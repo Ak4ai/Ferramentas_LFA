@@ -63,8 +63,8 @@ const validators = {
             if (!pattern || !condition) return true;
             try {
                 // 1. Constrói a Regex para capturar as partes
-                // Ex: a*b*a* -> ^(a*)(b*)(a*)$
-                const regexPattern = pattern.split('').map(char => `(${char}*)`).join('');
+                // Ex: aba -> ^(a*?)(b*?)(a*)$ (não-ganancioso)
+                const regexPattern = pattern.split('').map(char => `(${char}*?)`).join('');
                 const regex = new RegExp(`^${regexPattern}$`);
                 const match = str.match(regex);
 
@@ -73,7 +73,11 @@ const validators = {
                 // 2. Extrai as contagens (i, j, k, etc.)
                 const counts = match.slice(1).map(part => part ? part.length : 0);
                 const [i, j, k] = counts; // Para o nosso problema específico
-
+                
+                // Caso especial: se a palavra não tiver 'b' (j=0), a regex pode agrupar tudo em 'i'.
+                // Se a palavra inteira for 'a's e j for 0, k deve ser o comprimento total.
+                if (j === 0 && k === 0 && i > 0 && !str.includes('b')) return false;
+                
                 // 3. Avalia a condição matemática
                 // CUIDADO: eval é poderoso, mas use com cautela. Para esta ferramenta local, é aceitável.
                 return eval(condition);
