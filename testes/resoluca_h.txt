@@ -1,0 +1,140 @@
+Estados: q0, q1_scan, q2_scan_j, q_scan_k, q3_mark_k, q4_return, q_mark_next_i, q_finish_i, q_start_verify, q_find_b_jk, q_match_k, q_back_to_b_jk, q_check_excess_k, q_find_b_ji, q_match_i, q_back_to_b_ji, q_check_excess_i, q_accept, q_reject
+Alfabeto_Entrada: a, b
+Alfabeto_Fita: a, b, X, Y, Z, _, I, M, x, y, z
+Simbolo_Branco: _
+Estado_Inicial: q0
+Estado_Aceitacao: q_accept
+Estado_Rejeicao: q_reject
+Transicoes:
+// L = {aⁱbʲaᵏ | j = max(i, k)}
+
+// --- FASE 1: Comparar i e k ---
+
+// q0: Marca APENAS o primeiro 'a' como 'I'.
+q0, a, q1_scan, I, R
+q0, _, q_accept, _, N
+q0, b, q_match_k, Z, R     // i=0. Marca Z e vai buscar par 'a' imediatamente.
+
+// q_mark_next_i: Início do loop (para i > 1). Marca 'a' como 'X'.
+q_mark_next_i, a, q1_scan, X, R
+q_mark_next_i, b, q_match_k, Z, R // i acabou, começa j (caso especial onde loop terminou bem no b)
+q_mark_next_i, Y, q_scan_k, Y, R  // i acabou
+
+// q1_scan: Avança até encontrar b ou k
+q1_scan, a, q1_scan, a, R
+q1_scan, X, q1_scan, X, R  // Pula X já marcados (segurança)
+q1_scan, Y, q1_scan, Y, R
+q1_scan, b, q2_scan_j, b, R 
+q1_scan, _, q3_mark_k, _, L 
+
+// q2_scan_j: Passa pelos 'b's
+q2_scan_j, b, q2_scan_j, b, R
+q2_scan_j, a, q_scan_k, a, R  // Entrou na região de k
+q2_scan_j, Y, q_scan_k, Y, R  // Entrou na região de k
+q2_scan_j, _, q3_mark_k, _, L 
+
+// q_scan_k: Passa pelo sufixo k (Strict Check)
+q_scan_k, a, q_scan_k, a, R
+q_scan_k, Y, q_scan_k, Y, R
+q_scan_k, b, q_reject, b, N   // REJEITA: 'b' encontrado dentro do sufixo k (ex: baba)
+q_scan_k, _, q3_mark_k, _, L
+
+// q3_mark_k: Marca k com Y (Ping-Pong)
+q3_mark_k, a, q4_return, Y, L     // Achou 'a' do k, marca Y, volta.
+q3_mark_k, Y, q3_mark_k, Y, L
+q3_mark_k, b, q_finish_i, b, L    // Acabou k, mas tem b (k < i). Vai terminar de marcar i.
+q3_mark_k, X, q_start_verify, X, R // i == k.
+q3_mark_k, I, q_start_verify, I, R // i == k.
+
+// q4_return: Volta para o início do loop
+q4_return, a, q4_return, a, L
+q4_return, b, q4_return, b, L
+q4_return, Y, q4_return, Y, L
+q4_return, X, q_mark_next_i, X, R // Bateu em X, avança para marcar próximo a
+q4_return, I, q_mark_next_i, I, R // Bateu em I, avança para marcar próximo a
+
+// --- PREPARAÇÃO FASE 2 ---
+// q_finish_i: Transforma o restante dos 'a's (prefixo) em 'X'
+q_finish_i, a, q_finish_i, X, L
+q_finish_i, Y, q_finish_i, Y, L
+q_finish_i, b, q_finish_i, b, L
+q_finish_i, X, q_find_b_ji, X, R  // Caminho J=I
+q_finish_i, I, q_find_b_ji, I, R  // Caminho J=I
+
+// q_start_verify: Posiciona no começo dos b's (Caminho J=K)
+q_start_verify, X, q_start_verify, X, R
+q_start_verify, I, q_start_verify, I, R
+q_start_verify, Y, q_start_verify, Y, R
+q_start_verify, b, q_match_k, z, R // Marca z e VAI BUSCAR PAR.
+q_start_verify, _, q_reject, _, N  // i=k>0 e j=0.
+
+// ==========================================
+// CAMINHO 1: VERIFICAR SE J = K
+// ==========================================
+
+// q_find_b_jk: Procura o próximo 'b'
+q_find_b_jk, b, q_match_k, z, R    
+q_find_b_jk, z, q_find_b_jk, z, R  
+q_find_b_jk, Z, q_find_b_jk, Z, R  
+// RIGOR: Se encontrar y, Y ou a, NÃO PODE TER MAIS b. Vai verificar excesso.
+q_find_b_jk, y, q_check_excess_k, y, R  
+q_find_b_jk, Y, q_check_excess_k, Y, N 
+q_find_b_jk, a, q_check_excess_k, a, N 
+q_find_b_jk, _, q_check_excess_k, _, N 
+
+// q_match_k: Busca par (Y ou a) à direita
+q_match_k, b, q_match_k, b, R
+q_match_k, z, q_match_k, z, R
+q_match_k, y, q_match_k, y, R      
+q_match_k, Y, q_back_to_b_jk, y, L // Matou Y
+q_match_k, a, q_back_to_b_jk, y, L // Matou a
+q_match_k, _, q_reject, _, N       // Sobrou b
+
+// q_back_to_b_jk: Volta para o último z ou Z
+q_back_to_b_jk, y, q_back_to_b_jk, y, L
+q_back_to_b_jk, b, q_back_to_b_jk, b, L
+q_back_to_b_jk, z, q_find_b_jk, z, R 
+q_back_to_b_jk, Z, q_find_b_jk, Z, R 
+
+// q_check_excess_k: Garante que não sobrou k, nem b escondido
+q_check_excess_k, Y, q_reject, Y, R // Sobrou k
+q_check_excess_k, a, q_reject, a, R // Sobrou k
+q_check_excess_k, b, q_reject, b, R // REJEITA: 'b' escondido no final (baba)
+q_check_excess_k, y, q_check_excess_k, y, R 
+q_check_excess_k, _, q_accept, _, N 
+
+// ==========================================
+// CAMINHO 2: VERIFICAR SE J = I
+// ==========================================
+
+// q_find_b_ji: Procura b
+q_find_b_ji, X, q_find_b_ji, X, R
+q_find_b_ji, I, q_find_b_ji, I, R
+q_find_b_ji, M, q_find_b_ji, M, R
+q_find_b_ji, x, q_find_b_ji, x, R
+q_find_b_ji, z, q_find_b_ji, z, R
+q_find_b_ji, b, q_match_i, z, L    
+q_find_b_ji, Y, q_check_excess_i, Y, L // Acabou b
+q_find_b_ji, _, q_check_excess_i, _, L // Acabou b
+
+// q_match_i: Busca par (X ou I) à esquerda
+q_match_i, z, q_match_i, z, L
+q_match_i, x, q_match_i, x, L
+q_match_i, M, q_match_i, M, L
+q_match_i, X, q_back_to_b_ji, x, R // Matou X
+q_match_i, I, q_back_to_b_ji, M, R // Matou I
+q_match_i, _, q_reject, _, N       // Sobrou b
+
+// q_back_to_b_ji: Volta para o z
+q_back_to_b_ji, X, q_back_to_b_ji, X, R
+q_back_to_b_ji, x, q_back_to_b_ji, x, R
+q_back_to_b_ji, M, q_back_to_b_ji, M, R
+q_back_to_b_ji, z, q_find_b_ji, z, R 
+
+// q_check_excess_i: Varre esquerda. 
+q_check_excess_i, z, q_check_excess_i, z, L
+q_check_excess_i, x, q_check_excess_i, x, L
+q_check_excess_i, M, q_accept, M, N     // Bateu no início processado = SUCESSO.
+q_check_excess_i, X, q_reject, X, R     // Sobrou X.
+q_check_excess_i, I, q_reject, I, R     // Sobrou I.
+q_check_excess_i, _, q_accept, _, N

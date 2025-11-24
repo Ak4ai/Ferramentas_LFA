@@ -1,0 +1,234 @@
+body {
+    font-family: sans-serif;
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 0 2em;
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+#machine-type-selector {
+    background-color: #fff;
+    padding: 1em;
+    border-radius: 8px;
+    margin-bottom: 1em;
+    text-align: center;
+}
+
+#machine-type-selector label {
+    margin: 0 1em;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#machine-type-selector input[type="radio"] {
+    margin-right: 0.5em;
+}
+
+#problem-container {
+    background-color: #fff;
+    padding: 1em;
+    border-radius: 8px;
+    margin-bottom: 1em;
+}
+
+#problem-builder {
+    background-color: #fff;
+    padding: 1em 2em;
+    border-radius: 8px;
+    margin-bottom: 1em;
+}
+
+.and-group {
+    border: 2px solid #007bff;
+    border-radius: 8px;
+    padding: 1em;
+    margin-bottom: 1em;
+    position: relative;
+}
+
+.group-header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 1em;
+}
+
+.remove-group-btn {
+    background: #ffdddd;
+    border: 1px solid #dc3545;
+    color: #dc3545;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 2px 8px;
+}
+
+.or-separator {
+    text-align: center;
+    font-weight: bold;
+    color: #555;
+    margin: -0.5em 0 0.5em 0;
+}
+
+.rule-pill {
+    display: inline-flex;
+    align-items: center;
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    border-radius: 16px;
+    padding: 5px 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.negation-control {
+    margin-right: 5px;
+    padding-right: 5px;
+    border-right: 1px solid #ccc;
+}
+
+.rule-content {
+    display: flex;
+    align-items: center;
+}
+
+.rule-pill span, .rule-pill select {
+    margin: 0 5px;
+}
+
+.rule-pill input {
+    border: none;
+    background: #fff;
+    border-radius: 4px;
+    margin: 0 5px;
+    padding: 2px 5px;
+    width: 80px;
+}
+
+.remove-rule-btn {
+    cursor: pointer;
+    color: #dc3545;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+#add-group-btn, .add-rule-btn {
+    font-size: 14px;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid #007bff;
+    background-color: #fff;
+    color: #007bff;
+}
+
+#add-group-btn:hover, .add-rule-btn:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.rule-row label {
+    margin: 0 0.5em;
+}
+
+.rule-value {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 4px 8px;
+}
+
+.rule-value:disabled {
+    background-color: #eee;
+}
+
+#app-container {
+    display: flex;
+    gap: 1em;
+}
+
+#editor-container, #diagram-container {
+    flex: 1;
+    background-color: #fff;
+    padding: 1em;
+    border-radius: 8px;
+    position: relative; /* Necessário para posicionar o botão de copiar */
+}
+
+#copy-mermaid-btn {
+    position: absolute;
+    top: 1em;
+    right: 7em; /* Ajustado para dar espaço ao novo botão */
+    font-size: 12px;
+    padding: 4px 8px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #f0f0f0;
+}
+
+#download-svg-btn {
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    font-size: 12px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #f0f0f0;
+}
+
+#mermaid-editor {
+    width: 95%;
+    font-family: monospace;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+#diagram-output {
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#controls-container {
+    text-align: center;
+    margin-top: 1em;
+}
+
+#check-button {
+    font-size: 18px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+#check-button:hover {
+    background-color: #0056b3;
+}
+
+#feedback-container {
+    margin-top: 1em;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#copy-errors-btn {
+    font-size: 12px;
+    padding: 4px 8px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid #dc3545;
+    background-color: #fff;
+    color: #dc3545;
+    margin-left: 1em;
+    vertical-align: middle;
+}

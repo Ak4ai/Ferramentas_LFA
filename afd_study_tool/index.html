@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudo de AFD com Mermaid</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Ferramenta de Estudo de AFD</h1>
+
+    <div id="machine-type-selector">
+        <label>
+            <input type="radio" name="machine-type" value="afd" checked> AFD (Autômato Finito Determinístico)
+        </label>
+        <label>
+            <input type="radio" name="machine-type" value="turing"> Máquina de Turing
+        </label>
+    </div>
+
+    <div id="problem-builder">
+        <h2>Construtor de Fórmulas</h2>
+        <div id="formula-container">
+            <!-- Grupos de regras (E) serão adicionados aqui via JS -->
+        </div>
+        <button id="add-group-btn">+ Adicionar Grupo de Regras (OU)</button>
+    </div>
+
+    <div id="app-container">
+        <div id="editor-container">
+            <h3 id="editor-title">Definição do AFD:</h3>
+            <textarea id="mermaid-editor" rows="20" placeholder="Digite seu código Mermaid aqui..."></textarea>
+        </div>
+        <div id="diagram-container">
+            <button id="copy-mermaid-btn">Copiar Código</button>
+            <button id="download-svg-btn">Baixar SVG</button>
+            <h3>Diagrama Visual:</h3>
+            <div id="diagram-output"></div>
+        </div>
+    </div>
+
+    <div id="controls-container">
+        <button id="check-button">Verificar Solução</button>
+        <div id="feedback-container"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
