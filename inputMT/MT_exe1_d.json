@@ -1,0 +1,16 @@
+{
+  "definition": "Estados: q0, q_find_end_a, q_find_end_b, q_match_a, q_match_b, q_back, qf, qreject\nAlfabeto_Entrada: a, b\nAlfabeto_Fita: a, b, X, _\nSimbolo_Branco: _\nEstado_Inicial: q0\nEstado_Aceitacao: qf\nEstado_Rejeicao: qreject\nTransicoes:\nq0, _, qf, _, N\nq0, X, q0, X, R\nq0, a, q_find_end_a, X, R\nq0, b, q_find_end_b, X, R\nq_find_end_a, a, q_find_end_a, a, R\nq_find_end_a, b, q_find_end_a, b, R\nq_find_end_a, X, q_find_end_a, X, R\nq_find_end_a, _, q_match_a, _, L\nq_find_end_b, a, q_find_end_b, a, R\nq_find_end_b, b, q_find_end_b, b, R\nq_find_end_b, X, q_find_end_b, X, R\nq_find_end_b, _, q_match_b, _, L\nq_match_a, X, q_match_a, X, L\nq_match_a, a, q_back, X, L\nq_match_a, b, qreject, b, N\nq_match_b, X, q_match_b, X, L\nq_match_b, b, q_back, X, L\nq_match_b, a, qreject, a, N\nq_back, a, q_back, a, L\nq_back, b, q_back, b, L\nq_back, X, q0, X, R\nq_back, _, q0, _, R\n",
+  "rules": [
+    {
+      "rules": [
+        {
+          "type": "palindrome",
+          "value": {
+            "type": "even"
+          },
+          "negated": false
+        }
+      ]
+    }
+  ]
+}

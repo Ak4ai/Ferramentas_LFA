@@ -1,0 +1,12 @@
+{
+  "definition": "Estados: q0, q1, q2, q3, q4, qrej\nAlfabeto: a, b\nEstado_Inicial: q0\nEstados_Finais: q4\nTransicoes:\nq0, a, qrej\nq0, b, q1\nq1, a, q2\nq1, b, q3\nq2, a, q2\nq2, b, q3\nq3, a, q4\nq3, b, qrej\nq4, a, qrej\nq4, b, qrej\nqrej, a, qrej\nqrej, b, qrej",
+  "rules": [
+    {
+      "rules": [
+        { "type": "regex", "value": "^ba*ba$", "negated": false }
+      ]
+    }
+  ],
+  "description": "AFD Exe 3: L = {ba^n ba | n ≥ 0}",
+  "comments": "Sequência: b -> a* -> b -> a -> aceita. q1 com b vai pra q3 (zero a's)"
+}

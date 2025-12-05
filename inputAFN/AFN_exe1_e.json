@@ -1,0 +1,21 @@
+{
+  "description": "AFN Exercício 1e: L = {w | aa ou bb é subpalavra e cccc é sufixo}",
+  "nondeterministic": true,
+  "definition": "Estados: q0, q1a, q1b, q2, q3, q4, q5, qf\nAlfabeto: a, b, c\nEstado_Inicial: q0\nEstados_Finais: qf\nTransicoes:\nq0, a, q0\nq0, b, q0\nq0, c, q0\nq0, a, q1a\nq0, b, q1b\nq1a, a, q2\nq1b, b, q2\nq2, a, q2\nq2, b, q2\nq2, c, q2\nq2, c, q3\nq3, c, q4\nq4, c, q5\nq5, c, qf",
+  "rules": [
+    {
+      "rules": [
+        {
+          "type": "hasConsecutivePair",
+          "value": { "chars": ["a", "b"] },
+          "negated": false
+        },
+        {
+          "type": "endsWith",
+          "value": "cccc",
+          "negated": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+Máquina de Turing
+1. Construa Máquinas de Turing padrão que aceitem as seguintes
+linguagens:
+a. {w | w ∈ {a, b, c}* e w começa com ab}
+b. {a^n b^n c^n | n ≥ 0}
+c. {a^n b^m | n, m ≥ 0 e n = 2m}
+d. {ww^R | w ∈ {a, b}*}
+e. {w | w ∈ {a, b}* e w tem a mesma quantidade de 'a' e 'b'}
+f. {1^n 0^(n+3) | n ≥ 0}
+g. {a^n b^(2n) c^(n-1) | n > 0}
+h. {a^i b^j a^k | j = max(i, k)}
+i. {a^i b^j a^k | i = j ou j = k}
+
+2. Dada a MT da figura abaixo, sobre o alfabeto ∑ = {a, b},
+responda:
+
+[Descrição da imagem de uma Máquina de Turing com 6 estados: q0 a q5]
+
+a. Dê a sequência de configurações da máquina quando a
+fita começa com as seguintes cadeias: #abab, #aabba,
+#bbabaa, #abaabab, dizendo se as cadeias são aceitas ou
+não pela máquina. O símbolo # não pertence ao alfabeto e
+foi inserido somente para marcar o início da fita.
+b. Qual a linguagem aceita por essa MT?
+
+3. Refaça os exercícios usando MT multifita com uma
+complexidade de tempo inferior a MT padrão.
+
+4. Refaça os exercícios usando MT Não-determinísticas com uma
+complexidade de tempo inferior a MT padrão.

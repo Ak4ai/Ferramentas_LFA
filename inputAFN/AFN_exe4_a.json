@@ -1,0 +1,16 @@
+{
+  "description": "AFN Exercício 4a: Regex (ab)*",
+  "nondeterministic": true,
+  "definition": "Estados: q0, q1\nAlfabeto: a, b\nEstado_Inicial: q0\nEstados_Finais: q0\nTransicoes:\nq0, a, q1\nq1, b, q0",
+  "rules": [
+    {
+      "rules": [
+        {
+          "type": "regex",
+          "value": "^(ab)*$",
+          "negated": false
+        }
+      ]
+    }
+  ]
+}

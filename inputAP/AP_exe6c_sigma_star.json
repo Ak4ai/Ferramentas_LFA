@@ -1,0 +1,16 @@
+{
+    "description": "Exercício 6c: L = {w ∈ {0,1}* | w ∈ (0*1*)*} - Qualquer string (Σ*)",
+    "type": "ap",
+    "definition": "Estados: q0\nAlfabeto_Entrada: 0, 1\nAlfabeto_Pilha: Z\nSimbolo_Inicial_Pilha: Z\nEstado_Inicial: q0\nEstados_Finais: q0\nModo_Aceitacao: estado\nTransicoes:\nq0, 0, Z, q0, Z\nq0, 1, Z, q0, Z",
+    "rules": [
+        {
+            "rules": [
+                {
+                    "type": "regex",
+                    "value": "^[01]*$"
+                }
+            ]
+        }
+    ],
+    "testStrings": ["", "0", "1", "01", "10", "00", "11", "0011", "1100", "010101"]
+}

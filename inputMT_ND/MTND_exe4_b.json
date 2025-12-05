@@ -1,0 +1,21 @@
+{
+  "description": "MTND Exercício 4b: L = {a^i b^j c^k | i = j = k, i >= 1}",
+  "nondeterministic": true,
+  "definition": "Estados: q0, mark_a, find_b, mark_b, find_c, mark_c, rewind, verify, q_accept, q_reject\nAlfabeto_Entrada: a, b, c\nAlfabeto_Fita: a, b, c, X, Y, Z, _\nSimbolo_Branco: _\nEstado_Inicial: q0\nEstado_Aceitacao: q_accept\nEstado_Rejeicao: q_reject\nTransicoes:\nq0, a, mark_a, X, R\nq0, Y, verify, Y, R\nq0, _, q_reject, _, S\nq0, b, q_reject, b, S\nq0, c, q_reject, c, S\nmark_a, a, mark_a, a, R\nmark_a, Y, mark_a, Y, R\nmark_a, b, find_b, b, R\nfind_b, b, find_b, b, R\nfind_b, Z, find_b, Z, R\nfind_b, c, mark_b, Y, L\nmark_b, b, mark_b, b, L\nmark_b, Z, mark_b, Z, L\nmark_b, Y, find_c, Y, R\nmark_b, a, find_c, a, R\nfind_c, b, find_c, b, R\nfind_c, Y, find_c, Y, R\nfind_c, Z, find_c, Z, R\nfind_c, c, mark_c, Z, L\nmark_c, b, mark_c, b, L\nmark_c, Y, mark_c, Y, L\nmark_c, Z, mark_c, Z, L\nmark_c, a, mark_c, a, L\nmark_c, X, rewind, X, R\nrewind, a, q0, a, L\nrewind, Y, q0, Y, L\nrewind, X, q0, X, L\nverify, Y, verify, Y, R\nverify, Z, verify, Z, R\nverify, _, q_accept, _, S\nverify, a, q_reject, a, S\nverify, b, q_reject, b, S\nverify, c, q_reject, c, S",
+  "rules": [
+    {
+      "rules": [
+        {
+          "type": "regex",
+          "value": "^a+b+c+$",
+          "negated": false
+        },
+        {
+          "type": "equalCount",
+          "chars": ["a", "b", "c"],
+          "negated": false
+        }
+      ]
+    }
+  ]
+}

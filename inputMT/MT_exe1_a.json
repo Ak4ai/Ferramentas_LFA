@@ -1,0 +1,14 @@
+{
+  "definition": "Estados: q0, q1, q2\nAlfabeto_Entrada: a, b, c\nAlfabeto_Fita: a, b, c, _\nSimbolo_Branco: _\nEstado_Inicial: q0\nEstado_Aceitacao: q2\nEstado_Rejeicao: qreject\nTransicoes:\nq0, a, q1, a, R\nq1, b, q2, b, R\nq2, a, q2, a, R\nq2, b, q2, b, R\nq2, c, q2, c, R\nq2, _, q2, _, R",
+  "rules": [
+    {
+      "rules": [
+        {
+          "type": "startsWith",
+          "value": "ab",
+          "negated": false
+        }
+      ]
+    }
+  ]
+}

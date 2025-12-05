@@ -1,0 +1,12 @@
+{
+  "definition": "Estados: q0, q1, q2, q3, qok\nAlfabeto: a, b\nEstado_Inicial: q0\nEstados_Finais: q0, q1, q2, qok\nTransicoes:\nq0, a, q1\nq0, b, qok\nq1, a, q2\nq1, b, qok\nq2, a, q3\nq2, b, qok\nq3, a, q3\nq3, b, q3\nqok, a, qok\nqok, b, qok",
+  "rules": [
+    {
+      "rules": [
+        { "type": "startsWith", "value": "aaa", "negated": true }
+      ]
+    }
+  ],
+  "description": "AFD Exe 5f: L = {w | w NÃO começa com 'aaa'}",
+  "comments": "q0-q2 contam a's iniciais. qok=aceito (não começa com aaa). q3=rejeitado (começa com aaa)"
+}

@@ -1,0 +1,17 @@
+{
+    "description": "L = {wcw^R | w ∈ {a,b}*} - Palíndromos com marcador central c",
+    "type": "ap",
+    "definition": "Estados: q0, q1, qf\nAlfabeto_Entrada: a, b, c\nAlfabeto_Pilha: A, B, Z\nSimbolo_Inicial_Pilha: Z\nEstado_Inicial: q0\nEstados_Finais: qf\nModo_Aceitacao: estado\nTransicoes:\nq0, a, Z, q0, AZ\nq0, a, A, q0, AA\nq0, a, B, q0, AB\nq0, b, Z, q0, BZ\nq0, b, A, q0, BA\nq0, b, B, q0, BB\nq0, c, Z, q1, Z\nq0, c, A, q1, A\nq0, c, B, q1, B\nq1, a, A, q1, ε\nq1, b, B, q1, ε\nq1, ε, Z, qf, Z",
+    "rules": [
+        {
+            "rules": [
+                {
+                    "type": "wcwReverse",
+                    "separator": "c",
+                    "alphabet": ["a", "b"]
+                }
+            ]
+        }
+    ],
+    "testStrings": ["c", "aca", "bcb", "abcba", "aabcbaa", "abc", "abcab", "abcba", "aacaa"]
+}

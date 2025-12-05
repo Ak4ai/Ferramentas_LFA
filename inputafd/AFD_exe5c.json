@@ -1,0 +1,13 @@
+{
+  "definition": "Estados: q00, q01, q10, q11\nAlfabeto: a, b\nEstado_Inicial: q00\nEstados_Finais: q11\nTransicoes:\nq00, a, q10\nq00, b, q01\nq01, a, q11\nq01, b, q00\nq10, a, q00\nq10, b, q11\nq11, a, q01\nq11, b, q10",
+  "rules": [
+    {
+      "rules": [
+        { "type": "parity", "value": { "char": "a", "type": "odd" }, "negated": false },
+        { "type": "parity", "value": { "char": "b", "type": "odd" }, "negated": false }
+      ]
+    }
+  ],
+  "description": "AFD Exe 5c: L = {w | w tem quantidade ímpar de 'a' E de 'b'}",
+  "comments": "Estados: qXY onde X=paridade de a, Y=paridade de b (0=par, 1=ímpar)"
+}

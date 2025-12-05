@@ -1,0 +1,16 @@
+{
+  "description": "AFN Exercício 4c: Regex a(a+b)*b",
+  "nondeterministic": true,
+  "definition": "Estados: q0, q1, q2\nAlfabeto: a, b\nEstado_Inicial: q0\nEstados_Finais: q2\nTransicoes:\nq0, a, q1\nq1, a, q1\nq1, b, q1\nq1, b, q2",
+  "rules": [
+    {
+      "rules": [
+        {
+          "type": "regex",
+          "value": "^a[ab]*b$",
+          "negated": false
+        }
+      ]
+    }
+  ]
+}

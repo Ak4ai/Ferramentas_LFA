@@ -1,0 +1,16 @@
+{
+  "description": "AFN Exercício 1h: L = {w | w contenha exatamente um a}",
+  "nondeterministic": true,
+  "definition": "Estados: q0, q1, qf\nAlfabeto: a, b, c\nEstado_Inicial: q0\nEstados_Finais: qf\nTransicoes:\nq0, b, q0\nq0, c, q0\nq0, a, q1\nq1, b, q1\nq1, c, q1\nq1, ε, qf",
+  "rules": [
+    {
+      "rules": [
+        {
+          "type": "exactSubstringOccurrences",
+          "value": { "sub": "a", "count": 1 },
+          "negated": false
+        }
+      ]
+    }
+  ]
+}

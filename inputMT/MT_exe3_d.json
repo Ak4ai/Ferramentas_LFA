@@ -1,0 +1,68 @@
+{
+  "definition_multitape": {
+    "tapes": 2,
+    "description": "Fita 1: entrada, Fita 2: cópia. Copia entrada para F2, volta F1 ao início, compara F1[→] com F2[←]",
+    "states": ["q0", "qcopy", "qback1", "qback2", "qcomp", "qf", "qreject"],
+    "initial_state": "q0",
+    "accept_state": "qf",
+    "reject_state": "qreject",
+    "input_alphabet": ["a", "b"],
+    "tape_alphabet": ["a", "b", "$", "_"],
+    "blank_symbol": "_",
+    "algorithm": [
+      "1. q0: String vazia aceita. Marca $ no início de F2",
+      "2. qcopy: Copia toda entrada de F1 para F2",
+      "3. qback1: Volta F1 ao início",
+      "4. qback2: Volta F2 ao último símbolo (antes do _)",
+      "5. qcomp: Compara F1[→] com F2[←] símbolo a símbolo"
+    ],
+    "transitions": [
+      "(q0, [_, _]) -> (qf, [_, _], [N, N])",
+      "(q0, [a, _]) -> (qcopy, [a, $], [R, R])",
+      "(q0, [b, _]) -> (qcopy, [b, $], [R, R])",
+      
+      "(qcopy, [a, _]) -> (qcopy, [a, a], [R, R])",
+      "(qcopy, [a, $]) -> (qcopy, [a, a], [R, R])",
+      "(qcopy, [b, _]) -> (qcopy, [b, b], [R, R])",
+      "(qcopy, [b, $]) -> (qcopy, [b, b], [R, R])",
+      "(qcopy, [_, _]) -> (qback1, [_, _], [L, L])",
+      
+      "(qback1, [a, a]) -> (qback1, [a, a], [L, N])",
+      "(qback1, [a, b]) -> (qback1, [a, b], [L, N])",
+      "(qback1, [b, a]) -> (qback1, [b, a], [L, N])",
+      "(qback1, [b, b]) -> (qback1, [b, b], [L, N])",
+      "(qback1, [a, $]) -> (qback1, [a, $], [L, N])",
+      "(qback1, [b, $]) -> (qback1, [b, $], [L, N])",
+      "(qback1, [_, a]) -> (qcomp, [_, a], [R, N])",
+      "(qback1, [_, b]) -> (qcomp, [_, b], [R, N])",
+      "(qback1, [_, $]) -> (qf, [_, $], [N, N])",
+      
+      "(qcomp, [a, a]) -> (qcomp, [a, a], [R, L])",
+      "(qcomp, [b, b]) -> (qcomp, [b, b], [R, L])",
+      "(qcomp, [a, b]) -> (qreject, [a, b], [N, N])",
+      "(qcomp, [b, a]) -> (qreject, [b, a], [N, N])",
+      "(qcomp, [_, $]) -> (qf, [_, $], [N, N])",
+      "(qcomp, [a, $]) -> (qreject, [a, $], [N, N])",
+      "(qcomp, [b, $]) -> (qreject, [b, $], [N, N])",
+      "(qcomp, [_, a]) -> (qreject, [_, a], [N, N])",
+      "(qcomp, [_, b]) -> (qreject, [_, b], [N, N])"
+    ]
+  },
+  "rules": [
+    {
+      "rules": [
+        {
+          "type": "palindrome",
+          "palindromeType": "even",
+          "negated": false
+        }
+      ]
+    }
+  ],
+  "description": "MT Multifita (2 fitas): L = {ww^R | w ∈ {a,b}*} (palíndromos de tamanho par)",
+  "complexity": {
+    "standard": "O(n²)",
+    "multitape": "O(n)",
+    "reason": "Multifita copia e compara em paralelo em O(n)"
+  }
+}

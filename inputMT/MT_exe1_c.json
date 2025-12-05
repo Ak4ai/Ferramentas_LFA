@@ -1,0 +1,17 @@
+{
+  "definition": "Estados: q0, q1, q2, q3, q4, qf\nAlfabeto_Entrada: a, b\nAlfabeto_Fita: a, b, X, Y, _\nSimbolo_Branco: _\nEstado_Inicial: q0\nEstado_Aceitacao: qf\nEstado_Rejeicao: qreject\nTransicoes:\nq0, _, qf, _, R\nq0, a, q1, X, R\nq1, a, q2, X, R\nq2, a, q2, a, R\nq2, X, q2, X, R\nq2, b, q3, Y, L\nq3, a, q3, a, L\nq3, X, q4, X, R\nq4, X, q4, X, R\nq4, a, q1, X, R\nq4, Y, q4, Y, R\nq4, _, qf, _, R",
+  "rules": [
+    {
+      "rules": [
+        {
+          "type": "structuredLanguage",
+          "value": {
+            "pattern": "ab",
+            "condition": "i === 2 * j"
+          },
+          "negated": false
+        }
+      ]
+    }
+  ]
+}

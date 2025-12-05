@@ -1,0 +1,12 @@
+{
+  "definition": "Estados: q0, q1, q2, q3\nAlfabeto: a, b\nEstado_Inicial: q0\nEstados_Finais: q2, q3\nTransicoes:\nq0, a, q1\nq0, b, q0\nq1, a, q1\nq1, b, q2\nq2, a, q3\nq2, b, q2\nq3, a, q3\nq3, b, q0",
+  "rules": [
+    {
+      "rules": [
+        { "type": "substringCount", "value": { "sub": "ab", "type": "odd" }, "negated": false }
+      ]
+    }
+  ],
+  "description": "AFD Exe 5e: L = {w | w tem número ímpar de ocorrências de 'ab'}",
+  "comments": "q0=par/sem a, q1=par/com a, q2=ímpar/sem a, q3=ímpar/com a. q2 e q3 são finais (ímpar)"
+}

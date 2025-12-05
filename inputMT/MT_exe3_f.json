@@ -1,0 +1,61 @@
+{
+  "definition_multitape": {
+    "tapes": 2,
+    "description": "Fita 1: entrada, Fita 2: contador. Para cada '1' escreve X, verifica n+3 zeros",
+    "states": ["q0", "q1", "q2", "q3", "q0s", "qf", "qreject"],
+    "initial_state": "q0",
+    "accept_state": "qf",
+    "reject_state": "qreject",
+    "input_alphabet": ["0", "1"],
+    "tape_alphabet": ["0", "1", "X", "$", "_"],
+    "blank_symbol": "_",
+    "algorithm": [
+      "1. q0-q3: Primeiro verifica se há pelo menos 3 zeros (caso n=0: aceita 000)",
+      "2. q0s: Para cada '1', escreve X em F2",
+      "3. Depois dos 1s, para cada '0' além dos 3 iniciais, apaga um X",
+      "4. Aceita se F2 volta ao $ (n 1s casaram com n 0s extras)"
+    ],
+    "transitions": [
+      "(q0, [0, _]) -> (q1, [0, $], [R, N])",
+      "(q0, [1, _]) -> (qreject, [1, _], [N, N])",
+      "(q0, [_, _]) -> (qreject, [_, _], [N, N])",
+      
+      "(q1, [0, $]) -> (q2, [0, $], [R, N])",
+      "(q1, [_, $]) -> (qreject, [_, $], [N, N])",
+      "(q1, [1, $]) -> (qreject, [1, $], [N, N])",
+      
+      "(q2, [0, $]) -> (q3, [0, $], [R, N])",
+      "(q2, [_, $]) -> (qreject, [_, $], [N, N])",
+      "(q2, [1, $]) -> (qreject, [1, $], [N, N])",
+      
+      "(q3, [_, $]) -> (qf, [_, $], [N, N])",
+      "(q3, [0, $]) -> (qreject, [0, $], [N, N])",
+      "(q3, [1, $]) -> (q0s, [1, X], [R, R])",
+      
+      "(q0s, [1, _]) -> (q0s, [1, X], [R, R])",
+      "(q0s, [1, X]) -> (q0s, [1, X], [R, R])",
+      "(q0s, [0, X]) -> (q0s, [0, _], [R, L])",
+      "(q0s, [0, $]) -> (qreject, [0, $], [N, N])",
+      "(q0s, [_, $]) -> (qf, [_, $], [N, N])",
+      "(q0s, [_, X]) -> (qreject, [_, X], [N, N])"
+    ]
+  },
+  "rules": [
+    {
+      "rules": [
+        {
+          "type": "structuredLanguage",
+          "symbols": ["1", "0"],
+          "condition": "j === i + 3",
+          "negated": false
+        }
+      ]
+    }
+  ],
+  "description": "MT Multifita (2 fitas): L = {1^n 0^(n+3) | n ≥ 0}",
+  "complexity": {
+    "standard": "O(n²)",
+    "multitape": "O(n)",
+    "reason": "Multifita conta 1s e 0s em paralelo em O(n)"
+  }
+}

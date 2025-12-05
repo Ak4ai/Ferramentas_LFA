@@ -1,0 +1,17 @@
+{
+    "description": "L = {a^i b^j | i < j, i,j >= 0} - Aceita strings com menos a's que b's",
+    "type": "ap",
+    "definition": "Estados: q0, q1, q2, qf\nAlfabeto_Entrada: a, b\nAlfabeto_Pilha: A, B, Z\nSimbolo_Inicial_Pilha: Z\nEstado_Inicial: q0\nEstados_Finais: qf\nModo_Aceitacao: estado\nTransicoes:\nq0, a, Z, q0, AZ\nq0, a, A, q0, AA\nq0, b, Z, q1, BZ\nq0, b, A, q1, ε\nq1, b, Z, q1, BZ\nq1, b, A, q1, ε\nq1, b, B, q1, BB\nq1, ε, B, qf, B",
+    "rules": [
+        {
+            "rules": [
+                {
+                    "type": "matchingPowers",
+                    "pattern": "ab",
+                    "condition": "i < j"
+                }
+            ]
+        }
+    ],
+    "testStrings": ["b", "bb", "abb", "aabbb", "ab", "", "a", "aabb"]
+}

@@ -1,0 +1,20 @@
+{
+    "description": "Exercício 2f: L = {a^i b^j c^k | i,j,k > 0, k = 2(i+j)} - k é o dobro de i+j",
+    "type": "ap",
+    "definition": "Estados: q0, q1, q2, qf\nAlfabeto_Entrada: a, b, c\nAlfabeto_Pilha: X, Z\nSimbolo_Inicial_Pilha: Z\nEstado_Inicial: q0\nEstados_Finais: qf\nModo_Aceitacao: estado\nTransicoes:\nq0, a, Z, q0, XXZ\nq0, a, X, q0, XXX\nq0, b, X, q1, XX\nq1, b, X, q1, XX\nq1, c, X, q2, ε\nq2, c, X, q2, ε\nq2, ε, Z, qf, Z",
+    "rules": [
+        {
+            "rules": [
+                {
+                    "type": "regex",
+                    "value": "^a+b+c+$"
+                },
+                {
+                    "type": "customFunction",
+                    "func": "str => { const m = str.match(/^(a+)(b+)(c+)$/); if (!m) return false; const i = m[1].length, j = m[2].length, k = m[3].length; return k === 2*(i+j); }"
+                }
+            ]
+        }
+    ],
+    "testStrings": ["abcc", "abcccc", "aabbcccccc", "abc", "aabcc", "abccc"]
+}

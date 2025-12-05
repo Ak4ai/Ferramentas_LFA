@@ -1,0 +1,17 @@
+{
+    "description": "Exercício 6a: L = {w ∈ {0,1}* | w possui pelo menos três 1's} - Linguagem Regular (AP trivial)",
+    "type": "ap",
+    "definition": "Estados: q0, q1, q2, q3\nAlfabeto_Entrada: 0, 1\nAlfabeto_Pilha: Z\nSimbolo_Inicial_Pilha: Z\nEstado_Inicial: q0\nEstados_Finais: q3\nModo_Aceitacao: estado\nTransicoes:\nq0, 0, Z, q0, Z\nq0, 1, Z, q1, Z\nq1, 0, Z, q1, Z\nq1, 1, Z, q2, Z\nq2, 0, Z, q2, Z\nq2, 1, Z, q3, Z\nq3, 0, Z, q3, Z\nq3, 1, Z, q3, Z",
+    "rules": [
+        {
+            "rules": [
+                {
+                    "type": "atLeastN",
+                    "char": "1",
+                    "n": 3
+                }
+            ]
+        }
+    ],
+    "testStrings": ["111", "0111", "1011", "1101", "1110", "01010101", "11", "1", "", "000"]
+}

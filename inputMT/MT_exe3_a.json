@@ -1,0 +1,50 @@
+{
+  "definition_multitape": {
+    "tapes": 2,
+    "description": "Fita 1: entrada, Fita 2: não utilizada (linguagem simples demais)",
+    "states": ["q0", "q1", "q2", "qf", "qreject"],
+    "initial_state": "q0",
+    "accept_state": "qf",
+    "reject_state": "qreject",
+    "input_alphabet": ["a", "b", "c"],
+    "tape_alphabet": ["a", "b", "c", "_"],
+    "blank_symbol": "_",
+    "algorithm": [
+      "1. q0: Lê primeiro símbolo, verifica se é 'a'",
+      "2. q1: Lê segundo símbolo, verifica se é 'b'",
+      "3. q2: Aceita restante da string sem verificar",
+      "Nota: Esta linguagem é simples demais para benefício significativo de múltiplas fitas"
+    ],
+    "transitions": [
+      "(q0, [a, _]) -> (q1, [a, _], [R, N])",
+      "(q0, [b, _]) -> (qreject, [b, _], [N, N])",
+      "(q0, [c, _]) -> (qreject, [c, _], [N, N])",
+      "(q0, [_, _]) -> (qreject, [_, _], [N, N])",
+      "(q1, [a, _]) -> (qreject, [a, _], [N, N])",
+      "(q1, [b, _]) -> (q2, [b, _], [R, N])",
+      "(q1, [c, _]) -> (qreject, [c, _], [N, N])",
+      "(q1, [_, _]) -> (qreject, [_, _], [N, N])",
+      "(q2, [a, _]) -> (q2, [a, _], [R, N])",
+      "(q2, [b, _]) -> (q2, [b, _], [R, N])",
+      "(q2, [c, _]) -> (q2, [c, _], [R, N])",
+      "(q2, [_, _]) -> (qf, [_, _], [N, N])"
+    ]
+  },
+  "rules": [
+    {
+      "rules": [
+        {
+          "type": "startsWith",
+          "value": "ab",
+          "negated": false
+        }
+      ]
+    }
+  ],
+  "description": "MT Multifita (2 fitas): L = {w ∈ {a,b,c}* | w começa com 'ab'}",
+  "complexity": {
+    "standard": "O(n)",
+    "multitape": "O(n)",
+    "reason": "Linguagem muito simples - verificação de prefixo é O(1), leitura é O(n). Não há ganho com múltiplas fitas."
+  }
+}

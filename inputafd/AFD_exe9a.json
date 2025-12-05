@@ -1,0 +1,13 @@
+{
+  "definition": "Estados: q0, q1, q2, qf, qrej\nAlfabeto: a, b\nEstado_Inicial: q0\nEstados_Finais: qf\nTransicoes:\nq0, a, q0\nq0, b, q1\nq1, a, q2\nq1, b, qf\nq2, a, q2\nq2, b, q1\nqf, a, qrej\nqf, b, qrej\nqrej, a, qrej\nqrej, b, qrej",
+  "rules": [
+    {
+      "rules": [
+        { "type": "regex", "value": "^a*(ba*a)*bb$", "negated": false }
+      ]
+    }
+  ],
+  "description": "AFD Exe 9a (Autômato 1): Identificar linguagem aceita",
+  "comments": "L = a*(ba*a)*bb - termina exatamente com bb, sem mais caracteres depois",
+  "exercise_notes": "Objetivo: identificar a linguagem aceita por este autômato"
+}

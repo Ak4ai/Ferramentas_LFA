@@ -1,0 +1,12 @@
+{
+  "definition": "Estados: q0, qA, qB, qC, qAB, qrej\nAlfabeto: a, b, c\nEstado_Inicial: q0\nEstados_Finais: q0\nTransicoes:\nq0, a, qA\nq0, b, qB\nq0, c, qC\nqA, a, qAB\nqA, b, qrej\nqA, c, qrej\nqB, a, qrej\nqB, b, qAB\nqB, c, qrej\nqC, a, qrej\nqC, b, qrej\nqC, c, q0\nqAB, a, qA\nqAB, b, qB\nqAB, c, qC\nqrej, a, qrej\nqrej, b, qrej\nqrej, c, qrej",
+  "rules": [
+    {
+      "rules": [
+        { "type": "regex", "value": "^((aa|bb)*cc)*$", "negated": false }
+      ]
+    }
+  ],
+  "description": "AFD Exe 7d: L = ((aa ∪ bb)*cc)*",
+  "comments": "q0=base. qAB=completou aa ou bb (pode continuar ou ir pra cc). qC=leu 1 c. cc completo volta a q0."
+}

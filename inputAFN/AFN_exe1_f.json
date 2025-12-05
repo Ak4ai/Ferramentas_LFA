@@ -1,0 +1,16 @@
+{
+  "description": "AFN Exercício 1f: L = {w | w contém 'ab' E 'ba'} = contém 'aba' OU 'bab' OU ('ab' antes de 'ba') OU ('ba' antes de 'ab')",
+  "nondeterministic": true,
+  "definition": "Estados: q0, q_aba1, q_aba2, q_bab1, q_bab2, q_ab1, q_ab, q_ab_b, q_abba, q_ba1, q_ba, q_ba_a, q_baab, qf\nAlfabeto: a, b, c\nEstado_Inicial: q0\nEstados_Finais: qf\nTransicoes:\nq0, a, q0\nq0, b, q0\nq0, c, q0\nq0, a, q_aba1\nq0, b, q_bab1\nq0, a, q_ab1\nq0, b, q_ba1\nq_aba1, b, q_aba2\nq_aba2, a, qf\nq_bab1, a, q_bab2\nq_bab2, b, qf\nq_ab1, a, q_ab1\nq_ab1, b, q_ab\nq_ab, a, q_ab\nq_ab, b, q_ab\nq_ab, c, q_ab\nq_ab, b, q_ab_b\nq_ab_b, b, q_ab_b\nq_ab_b, a, q_abba\nq_abba, ε, qf\nq_ba1, b, q_ba1\nq_ba1, a, q_ba\nq_ba, a, q_ba\nq_ba, b, q_ba\nq_ba, c, q_ba\nq_ba, a, q_ba_a\nq_ba_a, a, q_ba_a\nq_ba_a, b, q_baab\nq_baab, ε, qf\nqf, a, qf\nqf, b, qf\nqf, c, qf",
+  "rules": [
+    {
+      "rules": [
+        {
+          "type": "hasBothSubstrings",
+          "value": { "subs": ["ab", "ba"] },
+          "negated": false
+        }
+      ]
+    }
+  ]
+}

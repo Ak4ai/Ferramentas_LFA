@@ -1,0 +1,20 @@
+{
+    "description": "Exercício 4 (APD): L = {a^i b^j c^k d^l | i+j = k+l} - Soma das primeiras = soma das últimas",
+    "type": "ap",
+    "definition": "Estados: q0, q1, q2, q3, qf\nAlfabeto_Entrada: a, b, c, d\nAlfabeto_Pilha: X, Z\nSimbolo_Inicial_Pilha: Z\nEstado_Inicial: q0\nEstados_Finais: qf\nModo_Aceitacao: estado\nTransicoes:\nq0, a, Z, q0, XZ\nq0, a, X, q0, XX\nq0, b, Z, q1, XZ\nq0, b, X, q1, XX\nq0, c, X, q2, ε\nq0, d, X, q3, ε\nq0, ε, Z, qf, Z\nq1, b, Z, q1, XZ\nq1, b, X, q1, XX\nq1, c, X, q2, ε\nq1, d, X, q3, ε\nq1, ε, Z, qf, Z\nq2, c, X, q2, ε\nq2, d, X, q3, ε\nq2, ε, Z, qf, Z\nq3, d, X, q3, ε\nq3, ε, Z, qf, Z",
+    "rules": [
+        {
+            "rules": [
+                {
+                    "type": "regex",
+                    "value": "^a*b*c*d*$"
+                },
+                {
+                    "type": "customFunction",
+                    "func": "str => { const m = str.match(/^(a*)(b*)(c*)(d*)$/); if (!m) return false; return m[1].length + m[2].length === m[3].length + m[4].length; }"
+                }
+            ]
+        }
+    ],
+    "testStrings": ["", "ac", "bd", "abcd", "aabccd", "abcdd", "aacd", "abcc", "aabbccdd", "abc", "ad", "aabbcd", "abccdd"]
+}

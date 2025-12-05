@@ -1,0 +1,16 @@
+{
+  "description": "AFN Exercício 1c: L = {w | primeiro símbolo = último símbolo}",
+  "nondeterministic": true,
+  "definition": "Estados: q0, qa, qb, qc, qfa, qfb, qfc\nAlfabeto: a, b, c\nEstado_Inicial: q0\nEstados_Finais: qfa, qfb, qfc\nTransicoes:\nq0, a, qa\nq0, b, qb\nq0, c, qc\nq0, a, qfa\nq0, b, qfb\nq0, c, qfc\nqa, a, qa\nqa, b, qa\nqa, c, qa\nqa, a, qfa\nqb, a, qb\nqb, b, qb\nqb, c, qb\nqb, b, qfb\nqc, a, qc\nqc, b, qc\nqc, c, qc\nqc, c, qfc",
+  "rules": [
+    {
+      "rules": [
+        {
+          "type": "firstEqualsLast",
+          "value": true,
+          "negated": false
+        }
+      ]
+    }
+  ]
+}

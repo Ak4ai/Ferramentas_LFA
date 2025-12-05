@@ -1,0 +1,16 @@
+{
+  "description": "AFN Exercício 4g: Regex ((ab+ba)c)*",
+  "nondeterministic": true,
+  "definition": "Estados: q0, q1, q2, q3\nAlfabeto: a, b, c\nEstado_Inicial: q0\nEstados_Finais: q0\nTransicoes:\nq0, a, q1\nq0, b, q2\nq1, b, q3\nq2, a, q3\nq3, c, q0",
+  "rules": [
+    {
+      "rules": [
+        {
+          "type": "regex",
+          "value": "^((ab|ba)c)*$",
+          "negated": false
+        }
+      ]
+    }
+  ]
+}

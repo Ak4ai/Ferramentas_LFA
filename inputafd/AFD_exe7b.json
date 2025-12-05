@@ -1,0 +1,12 @@
+{
+  "definition": "Estados: q0, qA, qAB, qB, qBA, qrej\nAlfabeto: a, b\nEstado_Inicial: q0\nEstados_Finais: q0, qAB, qBA\nTransicoes:\nq0, a, qA\nq0, b, qB\nqA, a, qrej\nqA, b, qAB\nqAB, a, qA\nqAB, b, qB\nqB, a, qBA\nqB, b, qrej\nqBA, a, qrej\nqBA, b, qB\nqrej, a, qrej\nqrej, b, qrej",
+  "rules": [
+    {
+      "rules": [
+        { "type": "regex", "value": "^(ab)*(ba)*$", "negated": false }
+      ]
+    }
+  ],
+  "description": "AFD Exe 7b: L = (ab)*(ba)*",
+  "comments": "Fase (ab)*: q0->qA->qAB->qA... Fase (ba)*: qAB->qB->qBA->qB... ou q0->qB->qBA..."
+}

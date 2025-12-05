@@ -1,0 +1,12 @@
+{
+  "definition": "Estados: q0, q1, q2\nAlfabeto: 0, 1\nEstado_Inicial: q0\nEstados_Finais: q0\nTransicoes:\nq0, 0, q0\nq0, 1, q1\nq1, 0, q2\nq1, 1, q0\nq2, 0, q1\nq2, 1, q2",
+  "rules": [
+    {
+      "rules": [
+        { "type": "binaryDivisibleBy", "value": { "n": 3 }, "negated": false }
+      ]
+    }
+  ],
+  "description": "AFD Exe 6: L = {w | número binário w é divisível por 3}",
+  "comments": "Estados representam resto da divisão por 3. Transições: ler 0 = *2, ler 1 = *2+1"
+}

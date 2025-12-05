@@ -1,0 +1,16 @@
+{
+    "description": "Exercício 6f: L = {a^n b^n ∪ b^n a^n | n ≥ 0} - a's seguidos de b's OU b's seguidos de a's (mesma quantidade)",
+    "type": "ap",
+    "definition": "Estados: q0, q1, q2, q3, q4, qf\nAlfabeto_Entrada: a, b\nAlfabeto_Pilha: A, B, Z\nSimbolo_Inicial_Pilha: Z\nEstado_Inicial: q0\nEstados_Finais: qf\nModo_Aceitacao: estado\nTransicoes:\nq0, a, Z, q1, AZ\nq0, a, A, q1, AA\nq0, b, Z, q3, BZ\nq0, b, B, q3, BB\nq0, ε, Z, qf, Z\nq1, a, Z, q1, AZ\nq1, a, A, q1, AA\nq1, b, A, q2, ε\nq2, b, A, q2, ε\nq2, ε, Z, qf, Z\nq3, b, Z, q3, BZ\nq3, b, B, q3, BB\nq3, a, B, q4, ε\nq4, a, B, q4, ε\nq4, ε, Z, qf, Z",
+    "rules": [
+        {
+            "rules": [
+                {
+                    "type": "customFunction",
+                    "func": "str => { const m1 = str.match(/^(a*)(b*)$/); const m2 = str.match(/^(b*)(a*)$/); if (m1 && m1[1].length === m1[2].length) return true; if (m2 && m2[1].length === m2[2].length) return true; return false; }"
+                }
+            ]
+        }
+    ],
+    "testStrings": ["", "ab", "ba", "aabb", "bbaa", "aaabbb", "bbbaaa", "a", "b", "aab", "abb", "bba", "baa"]
+}

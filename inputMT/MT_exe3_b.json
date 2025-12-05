@@ -1,0 +1,72 @@
+{
+  "definition_multitape": {
+    "tapes": 2,
+    "description": "Fita 1: entrada, Fita 2: contador. Conta a's com X, depois desconta para b's, depois desconta para c's",
+    "states": ["q0", "qa", "qb", "qc", "qf", "qreject"],
+    "initial_state": "q0",
+    "accept_state": "qf",
+    "reject_state": "qreject",
+    "input_alphabet": ["a", "b", "c"],
+    "tape_alphabet": ["a", "b", "c", "X", "$", "_"],
+    "blank_symbol": "_",
+    "algorithm": [
+      "1. q0: String vazia aceita. Primeiro 'a' coloca $ em F2",
+      "2. qa: Para cada 'a', escreve X na Fita 2",
+      "3. qb: Para cada 'b', apaga um X da Fita 2. Quando chega em $, volta ao fim dos X's",
+      "4. qc: Para cada 'c', apaga um X da Fita 2",
+      "5. Aceita se no fim F2 volta ao $ (todos X consumidos = a=b=c)"
+    ],
+    "transitions": [
+      "(q0, [_, _]) -> (qf, [_, _], [N, N])",
+      "(q0, [a, _]) -> (qa, [a, $], [R, R])",
+      "(q0, [b, _]) -> (qreject, [b, _], [N, N])",
+      "(q0, [c, _]) -> (qreject, [c, _], [N, N])",
+      
+      "(qa, [a, _]) -> (qa, [a, X], [R, R])",
+      "(qa, [a, X]) -> (qa, [a, X], [R, R])",
+      "(qa, [b, _]) -> (qb, [b, _], [N, L])",
+      "(qa, [b, X]) -> (qb, [b, X], [N, L])",
+      "(qa, [c, _]) -> (qreject, [c, _], [N, N])",
+      "(qa, [c, X]) -> (qreject, [c, X], [N, N])",
+      "(qa, [_, _]) -> (qreject, [_, _], [N, N])",
+      "(qa, [_, X]) -> (qreject, [_, X], [N, N])",
+      
+      "(qb, [b, X]) -> (qb, [b, _], [R, L])",
+      "(qb, [b, $]) -> (qreject, [b, $], [N, N])",
+      "(qb, [b, _]) -> (qreject, [b, _], [N, N])",
+      "(qb, [c, $]) -> (qc, [c, $], [N, R])",
+      "(qb, [c, _]) -> (qreject, [c, _], [N, N])",
+      "(qb, [c, X]) -> (qreject, [c, X], [N, N])",
+      "(qb, [_, $]) -> (qreject, [_, $], [N, N])",
+      "(qb, [_, _]) -> (qreject, [_, _], [N, N])",
+      "(qb, [_, X]) -> (qreject, [_, X], [N, N])",
+      
+      "(qc, [c, X]) -> (qc, [c, _], [R, R])",
+      "(qc, [c, _]) -> (qreject, [c, _], [N, N])",
+      "(qc, [c, $]) -> (qreject, [c, $], [N, N])",
+      "(qc, [_, _]) -> (qf, [_, _], [N, N])",
+      "(qc, [_, X]) -> (qreject, [_, X], [N, N])",
+      "(qc, [_, $]) -> (qreject, [_, $], [N, N])",
+      "(qc, [a, X]) -> (qreject, [a, X], [N, N])",
+      "(qc, [b, X]) -> (qreject, [b, X], [N, N])"
+    ]
+  },
+  "rules": [
+    {
+      "rules": [
+        {
+          "type": "structuredLanguage",
+          "symbols": ["a", "b", "c"],
+          "condition": "i === j && j === k",
+          "negated": false
+        }
+      ]
+    }
+  ],
+  "description": "MT Multifita (2 fitas): L = {a^n b^n c^n | n ≥ 0}",
+  "complexity": {
+    "standard": "O(n²)",
+    "multitape": "O(n)",
+    "reason": "Versão padrão faz múltiplas passadas marcando símbolos. Multifita usa contador na Fita 2."
+  }
+}

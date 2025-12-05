@@ -1,0 +1,11 @@
+{
+  "definition": "Estados: q0, q1, q2\nAlfabeto: a, b\nEstado_Inicial: q0\nEstados_Finais: q2\nTransicoes:\nq0, a, q0\nq0, b, q1\nq1, a, q0\nq1, b, q2\nq2, a, q2\nq2, b, q2",
+  "rules": [
+    {
+      "rules": [
+        { "type": "hasConsecutive", "value": { "char": "b", "min": 2 }, "negated": false }
+      ]
+    }
+  ],
+  "description": "AFD Exe 5b: L = {w | w contém pelo menos dois símbolos 'b' consecutivos}"
+}

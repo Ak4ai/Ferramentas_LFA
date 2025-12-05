@@ -1,0 +1,15 @@
+{
+  "description": "MTND Exercício 4a: L = {w ∈ {a,b}* | w começa com 'ab'} - Já é O(n), determinístico basta",
+  "definition": "Estados: q0, q1, q_accept, q_reject\nAlfabeto_Entrada: a, b\nAlfabeto_Fita: a, b, _\nSimbolo_Branco: _\nEstado_Inicial: q0\nEstado_Aceitacao: q_accept\nEstado_Rejeicao: q_reject\nTransicoes:\nq0, a, q1, a, R\nq0, b, q_reject, b, R\nq0, _, q_reject, _, S\nq1, b, q_accept, b, R\nq1, a, q_reject, a, R\nq1, _, q_reject, _, S\nq_accept, a, q_accept, a, R\nq_accept, b, q_accept, b, R\nq_accept, _, q_accept, _, S",
+  "rules": [
+    {
+      "rules": [
+        {
+          "type": "startsWith",
+          "value": "ab",
+          "negated": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "description": "MTND Exercício 4e: L = {w | w ∈ {a,b}* e #a = #b} - Mesma quantidade de a's e b's",
+  "nondeterministic": true,
+  "definition": "Estados: q_init, q0, q_busca_a, q_busca_b, q_volta, qf, qreject\nAlfabeto_Entrada: a, b\nAlfabeto_Fita: a, b, X, Y, $, _\nSimbolo_Branco: _\nEstado_Inicial: q_init\nEstado_Aceitacao: qf\nEstado_Rejeicao: qreject\nTransicoes:\nq_init, a, q_busca_b, $, R\nq_init, b, q_busca_a, $, R\nq_init, _, qf, _, S\nq0, _, qf, _, R\nq0, a, q_busca_b, X, R\nq0, b, q_busca_a, Y, R\nq0, X, q0, X, R\nq0, Y, q0, Y, R\nq_busca_a, a, q_volta, X, L\nq_busca_a, b, q_busca_a, b, R\nq_busca_a, X, q_busca_a, X, R\nq_busca_a, Y, q_busca_a, Y, R\nq_busca_a, _, qreject, _, L\nq_busca_b, b, q_volta, Y, L\nq_busca_b, a, q_busca_b, a, R\nq_busca_b, X, q_busca_b, X, R\nq_busca_b, Y, q_busca_b, Y, R\nq_busca_b, _, qreject, _, L\nq_volta, a, q_volta, a, L\nq_volta, b, q_volta, b, L\nq_volta, X, q_volta, X, L\nq_volta, Y, q_volta, Y, L\nq_volta, $, q0, $, R",
+  "rules": [
+    {
+      "rules": [
+        {
+          "type": "equalCount",
+          "value": {
+            "chars": ["a", "b"]
+          },
+          "negated": false
+        }
+      ]
+    }
+  ]
+}

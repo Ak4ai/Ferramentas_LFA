@@ -1,0 +1,17 @@
+{
+    "description": "L = {a^i b^j | i ≠ j, i,j >= 0} - Aceita strings com número diferente de a's e b's (forma a*b*)",
+    "type": "ap",
+    "definition": "Estados: q0, q1, q2, q3, qf\nAlfabeto_Entrada: a, b\nAlfabeto_Pilha: A, Z\nSimbolo_Inicial_Pilha: Z\nEstado_Inicial: q0\nEstados_Finais: qf\nModo_Aceitacao: estado\nTransicoes:\nq0, a, Z, q1, AZ\nq0, a, A, q1, AA\nq0, b, Z, q2, AZ\nq1, a, Z, q1, AZ\nq1, a, A, q1, AA\nq1, b, A, q3, ε\nq1, ε, A, qf, A\nq2, b, Z, q2, AZ\nq2, b, A, q2, AA\nq2, ε, A, qf, A\nq3, b, A, q3, ε\nq3, ε, Z, q2, Z\nq3, ε, A, qf, A",
+    "rules": [
+        {
+            "rules": [
+                {
+                    "type": "matchingPowers",
+                    "pattern": "ab",
+                    "condition": "i !== j"
+                }
+            ]
+        }
+    ],
+    "testStrings": ["a", "b", "aa", "bb", "aab", "abb", "aaab", "abbb", "", "ab", "aabb"]
+}

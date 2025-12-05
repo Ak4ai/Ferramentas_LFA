@@ -1,0 +1,110 @@
+{
+  "definition_multitape": {
+    "tapes": 4,
+    "description": "L = {a^i b^j a^k | j = max(i, k)}. F1=entrada, F2=i, F3=j, F4=k",
+    "states": ["q0", "qi", "qj", "qk", "qrw", "qci", "qrw2", "qck", "qf", "qr"],
+    "initial_state": "q0",
+    "accept_state": "qf",
+    "reject_state": "qr",
+    "input_alphabet": ["a", "b"],
+    "tape_alphabet": ["a", "b", "X", "_"],
+    "blank_symbol": "_",
+    "algorithm": [
+      "j = max(i,k) ⟺ (j>=i ∧ j>=k) ∧ (j=i ∨ j=k)",
+      "qi: Para cada a inicial, escreve X em F2 (contando i)",
+      "qj: Para cada b, escreve X em F3 (contando j)",
+      "qk: Para cada a final, escreve X em F4 (contando k)",
+      "qrw: Rebobina F2, F3, F4 para o início",
+      "qci: Compara j com i cancelando X's de F2 e F3",
+      "  - Se F3 acaba antes que F2: j < i -> REJEITA",
+      "  - Se acabam juntos: j = i -> verifica j >= k",
+      "  - Se F2 acaba primeiro: j > i -> verifica j = k (precisa j == k)",
+      "qrw2: Rebobina F3 para comparar com F4",
+      "qck: Compara j com k"
+    ],
+    "transitions": [
+      "(q0, [_, _, _, _]) -> (qf, [_, _, _, _], [N, N, N, N])",
+      "(q0, [a, _, _, _]) -> (qi, [a, _, _, _], [N, N, N, N])",
+      "(q0, [b, _, _, _]) -> (qj, [b, _, _, _], [N, N, N, N])",
+      
+      "(qi, [a, _, _, _]) -> (qi, [a, X, _, _], [R, R, N, N])",
+      "(qi, [b, _, _, _]) -> (qj, [b, _, _, _], [N, N, N, N])",
+      "(qi, [b, X, _, _]) -> (qj, [b, X, _, _], [N, N, N, N])",
+      "(qi, [_, _, _, _]) -> (qr, [_, _, _, _], [N, N, N, N])",
+      "(qi, [_, X, _, _]) -> (qr, [_, X, _, _], [N, N, N, N])",
+      
+      "(qj, [b, _, _, _]) -> (qj, [b, _, X, _], [R, N, R, N])",
+      "(qj, [b, X, _, _]) -> (qj, [b, X, X, _], [R, N, R, N])",
+      "(qj, [b, _, X, _]) -> (qj, [b, _, X, _], [R, N, R, N])",
+      "(qj, [b, X, X, _]) -> (qj, [b, X, X, _], [R, N, R, N])",
+      "(qj, [a, _, _, _]) -> (qk, [a, _, _, _], [N, N, N, N])",
+      "(qj, [a, X, _, _]) -> (qk, [a, X, _, _], [N, N, N, N])",
+      "(qj, [a, _, X, _]) -> (qk, [a, _, X, _], [N, N, N, N])",
+      "(qj, [a, X, X, _]) -> (qk, [a, X, X, _], [N, N, N, N])",
+      "(qj, [_, _, _, _]) -> (qr, [_, _, _, _], [N, N, N, N])",
+      "(qj, [_, X, _, _]) -> (qr, [_, X, _, _], [N, N, N, N])",
+      "(qj, [_, _, X, _]) -> (qrw, [_, _, X, _], [N, L, L, N])",
+      "(qj, [_, X, X, _]) -> (qrw, [_, X, X, _], [N, L, L, N])",
+      
+      "(qk, [a, _, _, _]) -> (qk, [a, _, _, X], [R, N, N, R])",
+      "(qk, [a, X, _, _]) -> (qk, [a, X, _, X], [R, N, N, R])",
+      "(qk, [a, _, X, _]) -> (qk, [a, _, X, X], [R, N, N, R])",
+      "(qk, [a, X, X, _]) -> (qk, [a, X, X, X], [R, N, N, R])",
+      "(qk, [a, _, _, X]) -> (qk, [a, _, _, X], [R, N, N, R])",
+      "(qk, [a, X, _, X]) -> (qk, [a, X, _, X], [R, N, N, R])",
+      "(qk, [a, _, X, X]) -> (qk, [a, _, X, X], [R, N, N, R])",
+      "(qk, [a, X, X, X]) -> (qk, [a, X, X, X], [R, N, N, R])",
+      "(qk, [_, _, _, _]) -> (qrw, [_, _, _, _], [N, L, L, L])",
+      "(qk, [_, X, _, _]) -> (qrw, [_, X, _, _], [N, L, L, L])",
+      "(qk, [_, _, X, _]) -> (qrw, [_, _, X, _], [N, L, L, L])",
+      "(qk, [_, X, X, _]) -> (qrw, [_, X, X, _], [N, L, L, L])",
+      "(qk, [_, _, _, X]) -> (qrw, [_, _, _, X], [N, L, L, L])",
+      "(qk, [_, X, _, X]) -> (qrw, [_, X, _, X], [N, L, L, L])",
+      "(qk, [_, _, X, X]) -> (qrw, [_, _, X, X], [N, L, L, L])",
+      "(qk, [_, X, X, X]) -> (qrw, [_, X, X, X], [N, L, L, L])",
+      
+      "(qrw, [_, X, X, _]) -> (qrw, [_, X, X, _], [N, L, L, N])",
+      "(qrw, [_, _, X, _]) -> (qrw, [_, _, X, _], [N, N, L, N])",
+      "(qrw, [_, X, _, _]) -> (qrw, [_, X, _, _], [N, L, N, N])",
+      "(qrw, [_, X, X, X]) -> (qrw, [_, X, X, X], [N, L, L, L])",
+      "(qrw, [_, _, X, X]) -> (qrw, [_, _, X, X], [N, N, L, L])",
+      "(qrw, [_, X, _, X]) -> (qrw, [_, X, _, X], [N, L, N, L])",
+      "(qrw, [_, _, _, X]) -> (qrw, [_, _, _, X], [N, N, N, L])",
+      "(qrw, [_, _, _, _]) -> (qci, [_, _, _, _], [N, R, R, R])",
+      
+      "(qci, [_, X, X, _]) -> (qci, [_, _, _, _], [N, R, R, N])",
+      "(qci, [_, X, X, X]) -> (qci, [_, _, _, X], [N, R, R, N])",
+      "(qci, [_, _, X, _]) -> (qrw2, [_, _, X, _], [N, N, L, N])",
+      "(qci, [_, _, X, X]) -> (qrw2, [_, _, X, X], [N, N, L, N])",
+      "(qci, [_, X, _, _]) -> (qr, [_, X, _, _], [N, N, N, N])",
+      "(qci, [_, X, _, X]) -> (qr, [_, X, _, X], [N, N, N, N])",
+      "(qci, [_, _, _, _]) -> (qck, [_, _, _, _], [N, N, N, N])",
+      "(qci, [_, _, _, X]) -> (qck, [_, _, _, X], [N, N, N, N])",
+      
+      "(qrw2, [_, _, X, _]) -> (qrw2, [_, _, X, _], [N, N, L, N])",
+      "(qrw2, [_, _, X, X]) -> (qrw2, [_, _, X, X], [N, N, L, N])",
+      "(qrw2, [_, _, _, _]) -> (qck, [_, _, _, _], [N, N, R, R])",
+      "(qrw2, [_, _, _, X]) -> (qck, [_, _, _, X], [N, N, R, R])",
+      
+      "(qck, [_, _, X, X]) -> (qck, [_, _, _, _], [N, N, R, R])",
+      "(qck, [_, _, X, _]) -> (qr, [_, _, X, _], [N, N, N, N])",
+      "(qck, [_, _, _, X]) -> (qr, [_, _, _, X], [N, N, N, N])",
+      "(qck, [_, _, _, _]) -> (qf, [_, _, _, _], [N, N, N, N])"
+    ]
+  },
+  "rules": [
+    {
+      "rules": [
+        {
+          "type": "structuredLanguage",
+          "symbols": ["a", "b", "a"],
+          "value": {
+            "pattern": "aba",
+            "condition": "j === Math.max(i, k)"
+          },
+          "negated": false
+        }
+      ]
+    }
+  ]
+}

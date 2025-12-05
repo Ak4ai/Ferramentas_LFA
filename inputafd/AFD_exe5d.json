@@ -1,0 +1,12 @@
+{
+  "definition": "Estados: q0, q1, q2\nAlfabeto: a, b\nEstado_Inicial: q0\nEstados_Finais: q0\nTransicoes:\nq0, a, q1\nq0, b, q0\nq1, a, q2\nq1, b, q1\nq2, a, q0\nq2, b, q2",
+  "rules": [
+    {
+      "rules": [
+        { "type": "divisibleBy", "value": { "char": "a", "n": 3 }, "negated": false }
+      ]
+    }
+  ],
+  "description": "AFD Exe 5d: L = {w | w tem quantidade de 'a' divisível por 3}",
+  "comments": "Estados: q0=0 mod 3, q1=1 mod 3, q2=2 mod 3"
+}

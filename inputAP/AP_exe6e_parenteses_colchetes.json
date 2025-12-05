@@ -1,0 +1,16 @@
+{
+    "description": "L = {w | w tem parênteses e colchetes balanceados}",
+    "type": "ap",
+    "definition": "Estados: q0, qf\nAlfabeto_Entrada: (, ), [, ]\nAlfabeto_Pilha: P, C, Z\nSimbolo_Inicial_Pilha: Z\nEstado_Inicial: q0\nEstados_Finais: qf\nModo_Aceitacao: estado\nTransicoes:\nq0, (, Z, q0, PZ\nq0, (, P, q0, PP\nq0, (, C, q0, PC\nq0, [, Z, q0, CZ\nq0, [, P, q0, CP\nq0, [, C, q0, CC\nq0, ), P, q0, ε\nq0, ], C, q0, ε\nq0, ε, Z, qf, Z",
+    "rules": [
+        {
+            "rules": [
+                {
+                    "type": "balancedParentheses",
+                    "pairs": [["(", ")"], ["[", "]"]]
+                }
+            ]
+        }
+    ],
+    "testStrings": ["", "()", "[]", "([])", "([()])", "[()]", "[([])]", "(]", "[)", "([)]", "(([]()))", "[(())[][]]"]
+}
