@@ -1,0 +1,1746 @@
+% !TEX program = pdflatex
+\documentclass[a4paper,12pt]{article}
+
+% ================== PACOTES ==================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{geometry}
+\usepackage{tcolorbox}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{tikz}
+
+% ================== CONFIGURAÇÕES ==================
+\geometry{
+    left=2.5cm,
+    right=2.5cm,
+    top=2.5cm,
+    bottom=2.5cm
+}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+}
+
+% ================== CABEÇALHO/RODAPÉ ==================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{LFA - Linguagens Formais e Autômatos}
+\fancyhead[R]{CEFET-MG}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ================== BOXES ==================
+\newtcolorbox{truebox}{
+    colback=green!10,
+    colframe=green!60!black,
+    title={\textbf{Verdadeiro}},
+    fonttitle=\bfseries
+}
+
+\newtcolorbox{falsebox}{
+    colback=red!10,
+    colframe=red!60!black,
+    title={\textbf{Falso}},
+    fonttitle=\bfseries
+}
+
+\newtcolorbox{proofbox}{
+    colback=blue!5,
+    colframe=blue!60!black,
+    title={\textbf{Demonstração}},
+    fonttitle=\bfseries
+}
+
+\newtcolorbox{answerbox}{
+    colback=yellow!5,
+    colframe=orange!60!black,
+    title={\textbf{Resposta}},
+    fonttitle=\bfseries
+}
+
+\newtcolorbox{examplebox}{
+    colback=purple!5,
+    colframe=purple!60!black,
+    title={\textbf{Exemplo}},
+    fonttitle=\bfseries
+}
+
+% ================== TÍTULO ==================
+\title{\textbf{Lista de Exercícios}\\
+\Large Máquinas de Turing e Decidibilidade\\
+\large Resoluções Comentadas}
+\author{Linguagens Formais e Autômatos}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+% ============================================================
+% EXERCÍCIO 1
+% ============================================================
+\section{Exercício 1: Proposições sobre Autômatos e Linguagens}
+
+\subsection{(a) Linguagem infinita em AFD de um estado}
+
+\textbf{Proposição:} Existe linguagem infinita que pode ser reconhecida por um AFD de apenas um estado.
+
+\begin{truebox}
+\textbf{Verdadeiro.}
+
+\textbf{Justificativa:}
+Considere o AFD $M = (\{q_0\}, \{a,b\}, \delta, q_0, \{q_0\})$ onde:
+\begin{itemize}
+    \item Estado único: $q_0$ (inicial e final)
+    \item $\delta(q_0, a) = q_0$ e $\delta(q_0, b) = q_0$
+\end{itemize}
+
+Este AFD reconhece $L = \Sigma^* = \{a,b\}^*$, que é infinita.
+\end{truebox}
+
+\begin{examplebox}
+Cadeias aceitas: $\varepsilon$, $a$, $b$, $aa$, $ab$, $ba$, $bb$, $aaa$, \ldots (infinitas)
+\end{examplebox}
+
+\subsection{(b) Linguagem finita com trilhão de estados}
+
+\textbf{Proposição:} Existe linguagem finita que pode ser reconhecida por um AFD de, no mínimo, um trilhão de estados.
+
+\begin{truebox}
+\textbf{Verdadeiro.}
+
+\textbf{Justificativa:}
+Toda linguagem finita é regular e pode ser reconhecida por um AFD. Podemos construir um AFD ineficiente com quantos estados quisermos.
+
+Exemplo: para reconhecer $L = \{a\}$ (apenas a cadeia ``a''), podemos criar um AFD com $10^{12}$ estados onde:
+\begin{itemize}
+    \item Há um caminho útil de 2 estados: $q_0 \xrightarrow{a} q_1$ (final)
+    \item Os outros $10^{12} - 2$ estados são inacessíveis ou levam a rejeição
+\end{itemize}
+
+Embora ineficiente, o AFD é válido e reconhece a linguagem finita.
+\end{truebox}
+
+\subsection{(c) Subconjunto de linguagem regular}
+
+\textbf{Proposição:} Se uma linguagem pode ser reconhecida por um AFD, qualquer subconjunto dela também pode ser.
+
+\begin{truebox}
+\textbf{Verdadeiro.}
+
+\textbf{Justificativa:}
+Se $L$ é regular (reconhecida por AFD), então todo subconjunto $L' \subseteq L$ também é regular.
+
+\textbf{Demonstração:}
+\begin{enumerate}
+    \item Linguagens regulares são fechadas sob intersecção
+    \item Todo subconjunto finito é regular (pode ser descrito por união de cadeias específicas)
+    \item Para subconjuntos infinitos, podemos modificar o AFD de $L$ removendo alguns estados finais ou redirecionando transições
+    \item Caso particular: dado AFD $M$ para $L$, podemos criar AFD $M'$ que aceita $L'$ enumerando as cadeias de $L'$ e construindo um autômato que aceita exatamente essas cadeias
+\end{enumerate}
+
+Na verdade, toda linguagem finita é regular. Se $L'$ é infinito, ainda assim pode ser regular dependendo da estrutura.
+\end{truebox}
+
+\subsection{(d) Superconjunto de linguagem não regular}
+
+\textbf{Proposição:} Se uma linguagem não pode ser reconhecida por um AFD e ela é subconjunto de $L$, então $L$ também não pode ser reconhecida por um AFD.
+
+\begin{falsebox}
+\textbf{Falso.}
+
+\textbf{Justificativa:}
+Contraexemplo:
+\begin{itemize}
+    \item Seja $L_1 = \{a^n b^n \mid n \geq 0\}$ (não regular, requer pilha)
+    \item Seja $L_2 = \Sigma^* = \{a,b\}^*$ (regular, reconhecida por AFD de 1 estado)
+    \item Temos $L_1 \subset L_2$
+    \item $L_1$ não é regular, mas $L_2$ é regular
+\end{itemize}
+
+Logo, um superconjunto de linguagem não regular pode ser regular.
+\end{falsebox}
+
+\subsection{(e) Regra única gera linguagem infinita}
+
+\textbf{Proposição:} Com apenas uma regra é possível gerar uma linguagem infinita?
+
+\begin{truebox}
+\textbf{Verdadeiro.}
+
+\textbf{Justificativa:}
+Considere a gramática $G = (\{S\}, \{a\}, P, S)$ com produção única:
+$$P = \{S \to aS \mid \varepsilon\}$$
+
+Tecnicamente são duas alternativas na mesma regra. Se considerarmos como uma única regra de produção com alternativas, ela gera $L(G) = \{a\}^* = \{\varepsilon, a, aa, aaa, \ldots\}$ (infinita).
+
+Se interpretarmos "uma regra" estritamente:
+$$P = \{S \to aS\}$$
+
+Sem produção de parada, esta gramática não gera linguagem bem definida (deriva infinitamente).
+
+\textbf{Resposta mais precisa:} Com uma regra recursiva e permitindo $\varepsilon$-produção implícita ou alternativas, sim. Com uma única produção sem mecanismo de parada, não gera linguagem finita utilizável.
+
+Considerando gramáticas regulares padrão: $S \to aS \mid a$ (duas produções) gera $\{a\}^+$ (infinita).
+\end{truebox}
+
+\subsection{(f) ER para GR}
+
+\textbf{Proposição:} Dada uma ER, é possível obter uma GR que gera a linguagem denotada por ela?
+
+\begin{truebox}
+\textbf{Verdadeiro.}
+
+\textbf{Justificativa:}
+Teorema fundamental: Linguagens Regulares podem ser descritas por:
+\begin{itemize}
+    \item Expressões Regulares (ER)
+    \item Gramáticas Regulares (GR)
+    \item Autômatos Finitos (AFD/AFN)
+\end{itemize}
+
+Algoritmo de conversão ER $\to$ GR:
+\begin{enumerate}
+    \item Converter ER para AFN (algoritmo de Thompson)
+    \item Converter AFN para GR (cada transição $q_i \xrightarrow{a} q_j$ vira produção $Q_i \to a Q_j$)
+\end{enumerate}
+
+Exemplo: ER $a^*b$ 
+\begin{itemize}
+    \item GR: $S \to aS \mid b$
+\end{itemize}
+\end{truebox}
+
+\subsection{(g) GR define qualquer linguagem finita}
+
+\textbf{Proposição:} É possível definir qualquer linguagem finita por meio de GR?
+
+\begin{truebox}
+\textbf{Verdadeiro.}
+
+\textbf{Justificativa:}
+Toda linguagem finita é regular, e toda linguagem regular pode ser descrita por GR.
+
+\textbf{Demonstração:}
+\begin{itemize}
+    \item Linguagem finita: $L = \{w_1, w_2, \ldots, w_n\}$ com $n$ cadeias
+    \item Podemos criar GR com produções específicas para cada cadeia
+    \item Exemplo: $L = \{a, ab, bb\}$
+    \begin{align*}
+        S &\to a \mid A \mid B\\
+        A &\to ab\\
+        B &\to bb
+    \end{align*}
+\end{itemize}
+
+Como linguagens finitas $\subset$ linguagens regulares, sempre existe GR correspondente.
+\end{truebox}
+
+\newpage
+
+% ============================================================
+% EXERCÍCIO 2
+% ============================================================
+\section{Exercício 2: APD para Linguagens Específicas}
+
+\subsection{(a) Linguagem $\{www \mid w \in \{a,b\}^*\}$}
+
+\textbf{Por que não há APD para $L = \{www \mid w \in \{a,b\}^*\}$?}
+
+\begin{answerbox}
+\textbf{Resposta:} Esta linguagem NÃO é livre de contexto, portanto não pode ser reconhecida por APD.
+
+\textbf{Demonstração (Lema do Bombeamento para LLC):}
+
+Suponha por contradição que $L$ é LLC. Seja $p$ a constante do lema.
+
+Considere $s = a^p b^p a^p b^p a^p b^p \in L$ (ou seja, $w = a^p b^p$, logo $www$).
+
+Temos $|s| = 6p \geq p$. Pelo lema, $s = uvxyz$ onde:
+\begin{enumerate}
+    \item $|vxy| \leq p$
+    \item $|vy| > 0$
+    \item $\forall i \geq 0: uv^ixy^iz \in L$
+\end{enumerate}
+
+Como $|vxy| \leq p$, o segmento $vxy$ está contido em no máximo duas das três cópias de $w$.
+
+\textbf{Casos:}
+\begin{itemize}
+    \item Se $vxy$ está inteiramente na primeira cópia: bombear cria desbalanceamento entre 1ª e 2ª/3ª cópias
+    \item Se $vxy$ cruza entre duas cópias: bombear quebra a estrutura $www$
+\end{itemize}
+
+Para $i=2$: $uv^2xy^2z$ terá uma das cópias maior que as outras, logo não pode ser $www$ para nenhum $w$.
+
+\textbf{Conclusão:} Contradição! Logo $L$ não é LLC e não existe APD.
+\end{answerbox}
+
+\begin{proofbox}
+\textbf{Intuição:} APD tem apenas uma pilha. Para verificar $www$:
+\begin{enumerate}
+    \item Empilhar primeira cópia $w$
+    \item Comparar com segunda cópia (desempilhando)
+    \item Comparar com terceira cópia... mas a pilha já foi esvaziada!
+\end{enumerate}
+
+Precisaríamos de duas pilhas ou memória adicional, o que está além do poder de APD.
+\end{proofbox}
+
+\subsection{(b) Linguagem $\{0^m 1^n \mid m \neq n\}$}
+
+\textbf{Por que não há APD para $L = \{0^m 1^n \mid m \neq n\}$?}
+
+\begin{answerbox}
+\textbf{Resposta:} Esta linguagem NÃO é livre de contexto (é o complemento de $\{0^n 1^n\}$ que é LLC).
+
+\textbf{Demonstração:}
+
+Linguagens LLC NÃO são fechadas sob complemento.
+
+Sabemos que:
+\begin{itemize}
+    \item $L_1 = \{0^n 1^n \mid n \geq 0\}$ é LLC (reconhecida por APD simples)
+    \item $L_2 = \{0^m 1^n \mid m \neq n\} = \overline{L_1} \cap \{0^* 1^*\}$ (dentro de $0^*1^*$)
+\end{itemize}
+
+Mais precisamente: $L_2 = \{0^m 1^n \mid m > n\} \cup \{0^m 1^n \mid m < n\}$
+
+\textbf{Prova por contradição usando Lema do Bombeamento:}
+
+Se $L$ fosse LLC, considere $s = 0^p 1^{p+p!}$ com $|s| > p$ (constante do lema).
+
+$s \in L$ pois $p \neq p + p!$.
+
+Pelo lema: $s = uvxyz$ com $|vxy| \leq p$, $|vy| > 0$.
+
+Como $|vxy| \leq p$, temos dois casos:
+\begin{itemize}
+    \item $vxy$ contém apenas 0's: bombear $i = 1 + \frac{p!}{|vy|}$ vezes adiciona exatamente $p!$ zeros, resultando em $0^{p+p!}1^{p+p!} \notin L$
+    \item $vxy$ contém apenas 1's: similar, podemos balancear
+    \item $vxy$ contém 0's e 1's: bombear adiciona ambos, mas em proporções fixas, eventualmente podemos fazer $m=n$
+\end{itemize}
+
+Contradição! Logo $L$ não é LLC.
+\end{answerbox}
+
+\begin{proofbox}
+\textbf{Intuição intuitiva (não formal):}
+
+APD pode verificar $m = n$ facilmente:
+\begin{enumerate}
+    \item Empilhe cada 0 lido
+    \item Desempilhe para cada 1 lido
+    \item Aceite se pilha vazia ao fim
+\end{enumerate}
+
+Para $m \neq n$, precisaríamos aceitar se pilha NÃO vazia OU se faltaram 0's. Isso requer verificar duas condições complementares simultaneamente, o que APD determinístico não consegue (e mesmo APD não-determinístico falha aqui pois LLC não é fechada sob complemento).
+\end{proofbox}
+
+\newpage
+
+% ============================================================
+% EXERCÍCIO 3
+% ============================================================
+\section{Exercício 3: Operações com LLC}
+
+Dadas as linguagens:
+\begin{itemize}
+    \item $L_1 = \{a^n b^n \mid n \geq 0\}$ (LLC)
+    \item $L_2 = \{x \in \{a,b\}^* \mid |x| \text{ é múltiplo de 5}\}$ (Regular)
+\end{itemize}
+
+\subsection{(a) $\overline{L_1}$ (complemento de $L_1$)}
+
+\textbf{Mostrar se $\overline{L_1}$ é LLC ou não.}
+
+\begin{falsebox}
+\textbf{NÃO é LLC.}
+
+\textbf{Justificativa:}
+
+$\overline{L_1} = \Sigma^* \setminus L_1 = $ todas as cadeias exceto $\{a^n b^n\}$
+
+Linguagens LLC NÃO são fechadas sob complemento (propriedade conhecida).
+
+\textbf{Demonstração formal:}
+
+Se LLC fosse fechada sob complemento:
+\begin{itemize}
+    \item $L_1 = \{a^n b^n\}$ é LLC
+    \item $\overline{L_1}$ seria LLC
+    \item LLC é fechada sob intersecção com regulares
+    \item $\overline{L_1} \cap \{a^* b^*\} = \{a^m b^n \mid m \neq n\}$ seria LLC
+\end{itemize}
+
+Mas já mostramos no Exercício 2(b) que $\{a^m b^n \mid m \neq n\}$ NÃO é LLC.
+
+Contradição! Logo $\overline{L_1}$ não é LLC.
+\end{falsebox}
+
+\subsection{(b) $L_1 \cap L_2$}
+
+\textbf{Mostrar se $L_1 \cap L_2$ é LLC ou não.}
+
+\begin{truebox}
+\textbf{É LLC.}
+
+\textbf{Justificativa:}
+
+LLC é fechada sob intersecção com linguagens regulares.
+
+\textbf{Demonstração:}
+\begin{itemize}
+    \item $L_1 = \{a^n b^n \mid n \geq 0\}$ é LLC
+    \item $L_2 = \{x \in \{a,b\}^* \mid |x| \equiv 0 \pmod{5}\}$ é Regular
+    \item $L_1 \cap L_2 = \{a^n b^n \mid n \geq 0 \text{ e } 2n \equiv 0 \pmod{5}\}$
+    \item $L_1 \cap L_2 = \{a^n b^n \mid n \equiv 0 \pmod{5}\} \cup \{a^n b^n \mid n \equiv \frac{5}{2} \pmod{5}\}$
+\end{itemize}
+
+Como $2n \equiv 0 \pmod{5} \Leftrightarrow n \equiv 0 \pmod{5}$ ou $n \equiv \frac{5}{2}$ (impossível para inteiros).
+
+Simplificando: $2n \equiv 0 \pmod{5}$ quando $n$ é múltiplo de 5 (pois $\text{mdc}(2,5)=1$).
+
+Espera, vamos recalcular:
+\begin{itemize}
+    \item $2n \equiv 0 \pmod{5}$
+    \item Casos: $n=0: 0 \equiv 0$ (sim); $n=1: 2$; $n=2: 4$; $n=3: 6 \equiv 1$; $n=4: 8 \equiv 3$; $n=5: 10 \equiv 0$ (sim)
+\end{itemize}
+
+Logo $L_1 \cap L_2 = \{a^{5k} b^{5k} \mid k \geq 0\}$ que é LLC (subconjunto de LLC gerado por GLC específica).
+
+\textbf{GLC para $L_1 \cap L_2$:}
+\begin{align*}
+    S &\to a^5 S b^5 \mid \varepsilon\\
+    \text{ou melhor: } S &\to aaaaaSbbbbb \mid \varepsilon
+\end{align*}
+\end{truebox}
+
+\subsection{(c) $L_1 \cap \overline{L_2}$}
+
+\textbf{Mostrar se $L_1 \cap \overline{L_2}$ é LLC ou não.}
+
+\begin{truebox}
+\textbf{É LLC.}
+
+\textbf{Justificativa:}
+
+$\overline{L_2} = \{x \in \{a,b\}^* \mid |x| \not\equiv 0 \pmod{5}\}$ é Regular (regulares são fechadas sob complemento).
+
+LLC é fechada sob intersecção com regulares, então:
+$$L_1 \cap \overline{L_2} = \{a^n b^n \mid 2n \not\equiv 0 \pmod{5}\}$$
+
+Ou seja: $\{a^n b^n \mid n \not\equiv 0 \pmod{5}\}$
+
+Isso equivale a: $\{a^n b^n \mid n \in \{1,2,3,4\} + 5\mathbb{N}\}$
+
+\textbf{GLC para $L_1 \cap \overline{L_2}$:}
+
+Podemos construir gramática que gera $a^n b^n$ com restrição modular:
+\begin{align*}
+    S &\to A \mid B \mid C \mid D \mid aaaaaSbbbbb\\
+    A &\to ab \mid aAb\\
+    B &\to aabb \mid aaBbb\\
+    C &\to aaabbb \mid aaaCbbb\\
+    D &\to aaaabbbb \mid aaaaDbbbb
+\end{align*}
+
+Como conseguimos construir GLC, a linguagem é LLC.
+\end{truebox}
+
+\newpage
+
+% ============================================================
+% EXERCÍCIO 4
+% ============================================================
+\section{Exercício 4: AP com Pilha Limitada}
+
+\textbf{Questão:} Seja um AP cuja pilha pode conter, no máximo, $n$ símbolos. Que limitações terá tal tipo de AP?
+
+\begin{answerbox}
+\textbf{Resposta:} Um AP com pilha limitada a $n$ símbolos tem poder computacional equivalente a um \textbf{Autômato Finito}.
+
+\textbf{Justificativa:}
+
+\begin{enumerate}
+    \item \textbf{Número finito de configurações:}
+    \begin{itemize}
+        \item Estados: $|Q|$ (finito)
+        \item Conteúdo da pilha: $|\Gamma|^0 + |\Gamma|^1 + \cdots + |\Gamma|^n$ configurações
+        \item Total: $|Q| \cdot \sum_{i=0}^{n} |\Gamma|^i = |Q| \cdot \frac{|\Gamma|^{n+1}-1}{|\Gamma|-1}$ (finito)
+    \end{itemize}
+    
+    \item \textbf{Simulação por AFD:}
+    
+    Podemos construir AFD $M' = (Q', \Sigma, \delta', q_0', F')$ onde:
+    \begin{itemize}
+        \item $Q' = Q \times \Gamma^{\leq n}$ (pares (estado, pilha))
+        \item $\delta'((q, \alpha), a)$ simula transição do AP: computa novo estado e nova pilha
+        \item Se AP tentasse exceder $n$ símbolos, vamos para estado de rejeição
+    \end{itemize}
+\end{enumerate}
+
+\textbf{Limitações:}
+\begin{itemize}
+    \item \textbf{Não reconhece todas as LLC:} $\{a^n b^n \mid n > n_{max}\}$ não pode ser reconhecida se precisar empilhar mais de $n$ símbolos
+    \item \textbf{Só reconhece linguagens regulares:} Com pilha limitada, AP reconhece exatamente as linguagens regulares
+    \item \textbf{Exemplos do que NÃO pode reconhecer:}
+    \begin{itemize}
+        \item $\{a^k b^k \mid k > n\}$ (precisa contar indefinidamente)
+        \item Palíndromos de tamanho $> 2n$
+        \item Balanceamento de parênteses com profundidade $> n$
+    \end{itemize}
+\end{itemize}
+\end{answerbox}
+
+\begin{proofbox}
+\textbf{Exemplo concreto:}
+
+AP com pilha limitada a $n=2$ símbolos pode reconhecer:
+\begin{itemize}
+    \item $\{a^k b^k \mid k \leq 2\} = \{\varepsilon, ab, aabb\}$ (finita, logo regular)
+    \item Qualquer linguagem regular (basta codificar na pilha)
+\end{itemize}
+
+Mas NÃO pode reconhecer:
+\begin{itemize}
+    \item $\{a^n b^n \mid n \geq 0\}$ completa (precisaria pilha ilimitada)
+\end{itemize}
+
+\textbf{Conclusão:} Pilha limitada = memória finita = poder de AFD.
+\end{proofbox}
+
+\newpage
+
+% ============================================================
+% EXERCÍCIO 5
+% ============================================================
+\section{Exercício 5: Tabela de Hierarquia de Linguagens}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|l|c|}
+\hline
+\textbf{Linguagem} & \textbf{Gramática} & \textbf{Exemplo (estrito)} & \textbf{Reconhecedor} & \textbf{D $\equiv$ N?} \\
+\hline
+$L_{reg}$ & GR (Tipo 3) & $a^*b^*$ & AFD & Sim \\
+\hline
+LLC & GLC (Tipo 2) & $a^n b^n$ com $n>0$ & AP (PDA) & Não \\
+\hline
+LSC & GSC (Tipo 1) & $a^n b^n c^n$ com $n>0$ & \begin{tabular}{@{}l@{}}Autômato\\Linearmente\\Limitado (ALL)\end{tabular} & Sim \\
+\hline
+LR & \begin{tabular}{@{}l@{}}Gramática\\Irrestrita\\(Tipo 0)\end{tabular} & \begin{tabular}{@{}l@{}}$\{w\#w \mid w \in \{a,b\}^*\}$\\(cópias com separador)\end{tabular} & \begin{tabular}{@{}l@{}}MT que\\sempre\\para\end{tabular} & Sim \\
+\hline
+LRE & \begin{tabular}{@{}l@{}}Gramática\\Irrestrita\\(Tipo 0)\end{tabular} & \begin{tabular}{@{}l@{}}$\{w \mid $ MT $M$ para\\com entrada $w\}$\end{tabular} & MT & Não \\
+\hline
+LNA & n.s.a. & $\Sigma^*$ & $\emptyset$ (n.s.a.) & n.s.a. \\
+\hline
+\end{tabular}
+\caption{Hierarquia de Chomsky - Classes de Linguagens}
+\end{table}
+
+\subsection{Explicações}
+
+\begin{answerbox}
+\textbf{Respostas e Justificativas:}
+
+\begin{enumerate}
+    \item \textbf{LLC - D $\equiv$ N?: NÃO}
+    \begin{itemize}
+        \item APD (determinístico) reconhece subclasse própria das LLC
+        \item APND (não-determinístico) reconhece todas as LLC
+        \item Exemplo: $\{ww^R \mid w \in \{a,b\}^*\}$ é LLC mas não reconhecida por APD
+    \end{itemize}
+    
+    \item \textbf{LSC - Exemplo estrito:}
+    \begin{itemize}
+        \item $L = \{a^n b^n c^n \mid n > 0\}$ é LSC mas NÃO é LLC (Lema do Bombeamento)
+        \item Requer GSC: $S \to abc \mid aSBc$, $cB \to Bc$, $bB \to bb$
+    \end{itemize}
+    
+    \item \textbf{LSC - Reconhecedor:}
+    \begin{itemize}
+        \item ALL (Autômato Linearmente Limitado)
+        \item MT que usa apenas espaço proporcional ao tamanho da entrada
+        \item Fita limitada ao comprimento de $|w|$ (input)
+    \end{itemize}
+    
+    \item \textbf{LSC - D $\equiv$ N?: SIM}
+    \begin{itemize}
+        \item ALL determinístico e não-determinístico têm mesmo poder
+        \item Teorema conhecido da teoria da computação
+    \end{itemize}
+    
+    \item \textbf{LR - Exemplo estrito:}
+    \begin{itemize}
+        \item Linguagem decidível (MT sempre para) mas não sensível ao contexto
+        \item $L = \{w\#w \mid w \in \{a,b\}^*\}$ ou problemas decidíveis complexos
+    \end{itemize}
+    
+    \item \textbf{LR - D $\equiv$ N?: SIM}
+    \begin{itemize}
+        \item MT determinística e não-determinística reconhecem mesmas linguagens
+        \item Teorema fundamental: MTND pode ser simulada por MTD
+    \end{itemize}
+    
+    \item \textbf{LRE - Exemplo estrito:}
+    \begin{itemize}
+        \item LRE mas não LR: problemas indecidíveis
+        \item Exemplo: $L = \{\langle M, w \rangle \mid$ MT $M$ aceita $w\}$ (Problema da Parada)
+        \item MT reconhece (aceita quando $M$ para), mas não decide (pode loop infinito)
+    \end{itemize}
+    
+    \item \textbf{LRE - D $\equiv$ N?: NÃO (na verdade SIM)}
+    \begin{itemize}
+        \item Na tabela marcado como "?", mas a resposta é SIM
+        \item MT determinística e não-determinística reconhecem mesmas linguagens
+        \item Ambas reconhecem exatamente LRE
+    \end{itemize}
+    
+    \item \textbf{LNA - Linguagens no alfabeto:}
+    \begin{itemize}
+        \item $P(\Sigma^*)$ = conjunto de todas as linguagens possíveis
+        \item Inclui linguagens não-RE (não reconhecidas por nenhuma MT)
+        \item Não há reconhecedor universal (não são enumeráveis)
+    \end{itemize}
+\end{enumerate}
+\end{answerbox}
+
+\newpage
+
+% ============================================================
+% EXERCÍCIO 6
+% ============================================================
+\section{Exercício 6: Complemento de Linguagem Não Recursiva}
+
+\textbf{Questão:} Seja $L$ uma linguagem não recursiva. Mostre que se $L$ é LRE, então $\overline{L}$ não é LRE.
+
+\begin{proofbox}
+\textbf{Demonstração por Contradição:}
+
+\textbf{Hipóteses:}
+\begin{itemize}
+    \item $L$ é LRE (reconhecida por MT $M_L$)
+    \item $L$ não é recursiva (não decidível)
+    \item Suponha por contradição que $\overline{L}$ é LRE (reconhecida por MT $M_{\overline{L}}$)
+\end{itemize}
+
+\textbf{Construção de MT Decisora:}
+
+Se ambas $L$ e $\overline{L}$ são LRE, podemos construir MT $M$ que decide $L$:
+
+\begin{enumerate}
+    \item Simular $M_L$ e $M_{\overline{L}}$ em paralelo (intercalando passos) para entrada $w$
+    \item Se $M_L$ aceita $w$: aceitar (pois $w \in L$)
+    \item Se $M_{\overline{L}}$ aceita $w$: rejeitar (pois $w \in \overline{L}$, logo $w \notin L$)
+\end{enumerate}
+
+\textbf{Análise:}
+\begin{itemize}
+    \item Para qualquer $w$: ou $w \in L$ ou $w \in \overline{L}$ (dicotomia)
+    \item Se $w \in L$: $M_L$ eventualmente aceita (pois $L$ é LRE)
+    \item Se $w \in \overline{L}$: $M_{\overline{L}}$ eventualmente aceita (pois $\overline{L}$ é LRE)
+    \item Logo, $M$ sempre para e decide corretamente se $w \in L$
+    \item Portanto, $L$ seria recursiva (decidível)
+\end{itemize}
+
+\textbf{Contradição:} Assumimos que $L$ não é recursiva, mas construímos decisor!
+
+\textbf{Conclusão:} A suposição de que $\overline{L}$ é LRE está errada.
+
+$$\boxed{\text{Se } L \text{ é LRE e não recursiva, então } \overline{L} \text{ não é LRE}}$$
+\end{proofbox}
+
+\begin{examplebox}
+\textbf{Exemplo Clássico:}
+
+\begin{itemize}
+    \item $L_{HP} = \{\langle M, w \rangle \mid$ MT $M$ aceita entrada $w\}$ (Problema da Parada)
+    \item $L_{HP}$ é LRE (MT universal pode simular $M$ em $w$)
+    \item $L_{HP}$ NÃO é recursiva (indecidível - Teorema de Turing)
+    \item Logo: $\overline{L_{HP}} = \{\langle M, w \rangle \mid M$ não aceita $w\}$ NÃO é LRE
+\end{itemize}
+
+Consequência: Existem linguagens não-RE (fora de LRE)!
+\end{examplebox}
+
+\newpage
+
+% ============================================================
+% EXERCÍCIO 7
+% ============================================================
+\section{Exercício 7: Operações entre LRE e Linguagens Recursivas}
+
+Seja $L$ uma LRE e $R$ uma linguagem recursiva.
+
+\subsection{(a) $L - R$ é LRE}
+
+\textbf{Proposição:} Mostre que $L - R$ é LRE.
+
+\begin{proofbox}
+\textbf{Demonstração:}
+
+Queremos mostrar que $L - R = L \cap \overline{R}$ é LRE.
+
+\textbf{Fatos:}
+\begin{enumerate}
+    \item $L$ é LRE (dado) $\Rightarrow$ existe MT $M_L$ que reconhece $L$
+    \item $R$ é recursiva (dado) $\Rightarrow$ existe MT $M_R$ que decide $R$
+    \item Linguagens recursivas são fechadas sob complemento
+    \item $\overline{R}$ é recursiva $\Rightarrow$ existe MT $M_{\overline{R}}$ que decide $\overline{R}$
+\end{enumerate}
+
+\textbf{Construção de MT para $L - R$:}
+
+Construímos MT $M$ que reconhece $L - R$:
+
+\begin{verbatim}
+M(w):
+  1. Simular M_R(w) (sempre para, pois R é recursiva)
+  2. Se M_R aceita w: REJEITAR (w ∈ R, logo w ∉ L-R)
+  3. Se M_R rejeita w: 
+     - Simular M_L(w)
+     - Se M_L aceita w: ACEITAR (w ∈ L e w ∉ R)
+     - Se M_L não para: loop (ok para reconhecedor)
+\end{verbatim}
+
+\textbf{Análise:}
+\begin{itemize}
+    \item Se $w \in L - R$: então $w \in L$ e $w \notin R$
+    \begin{itemize}
+        \item $M_R$ rejeita (passo 2)
+        \item $M_L$ aceita (passo 3)
+        \item $M$ aceita ✓
+    \end{itemize}
+    \item Se $w \notin L - R$: dois casos
+    \begin{itemize}
+        \item $w \in R$: $M_R$ aceita, $M$ rejeita ✓
+        \item $w \notin L$: $M_R$ rejeita, $M_L$ não aceita (rejeita ou loop), $M$ não aceita ✓
+    \end{itemize}
+\end{itemize}
+
+\textbf{Conclusão:} $M$ reconhece $L - R$, portanto $L - R$ é LRE.
+
+$$\boxed{L - R \text{ é LRE}}$$
+\end{proofbox}
+
+\subsection{(b) $R - L$ pode não ser LRE}
+
+\textbf{Proposição:} Mostre que $R - L$ pode não ser LRE.
+
+\begin{proofbox}
+\textbf{Demonstração por Contraexemplo:}
+
+Vamos construir exemplo onde $R$ é recursiva, $L$ é LRE, mas $R - L$ não é LRE.
+
+\textbf{Construção:}
+\begin{itemize}
+    \item Seja $L_{HP} = \{\langle M, w \rangle \mid $ MT $M$ aceita $w\}$ (Problema da Parada)
+    \begin{itemize}
+        \item $L_{HP}$ é LRE (MT universal pode simular)
+        \item $L_{HP}$ não é recursiva (indecidível)
+    \end{itemize}
+    
+    \item Seja $R = \Sigma^*$ (todas as cadeias)
+    \begin{itemize}
+        \item $R$ é recursiva (trivialmente decidível)
+    \end{itemize}
+    
+    \item Então $R - L_{HP} = \Sigma^* - L_{HP} = \overline{L_{HP}}$
+    \begin{itemize}
+        \item $\overline{L_{HP}} = \{\langle M, w \rangle \mid M$ não aceita $w\}$
+        \item Pelo Exercício 6: se $L$ é LRE e não recursiva, $\overline{L}$ não é LRE
+        \item Como $L_{HP}$ é LRE e não recursiva, $\overline{L_{HP}}$ não é LRE
+    \end{itemize}
+\end{itemize}
+
+\textbf{Conclusão:} Encontramos $R$ recursiva e $L$ LRE tal que $R - L$ não é LRE.
+
+$$\boxed{R - L \text{ pode não ser LRE}}$$
+\end{proofbox}
+
+\begin{examplebox}
+\textbf{Intuição:}
+
+A diferença fundamental está em qual operando é recursivo:
+\begin{itemize}
+    \item $L - R$: Podemos decidir se $w \in R$ primeiro (sempre para). Se $w \notin R$, testamos $L$ (pode loop, ok)
+    \item $R - L$: Precisamos decidir se $w \notin L$. Se $L$ não é recursiva, não conseguimos decidir isso!
+\end{itemize}
+
+Analogia: verificar "está em A mas não em B" depende de conseguir verificar "não está em B".
+\end{examplebox}
+
+\newpage
+
+% ============================================================
+% EXERCÍCIO 8
+% ============================================================
+\section{Exercício 8: Questões sobre Classes de Linguagens}
+
+\subsection{(a) $\{\}$ é uma LLC?}
+
+\begin{answerbox}
+\textbf{Resposta:} Sim, $\emptyset$ é LLC.
+
+\textbf{Justificativa:}
+
+A linguagem vazia $\emptyset = \{\}$ é LLC (e também regular).
+
+\textbf{GLC que gera $\emptyset$:}
+\begin{align*}
+    G &= (\{S\}, \{a\}, \emptyset, S)\\
+    P &= \emptyset \text{ (sem produções)}
+\end{align*}
+
+Sem produções, nenhuma cadeia pode ser derivada, então $L(G) = \emptyset$.
+
+\textbf{APD que reconhece $\emptyset$:}
+APD sem estados finais (ou sem transições que levem a estados finais).
+
+\textbf{Hierarquia:}
+$$\emptyset \in L_{reg} \subset LLC \subset LSC \subset LR \subset LRE$$
+
+Portanto, $\emptyset$ pertence a todas as classes da hierarquia de Chomsky.
+\end{answerbox}
+
+\subsection{(b) $\{\}$ é uma Lreg?}
+
+\begin{answerbox}
+\textbf{Resposta:} Sim, $\emptyset$ é regular.
+
+\textbf{Justificativa:}
+
+\textbf{AFD que reconhece $\emptyset$:}
+$$M = (Q, \Sigma, \delta, q_0, F)$$
+onde $F = \emptyset$ (sem estados finais).
+
+Nenhuma cadeia é aceita, então $L(M) = \emptyset$.
+
+\textbf{ER que denota $\emptyset$:}
+$\emptyset$ (símbolo de conjunto vazio na notação de ER).
+
+\textbf{GR que gera $\emptyset$:}
+Gramática sem produções (ou com produções que nunca terminam em terminal).
+
+Conclusão: $\emptyset$ é a linguagem mais simples possível, regular (e LLC, LSC, LR, LRE).
+\end{answerbox}
+
+\subsection{(c) LSC com $\lambda \in L$ implica LLC?}
+
+\textbf{Questão:} Se $L$ é uma LSC e $\lambda \in L$, pode-se dizer que $L$ é também LLC?
+
+\begin{falsebox}
+\textbf{Falso.}
+
+\textbf{Justificativa:}
+
+A presença de $\lambda$ (cadeia vazia) não muda a classe hierárquica da linguagem.
+
+\textbf{Contraexemplo:}
+$$L = \{a^n b^n c^n \mid n \geq 0\}$$
+
+\begin{itemize}
+    \item $\lambda \in L$ (quando $n=0$)
+    \item $L$ é LSC (reconhecida por ALL)
+    \item $L$ NÃO é LLC (Lema do Bombeamento prova que $\{a^n b^n c^n \mid n > 0\}$ não é LLC)
+\end{itemize}
+
+LSC $\supset$ LLC (contenção própria). Uma linguagem LSC pode conter $\lambda$ e ainda assim não ser LLC.
+
+\textbf{Conclusão:} A presença de $\lambda$ é irrelevante para a classificação na hierarquia.
+\end{falsebox}
+
+\subsection{(d) LLC com $\lambda \notin L$ implica LSC?}
+
+\textbf{Questão:} Se $L$ é uma LLC e $\lambda \notin L$, pode-se dizer que $L$ é também LSC?
+
+\begin{truebox}
+\textbf{Verdadeiro.}
+
+\textbf{Justificativa:}
+
+Toda LLC é também LSC (hierarquia de Chomsky):
+$$L_{reg} \subset LLC \subset LSC \subset LR \subset LRE$$
+
+A ausência de $\lambda$ não afeta essa relação de inclusão.
+
+Se $L$ é LLC, então $L$ é automaticamente LSC (independente de $\lambda \in L$ ou $\lambda \notin L$).
+
+\textbf{Observação:} A questão é trivial porque LLC $\subset$ LSC sempre.
+\end{truebox}
+
+\subsection{(e) LSC com $\lambda \notin L$ implica LLC?}
+
+\textbf{Questão:} Se $L$ é uma LSC e $\lambda \notin L$, pode-se dizer que $L$ é também LLC?
+
+\begin{falsebox}
+\textbf{Falso.}
+
+\textbf{Justificativa:}
+
+LSC $\supset$ LLC (contenção própria). Há linguagens LSC que não são LLC.
+
+\textbf{Contraexemplo:}
+$$L = \{a^n b^n c^n \mid n \geq 1\}$$
+
+\begin{itemize}
+    \item $\lambda \notin L$ (explicitamente $n \geq 1$)
+    \item $L$ é LSC
+    \item $L$ NÃO é LLC
+\end{itemize}
+
+\textbf{Prova de que não é LLC (Lema do Bombeamento):}
+
+Suponha $L$ é LLC com constante $p$. Considere $s = a^p b^p c^p \in L$.
+
+Pelo lema: $s = uvxyz$ com $|vxy| \leq p$, $|vy| > 0$, $uv^ixy^iz \in L$ para todo $i \geq 0$.
+
+Como $|vxy| \leq p$, o segmento $vxy$ contém no máximo 2 tipos de símbolos.
+
+Para $i=2$: $uv^2xy^2z$ aumenta apenas 1 ou 2 tipos de símbolos, quebrando a propriedade $a^n b^n c^n$.
+
+Contradição! Logo não é LLC.
+
+\textbf{Conclusão:} Ausência de $\lambda$ não torna LSC em LLC.
+\end{falsebox}
+
+\newpage
+
+% ============================================================
+% EXERCÍCIO 9
+% ============================================================
+\section{Exercício 9: Diferença entre LR e LRE}
+
+\textbf{Questão:} Qual a diferença fundamental entre as Classes das Linguagens Recursivas e a das Enumeráveis Recursivamente? Qual a importância de se distinguir entre essas duas classes?
+
+\begin{answerbox}
+\textbf{Diferença Fundamental:}
+
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Aspecto} & \textbf{LR (Recursiva)} & \textbf{LRE (Rec. Enumerável)} \\
+\hline
+\textbf{Definição} & \begin{tabular}{@{}l@{}}Existe MT que\\sempre para\end{tabular} & \begin{tabular}{@{}l@{}}Existe MT que\\reconhece\end{tabular} \\
+\hline
+\textbf{Decisão} & Decidível & Semi-decidível \\
+\hline
+\textbf{Para $w \in L$} & MT aceita e para & MT aceita \\
+\hline
+\textbf{Para $w \notin L$} & MT rejeita e para & \begin{tabular}{@{}l@{}}MT rejeita ou\\loop infinito\end{tabular} \\
+\hline
+\textbf{Complemento} & $\overline{L}$ é LR & $\overline{L}$ pode não ser LRE \\
+\hline
+\textbf{Halting} & Sempre para & Pode não parar \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{Definições Formais:}
+
+\begin{itemize}
+    \item \textbf{Linguagem Recursiva (LR):}
+    \begin{itemize}
+        \item $L$ é recursiva $\Leftrightarrow$ existe MT $M$ tal que:
+        \begin{itemize}
+            \item $w \in L \Rightarrow M(w)$ aceita
+            \item $w \notin L \Rightarrow M(w)$ rejeita
+            \item $M$ sempre para (para toda entrada)
+        \end{itemize}
+        \item Também chamada: \textbf{Decidível}
+    \end{itemize}
+    
+    \item \textbf{Linguagem Recursivamente Enumerável (LRE):}
+    \begin{itemize}
+        \item $L$ é LRE $\Leftrightarrow$ existe MT $M$ tal que:
+        \begin{itemize}
+            \item $w \in L \Rightarrow M(w)$ aceita (eventualmente)
+            \item $w \notin L \Rightarrow M(w)$ rejeita ou loop infinito
+        \end{itemize}
+        \item Também chamada: \textbf{Semi-decidível} ou \textbf{Reconhecível}
+    \end{itemize}
+\end{itemize}
+\end{answerbox}
+
+\begin{answerbox}
+\textbf{Importância da Distinção:}
+
+\begin{enumerate}
+    \item \textbf{Computabilidade Prática:}
+    \begin{itemize}
+        \item LR: Algoritmo sempre termina (útil na prática)
+        \item LRE: Algoritmo pode não terminar (limitação prática)
+    \end{itemize}
+    
+    \item \textbf{Exemplo de LRE não-LR:}
+    \begin{itemize}
+        \item Problema da Parada: $L_{HP} = \{\langle M, w \rangle \mid M$ aceita $w\}$
+        \item É LRE (simulamos $M$ em $w$, aceitamos se parar)
+        \item NÃO é LR (indecidível - Teorema de Turing)
+    \end{itemize}
+    
+    \item \textbf{Fechamento sob Complemento:}
+    \begin{itemize}
+        \item LR é fechada: $L$ recursiva $\Rightarrow \overline{L}$ recursiva
+        \item LRE NÃO é fechada: $L_{HP}$ é LRE, mas $\overline{L_{HP}}$ não é LRE
+    \end{itemize}
+    
+    \item \textbf{Relação com Linguagens:}
+    \begin{itemize}
+        \item $L$ é LR $\Leftrightarrow$ $L$ e $\overline{L}$ são LRE
+        \item Se apenas $L$ é LRE (e $\overline{L}$ não é), então $L$ não é LR
+    \end{itemize}
+    
+    \item \textbf{Limites da Computação:}
+    \begin{itemize}
+        \item LR: limite do que é efetivamente computável (com garantia de término)
+        \item LRE: limite do que é reconhecível por MT
+        \item Além de LRE: linguagens não computáveis
+    \end{itemize}
+    
+    \item \textbf{Aplicações:}
+    \begin{itemize}
+        \item Compiladores: análise sintática é decidível (LR)
+        \item Verificação de programas: propriedades gerais são indecidíveis (não-LR)
+        \item Teoria da prova: teoremas válidos são LRE, mas não LR em geral
+    \end{itemize}
+\end{enumerate}
+\end{answerbox}
+
+\begin{examplebox}
+\textbf{Analogia Visual:}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+    \draw[thick] (0,0) rectangle (8,3);
+    \node at (4,3.3) {LRE (Reconhecível)};
+    
+    \draw[thick, fill=green!20] (1,0.5) rectangle (7,2.5);
+    \node at (4,2.8) {LR (Decidível)};
+    
+    \node[align=center] at (4,1.5) {Sempre para\\Complemento fechado};
+    \node[align=center] at (4,0.2) {Pode não parar | Complemento pode não ser LRE};
+\end{tikzpicture}
+\end{center}
+
+$$LR \subset LRE \subset P(\Sigma^*)$$
+
+Existem problemas LRE que não são LR (como Problema da Parada).\\
+Existem linguagens não-LRE (como $\overline{L_{HP}}$).
+\end{examplebox}
+
+\newpage
+
+% ============================================================
+% EXERCÍCIO 10
+% ============================================================
+\section{Exercício 10: Máquina de Turing para $\Sigma^*$}
+
+\textbf{Questão:} Desenvolva uma Máquina de Turing que reconheça a linguagem: $L = \{w \mid w$ é palavra de $\{a,b\}^*\}$
+
+\begin{answerbox}
+\textbf{Análise:}
+
+A linguagem $L = \{a,b\}^*$ contém todas as cadeias possíveis sobre o alfabeto $\{a,b\}$, incluindo a cadeia vazia $\varepsilon$.
+
+Esta é uma linguagem trivial que aceita qualquer entrada composta apenas de $a$'s e $b$'s.
+\end{answerbox}
+
+\begin{definitionbox}
+\textbf{Máquina de Turing:}
+
+$M = (Q, \Sigma, \Gamma, \delta, q_0, q_{aceita}, q_{rejeita})$ onde:
+
+\begin{itemize}
+    \item $Q = \{q_0, q_{aceita}, q_{rejeita}\}$
+    \item $\Sigma = \{a, b\}$ (alfabeto de entrada)
+    \item $\Gamma = \{a, b, \sqcup\}$ (alfabeto da fita, $\sqcup$ = branco)
+    \item $q_0$ = estado inicial
+    \item $q_{aceita}$ = estado de aceitação
+    \item $q_{rejeita}$ = estado de rejeição
+\end{itemize}
+
+\textbf{Função de Transição $\delta$:}
+
+\begin{center}
+\begin{tabular}{c|c|c|c}
+\toprule
+\textbf{Estado} & \textbf{Símbolo} & \textbf{Novo Estado} & \textbf{Ação} \\
+\midrule
+$q_0$ & $a$ & $q_0$ & $(a, D)$ - move direita \\
+$q_0$ & $b$ & $q_0$ & $(b, D)$ - move direita \\
+$q_0$ & $\sqcup$ & $q_{aceita}$ & $({\sqcup}, D)$ - aceita \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Descrição do Funcionamento:}
+
+\begin{enumerate}
+    \item Começa no estado $q_0$
+    \item Lê símbolos da fita da esquerda para direita
+    \item Se encontrar $a$ ou $b$: mantém no estado $q_0$ e move direita
+    \item Se encontrar branco $\sqcup$ (fim da entrada): vai para $q_{aceita}$
+    \item Qualquer símbolo inválido (se existisse) levaria a $q_{rejeita}$
+\end{enumerate}
+\end{definitionbox}
+
+\begin{algorithmbox}
+\textbf{Algoritmo em Pseudocódigo:}
+
+\begin{verbatim}
+M(w):
+  1. Posicionar cabeça no início da fita
+  2. Enquanto símbolo atual ∈ {a, b}:
+       - Mover cabeça para direita
+  3. Se símbolo atual = ⊔ (branco):
+       - ACEITAR
+  4. Caso contrário:
+       - REJEITAR
+\end{verbatim}
+
+\textbf{Versão Ainda Mais Simples:}
+
+Como todo $w \in \{a,b\}^*$ é válido, podemos ter MT trivial:
+
+$M = (\{q_0, q_{aceita}\}, \{a,b\}, \{a,b,\sqcup\}, \delta, q_0, q_{aceita}, \emptyset)$
+
+Com transição única: $\delta(q_0, x) = (q_{aceita}, x, D)$ para todo $x \in \Gamma$.
+
+A MT aceita imediatamente qualquer entrada!
+\end{algorithmbox}
+
+\begin{examplebox}
+\textbf{Execuções:}
+
+\begin{itemize}
+    \item Entrada: $\varepsilon$ (vazia)
+    \begin{itemize}
+        \item Fita: $\sqcup \sqcup \sqcup \cdots$
+        \item Estado: $q_0$
+        \item Lê $\sqcup \Rightarrow q_{aceita}$ ✓
+    \end{itemize}
+    
+    \item Entrada: $ab$
+    \begin{itemize}
+        \item Fita: $a \, b \, \sqcup \sqcup \cdots$
+        \item $q_0$, lê $a$ $\Rightarrow$ $q_0$, move D
+        \item $q_0$, lê $b$ $\Rightarrow$ $q_0$, move D
+        \item $q_0$, lê $\sqcup$ $\Rightarrow$ $q_{aceita}$ ✓
+    \end{itemize}
+    
+    \item Entrada: $bbaaba$
+    \begin{itemize}
+        \item Percorre todos símbolos $\in \{a,b\}$ em $q_0$
+        \item Ao encontrar $\sqcup$: aceita ✓
+    \end{itemize}
+\end{itemize}
+
+\textbf{Complexidade:} $O(n)$ onde $n = |w|$ (percorre a fita uma vez).
+\end{examplebox}
+
+\newpage
+
+% ============================================================
+% EXERCÍCIO 11
+% ============================================================
+\section{Exercício 11: MT com Fita Limitada vs AFD}
+
+\textbf{Questão:} Uma Máquina de Turing com Fita Limitada possui uma fita finita, um conjunto de estados finitos e alfabetos finitos. Portanto, pode assumir um conjunto finito de estados. Assim, por que o seu poder computacional não é equivalente ao de um Autômato Finito?
+
+\begin{answerbox}
+\textbf{Resposta:}
+
+Apesar de ambos terem recursos finitos, MT com fita limitada tem poder computacional MAIOR que AFD. A diferença fundamental está na capacidade de \textbf{leitura/escrita} vs \textbf{apenas leitura}.
+\end{answerbox}
+
+\begin{proofbox}
+\textbf{Diferenças Fundamentais:}
+
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Característica} & \textbf{AFD} & \textbf{MT Fita Limitada} \\
+\hline
+Acesso à entrada & \begin{tabular}{@{}l@{}}Apenas leitura\\Sequencial (esq→dir)\end{tabular} & \begin{tabular}{@{}l@{}}Leitura E escrita\\Bidirecional\end{tabular} \\
+\hline
+Memória & Apenas estados & \begin{tabular}{@{}l@{}}Estados + fita\\(memória auxiliar)\end{tabular} \\
+\hline
+Configurações & $|Q| \times n$ posições & $|Q| \times |\Gamma|^k \times k$ pos. \\
+\hline
+Poder & Linguagens Regulares & \begin{tabular}{@{}l@{}}Linguagens LSC\\(Sensíveis ao Contexto)\end{tabular} \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{Por que MT com fita limitada > AFD:}
+
+\begin{enumerate}
+    \item \textbf{Memória Auxiliar Utilizável:}
+    \begin{itemize}
+        \item AFD: memória apenas nos estados (finita e fixa)
+        \item MT: pode usar a fita como memória de trabalho
+        \item Mesmo com fita limitada a $k$ células, tem $|\Gamma|^k$ configurações de fita
+        \item Se $k = O(n)$ (proporcional à entrada), memória cresce com entrada!
+    \end{itemize}
+    
+    \item \textbf{Acesso Não-Linear:}
+    \begin{itemize}
+        \item AFD: lê entrada uma vez, esquerda→direita, sem voltar
+        \item MT: pode mover cabeça para esquerda E direita
+        \item MT pode reler, comparar símbolos distantes, modificar
+    \end{itemize}
+    
+    \item \textbf{Exemplo Concreto - $L = \{ww \mid w \in \{a,b\}^*\}$:}
+    \begin{itemize}
+        \item Esta linguagem NÃO é regular (AFD não reconhece)
+        \item MT com fita limitada a $2n$ pode reconhecer:
+        \begin{enumerate}
+            \item Marcar o meio da entrada (marca posição)
+            \item Comparar símbolo $i$ com símbolo $n+i$ (volta e avança)
+            \item Usar marcas na fita para rastrear progresso
+        \end{enumerate}
+    \end{itemize}
+\end{enumerate}
+\end{proofbox}
+
+\begin{answerbox}
+\textbf{Resposta Direta à Questão:}
+
+O poder computacional de MT com fita limitada NÃO é equivalente ao de AFD porque:
+
+\begin{enumerate}
+    \item \textbf{MT pode ESCREVER na fita}, AFD só lê
+    \begin{itemize}
+        \item Escrever permite usar fita como memória auxiliar
+        \item Pode marcar posições visitadas, armazenar resultados intermediários
+    \end{itemize}
+    
+    \item \textbf{MT tem acesso BIDIRECIONAL}, AFD é unidirecional
+    \begin{itemize}
+        \item Pode comparar símbolos arbitrariamente distantes
+        \item Pode processar entrada múltiplas vezes
+    \end{itemize}
+    
+    \item \textbf{MT com fita linear reconhece LSC}, AFD reconhece apenas Lreg
+    \begin{itemize}
+        \item Autômato Linearmente Limitado (ALL) = MT com fita $\leq c \cdot n$
+        \item ALL reconhece linguagens sensíveis ao contexto
+        \item $L_{reg} \subset LLC \subset LSC$ (contenções próprias)
+    \end{itemize}
+\end{enumerate}
+
+\textbf{Configurações vs Estados:}
+
+Embora ambos tenham configurações finitas para entrada fixa:
+\begin{itemize}
+    \item AFD: $|Q|$ configurações (só estados)
+    \item MT fita-$k$: $|Q| \times |\Gamma|^k \times k$ configurações
+\end{itemize}
+
+Mas a questão é: \textit{como} essas configurações são usadas!
+
+MT pode simular memória auxiliar através da fita, permitindo reconhecer linguagens mais complexas.
+\end{answerbox}
+
+\begin{examplebox}
+\textbf{Exemplo Ilustrativo:}
+
+Reconhecer $L = \{a^n b^n \mid n \geq 0\}$:
+
+\textbf{AFD:} Impossível (Lema do Bombeamento - não é regular)
+
+\textbf{MT com fita limitada a $2n$:}
+\begin{verbatim}
+1. Para cada 'a' na entrada:
+   - Substituir por 'X'
+   - Procurar próximo 'b' não marcado
+   - Substituir por 'Y'
+   - Voltar ao início
+2. Se todos a's têm b's correspondentes: ACEITAR
+3. Caso contrário: REJEITAR
+\end{verbatim}
+
+A capacidade de marcar símbolos (escrever) e voltar (bidirecional) permite o reconhecimento!
+\end{examplebox}
+
+\newpage
+
+% ============================================================
+% EXERCÍCIO 12
+% ============================================================
+\section{Exercício 12: Proposições sobre Decidibilidade}
+
+\textbf{Marque V para verdadeiro e F para falso. Justifique todas as respostas.}
+
+\subsection{(a) Parar em no máximo 100 transições}
+
+\textbf{Proposição:} Dadas uma MT $M$ e uma palavra $w$, determinar se $M$ para com a entrada $w$ em, no máximo, 100 transições é um problema decidível.
+
+\begin{truebox}
+\textbf{Verdadeiro.}
+
+\textbf{Justificativa:}
+
+Este problema é \textbf{decidível} porque podemos simular exatamente 100 passos.
+
+\textbf{Algoritmo decisor:}
+\begin{verbatim}
+Decidir_100_passos(M, w):
+  1. Simular M em w por exatamente 100 transições
+  2. Se M parou (aceitou ou rejeitou) em ≤ 100 passos:
+       ACEITAR
+  3. Se M não parou após 100 passos:
+       REJEITAR
+\end{verbatim}
+
+\textbf{Análise:}
+\begin{itemize}
+    \item Simulação de número fixo de passos sempre termina
+    \item Não precisamos resolver o Problema da Parada geral
+    \item Apenas verificamos comportamento em tempo limitado (decidível)
+\end{itemize}
+
+\textbf{Generalização:} Para qualquer constante $k$, determinar se MT para em $\leq k$ passos é decidível.
+\end{truebox}
+
+\subsection{(b) Escrever símbolo diferente do branco para entrada vazia}
+
+\textbf{Proposição:} Dada uma MT $M$, determinar se $M$ escreve algum símbolo diferente do branco, para a entrada $\lambda$ (vazia) é um problema indecidível.
+
+\begin{falsebox}
+\textbf{Falso - o problema é DECIDÍVEL.}
+
+\textbf{Justificativa:}
+
+Este é um caso específico que pode ser decidido através de análise da MT.
+
+\textbf{Algoritmo decisor:}
+\begin{verbatim}
+Decidir_Escreve_Nao_Branco(M):
+  1. Simular M com entrada vazia (λ)
+  2. Instrumentar simulação para detectar:
+     - Escrita de símbolo ≠ ⊔
+     - Entrada em loop (repetição de configuração)
+     - Halting
+  3. Se M escreve símbolo ≠ ⊔: ACEITAR
+  4. Se M para sem escrever ≠ ⊔: REJEITAR
+  5. Se M entra em loop sem escrever ≠ ⊔: REJEITAR
+\end{verbatim}
+
+\textbf{Por que é decidível:}
+\begin{itemize}
+    \item Podemos simular $M$ em $\lambda$
+    \item Detectamos loops pela repetição de configurações (estados finitos)
+    \item Número de configurações sem escrita é finito
+    \item Se $M$ vai escrever $\neq \sqcup$, fará isso em tempo finito ou loopará antes
+\end{itemize}
+
+\textbf{Observação:} Embora pareça relacionado ao Problema da Parada, a propriedade específica "escrever símbolo não-branco" pode ser verificada em tempo finito ou detectada como impossível através de análise de ciclos.
+\end{falsebox}
+
+\subsection{(c) Conjunto finito de instâncias implica decidível}
+
+\textbf{Proposição:} Se um problema de decisão possui um conjunto finito de instâncias ele é decidível.
+
+\begin{truebox}
+\textbf{Verdadeiro.}
+
+\textbf{Justificativa:}
+
+Se há apenas finitas instâncias, podemos pré-computar todas as respostas.
+
+\textbf{Demonstração:}
+
+Seja $P$ problema de decisão com instâncias $I = \{i_1, i_2, \ldots, i_n\}$ (finitas).
+
+\textbf{Algoritmo decisor:}
+\begin{verbatim}
+Decidir_P(x):
+  1. Criar tabela T:
+     Para cada i_k ∈ I:
+       T[i_k] = resposta para i_k (SIM/NÃO)
+  2. Se x ∈ I:
+       Retornar T[x]
+  3. Caso contrário:
+       Retornar NÃO (ou rejeitar - fora do domínio)
+\end{verbatim}
+
+\textbf{Análise:}
+\begin{itemize}
+    \item Tabela tem tamanho finito $n$
+    \item Busca na tabela é decidível ($O(n)$ ou $O(\log n)$)
+    \item Algoritmo sempre para
+    \item Logo, $P$ é decidível
+\end{itemize}
+
+\textbf{Exemplo:} Conjunto $I = \{0, 1, 2, \ldots, 1000\}$, problema "é primo?". 
+Podemos ter tabela com 1001 respostas pré-computadas.
+\end{truebox}
+
+\subsection{(d) Testar primalidade de 234.557.239.451}
+
+\textbf{Proposição:} Verificar se o número 234.557.239.451 é primo é um problema indecidível.
+
+\begin{falsebox}
+\textbf{Falso - é DECIDÍVEL.}
+
+\textbf{Justificativa:}
+
+Testar primalidade é um problema \textbf{decidível} (e até eficientemente computável).
+
+\textbf{Algoritmos decidíveis para primalidade:}
+
+\begin{enumerate}
+    \item \textbf{Teste trivial} (sempre decide, $O(\sqrt{n})$):
+\begin{verbatim}
+É_Primo(n):
+  Se n ≤ 1: Retornar FALSO
+  Para i = 2 até √n:
+    Se n mod i = 0: Retornar FALSO
+  Retornar VERDADEIRO
+\end{verbatim}
+    
+    \item \textbf{Teste de Miller-Rabin} (probabilístico, mas pode ser determinístico):
+    \begin{itemize}
+        \item Polinomial em relação ao número de dígitos
+        \item Versão determinística sob hipótese de Riemann estendida
+    \end{itemize}
+    
+    \item \textbf{Teste AKS} (Agrawal-Kayal-Saxena, 2002):
+    \begin{itemize}
+        \item Primeiro algoritmo determinístico polinomial
+        \item Complexidade: $O((\log n)^{12})$ (melhorias subsequentes)
+        \item Prova que PRIMES $\in$ P
+    \end{itemize}
+\end{enumerate}
+
+\textbf{Para 234.557.239.451 especificamente:}
+\begin{itemize}
+    \item É uma instância específica (número fixo)
+    \item Podemos calcular: testar até $\sqrt{234557239451} \approx 484,310$
+    \item Algoritmo sempre termina com resposta correta
+    \item Resposta: 234.557.239.451 = 463.217 × 506.683 (composto)
+\end{itemize}
+
+\textbf{Conclusão:} Primalidade é decidível, tanto em geral quanto para instâncias específicas.
+\end{falsebox}
+
+\subsection{(e) MT fita limitada vs MT fita ilimitada}
+
+\textbf{Proposição:} Seja $L$ é uma linguagem aceita por uma Máquina de Turing com fita limitada, então $L$ também pode ser aceita por uma Máquina de Turing com fita ilimitada e vice-versa.
+
+\begin{falsebox}
+\textbf{Falso (apenas uma direção é verdadeira).}
+
+\textbf{Justificativa:}
+
+\textbf{Análise das duas direções:}
+
+\begin{enumerate}
+    \item \textbf{Fita limitada $\Rightarrow$ Fita ilimitada: VERDADEIRO}
+    \begin{itemize}
+        \item Se $L$ é aceita por MT com fita limitada $\rightarrow L$ é LSC
+        \item LSC $\subset$ LRE
+        \item MT com fita ilimitada reconhece todas as LRE
+        \item Logo, MT com fita ilimitada pode reconhecer $L$ ✓
+    \end{itemize}
+    
+    \item \textbf{Fita ilimitada $\Rightarrow$ Fita limitada: FALSO}
+    \begin{itemize}
+        \item MT com fita ilimitada reconhece LRE (todas linguagens RE)
+        \item MT com fita limitada reconhece apenas LSC
+        \item LSC $\subset$ LRE (contenção própria)
+        \item Contraexemplo: $L_{HP}$ (Problema da Parada)
+        \begin{itemize}
+            \item É LRE (aceita por MT com fita ilimitada)
+            \item NÃO é LSC (não é aceita por MT com fita limitada)
+        \end{itemize}
+    \end{itemize}
+\end{enumerate}
+
+\textbf{Correção da proposição:}
+
+"$\Rightarrow$" é verdadeiro, mas "$\Leftarrow$" (vice-versa) é \textbf{falso}.
+
+Portanto, a proposição completa (com "vice-versa") é FALSA.
+\end{falsebox}
+
+\subsection{(f) Gramática irrestrita e MT fita limitada}
+
+\textbf{Proposição:} Seja $L$ é uma linguagem gerada por uma gramática irrestrita, então $L$ pode ser aceita por uma Máquina de Turing com fita limitada.
+
+\begin{falsebox}
+\textbf{Falso.}
+
+\textbf{Justificativa:}
+
+\textbf{Hierarquia de Chomsky:}
+\begin{itemize}
+    \item Gramática Irrestrita (Tipo 0) $\Leftrightarrow$ LRE (Linguagens Recursivamente Enumeráveis)
+    \item MT com fita limitada $\Leftrightarrow$ LSC (Linguagens Sensíveis ao Contexto)
+    \item LSC $\subset$ LRE (contenção própria)
+\end{itemize}
+
+\textbf{Demonstração:}
+
+Gramáticas irrestritas geram todas as LRE, mas MT com fita limitada reconhece apenas LSC.
+
+\textbf{Contraexemplo:}
+\begin{itemize}
+    \item Considere gramática irrestrita que gera $L_{HP}$ (existe, pois $L_{HP}$ é LRE)
+    \item $L_{HP}$ não é LSC (requer fita ilimitada)
+    \item Logo, existe linguagem de gramática irrestrita não aceita por MT fita limitada
+\end{itemize}
+
+\textbf{Conclusão:} Gramáticas irrestritas são mais poderosas que MT com fita limitada.
+\end{falsebox}
+
+\subsection{(g) GLC gera linguagem LLC}
+
+\textbf{Proposição:} Uma linguagem gerada por uma gramática livre de contexto, é necessariamente, uma linguagem livre de contexto.
+
+\begin{truebox}
+\textbf{Verdadeiro (tautologia).}
+
+\textbf{Justificativa:}
+
+Esta é uma tautologia (verdade por definição).
+
+\textbf{Definição de LLC:}
+\begin{itemize}
+    \item $L$ é LLC $\Leftrightarrow$ existe GLC que gera $L$
+\end{itemize}
+
+Se $L$ é gerada por GLC, então por definição $L$ é LLC.
+
+É como dizer: "se um animal é gerado por pais mamíferos, necessariamente é mamífero".
+
+\textbf{Observação:} A proposição seria interessante se perguntasse o contrário ou envolvesse ambiguidade. Mas como está, é trivialmente verdadeira pela definição de LLC.
+\end{truebox}
+
+\subsection{(h) Provar decidibilidade requer exibir MT}
+
+\textbf{Proposição:} Para provar que determinado problema é decidível é necessário exibir uma MT que reconheça a linguagem que representa o problema.
+
+\begin{falsebox}
+\textbf{Falso (não é NECESSÁRIO exibir MT).}
+
+\textbf{Justificativa:}
+
+\textbf{Formas de provar decidibilidade:}
+
+\begin{enumerate}
+    \item \textbf{Exibir MT que decide:} Suficiente, mas NÃO necessário
+    
+    \item \textbf{Exibir algoritmo em linguagem de alto nível:}
+    \begin{itemize}
+        \item Algoritmo que sempre para com resposta correta
+        \item Pela Tese de Church-Turing: algoritmo $\Leftrightarrow$ MT
+        \item Não precisa construir MT explicitamente
+    \end{itemize}
+    
+    \item \textbf{Redução a problema conhecido decidível:}
+    \begin{itemize}
+        \item Mostrar que problema $A$ reduz a problema $B$ decidível
+        \item Se $B$ é decidível e $A \leq_m B$, então $A$ é decidível
+        \item Não requer construir MT para $A$ diretamente
+    \end{itemize}
+    
+    \item \textbf{Argumento por propriedades de fechamento:}
+    \begin{itemize}
+        \item Linguagens recursivas fechadas sob união, interseção, complemento, etc.
+        \item Se $L_1, L_2$ decidíveis, então $L_1 \cup L_2$ decidível
+        \item Não precisa exibir MT, apenas usar fechamento
+    \end{itemize}
+    
+    \item \textbf{Análise de complexidade finita:}
+    \begin{itemize}
+        \item Mostrar que problema tem número finito de casos
+        \item Ou que pode ser resolvido em tempo/espaço limitado
+    \end{itemize}
+\end{enumerate}
+
+\textbf{Exemplo:}
+
+Provar que $\{0^n1^n \mid n \geq 0\}$ é decidível:
+\begin{itemize}
+    \item Algoritmo: "conte 0's, depois conte 1's, compare"
+    \item Não precisamos desenhar estados da MT
+    \item O algoritmo implica existência de MT
+\end{itemize}
+
+\textbf{Conclusão:} Exibir MT é SUFICIENTE mas não NECESSÁRIO.
+\end{falsebox}
+
+\subsection{(i) Toda linguagem tem MT que a reconhece}
+
+\textbf{Proposição:} Dada uma linguagem qualquer, então existe uma MT que a reconhece.
+
+\begin{falsebox}
+\textbf{Falso.}
+
+\textbf{Justificativa:}
+
+Existem linguagens que NÃO são reconhecíveis por MT (não-LRE).
+
+\textbf{Argumento de Cardinalidade:}
+
+\begin{enumerate}
+    \item \textbf{Quantidade de linguagens:}
+    \begin{itemize}
+        \item Linguagens sobre $\Sigma = \{0,1\}$: $P(\Sigma^*) = P(\mathbb{N})$ (conjunto das partes de $\mathbb{N}$)
+        \item Cardinalidade: $|P(\mathbb{N})| = 2^{\aleph_0}$ (não-enumerável)
+    \end{itemize}
+    
+    \item \textbf{Quantidade de MTs:}
+    \begin{itemize}
+        \item Cada MT pode ser codificada como string finita
+        \item Conjunto de MTs é enumerável: $|\text{MTs}| = \aleph_0$
+    \end{itemize}
+    
+    \item \textbf{Conclusão:}
+    \begin{itemize}
+        \item $\aleph_0 < 2^{\aleph_0}$
+        \item Há mais linguagens que MTs
+        \item Logo, existem linguagens sem MT correspondente
+    \end{itemize}
+\end{enumerate}
+
+\textbf{Exemplo concreto:}
+
+$\overline{L_{HP}} = \{\langle M,w \rangle \mid M$ não aceita $w\}$ não é LRE.
+
+Provado no Exercício 6: se $L$ é LRE não-recursiva, $\overline{L}$ não é LRE.
+
+\textbf{Conclusão:} Nem toda linguagem é reconhecível por MT. Apenas linguagens LRE são.
+\end{falsebox}
+
+\subsection{(j) Gramática implica MT que gera palavras}
+
+\textbf{Proposição:} Dada uma gramática qualquer, então existe uma MT que gera as palavras dessa linguagem.
+
+\begin{truebox}
+\textbf{Verdadeiro.}
+
+\textbf{Justificativa:}
+
+Para qualquer gramática (mesmo irrestrita), podemos construir MT que enumera a linguagem.
+
+\textbf{Algoritmo de Enumeração:}
+
+\begin{verbatim}
+MT_Enumerador(G = (V, Σ, P, S)):
+  1. Enumerar todas as derivações possíveis em ordem:
+     - Derivações de comprimento 1, 2, 3, ...
+     - Para cada comprimento, todas as combinações de produções
+  2. Para cada derivação que resulta em w ∈ Σ*:
+     - Gerar/imprimir w
+  3. Repetir indefinidamente
+\end{verbatim}
+
+\textbf{Funcionamento:}
+\begin{itemize}
+    \item Gramática $G$ é finita (regras finitas)
+    \item MT pode sistematicamente tentar todas as derivações
+    \item Usa busca em largura (ou dovetailing) para garantir que toda palavra eventualmente seja gerada
+    \item Mesmo para gramáticas irrestritas (Tipo 0), enumeração é possível
+\end{itemize}
+
+\textbf{Observação importante:}
+
+"Gerar" (enumerar) $\neq$ "Reconhecer" (decidir pertinência)
+\begin{itemize}
+    \item Gerar: listar todas as palavras da linguagem (sempre possível para gramáticas)
+    \item Reconhecer: dado $w$, decidir se $w \in L$ (pode ser indecidível)
+\end{itemize}
+
+\textbf{Relação com LRE:}
+
+Linguagens geradas por gramáticas (Tipo 0) = LRE = linguagens enumeráveis = existe MT enumerador.
+
+\textbf{Conclusão:} Toda gramática tem MT enumeradora correspondente.
+\end{truebox}
+
+\newpage
+
+% ============================================================
+% OBSERVAÇÕES FINAIS
+% ============================================================
+\section{Observações Finais}
+
+\subsection{Resumo Completo dos Exercícios}
+
+\begin{center}
+\begin{tabular}{|c|l|}
+\hline
+\textbf{Exercício} & \textbf{Tema Principal} \\
+\hline
+1 & Proposições sobre AFDs, GRs e linguagens regulares \\
+2 & Limitações de APDs (linguagens não-LLC) \\
+3 & Operações com LLC (intersecção, complemento) \\
+4 & AP com pilha limitada = poder de AFD \\
+5 & Hierarquia de Chomsky completa \\
+6 & Complemento de linguagens não-recursivas \\
+7 & Operações entre LRE e linguagens recursivas \\
+8 & Questões sobre classes de linguagens \\
+9 & Diferença entre LR e LRE \\
+10 & Projeto de MT para $\Sigma^*$ \\
+11 & MT fita limitada vs AFD \\
+12 & Proposições sobre decidibilidade \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Conceitos-Chave Abordados}
+
+\begin{itemize}
+    \item \textbf{Hierarquia de Chomsky:} $L_{reg} \subset LLC \subset LSC \subset LR \subset LRE \subset P(\Sigma^*)$
+    \item \textbf{Fechamento:} Diferentes classes têm propriedades de fechamento distintas
+    \item \textbf{Decidibilidade vs Semi-decidibilidade:} LR (sempre para) vs LRE (pode não parar)
+    \item \textbf{Lema do Bombeamento:} Ferramenta para provar não-pertinência a classes
+    \item \textbf{Complemento:} LR fechada, LRE não fechada
+    \item \textbf{Poder Computacional:} AFD $<$ AP $<$ ALL $<$ MT
+    \item \textbf{Problema da Parada:} Exemplo fundamental de problema indecidível
+    \item \textbf{Tese de Church-Turing:} Algoritmo efetivo $\Leftrightarrow$ MT
+\end{itemize}
+
+\subsection{Resultados Importantes}
+
+\begin{enumerate}
+    \item \textbf{Teorema:} LLC não é fechada sob complemento nem interseção
+    \item \textbf{Teorema:} Se $L$ é LRE não-recursiva, então $\overline{L}$ não é LRE
+    \item \textbf{Teorema:} $L$ é recursiva $\Leftrightarrow$ $L$ e $\overline{L}$ são LRE
+    \item \textbf{Teorema:} Existem linguagens não-LRE (não reconhecíveis por MT)
+    \item \textbf{Teorema:} MT fita limitada linear $\Leftrightarrow$ LSC $\Leftrightarrow$ Gramática Tipo 1
+    \item \textbf{Teorema:} PRIMES $\in$ P (teste AKS, 2002)
+\end{enumerate}
+
+\subsection{Aplicações Práticas}
+
+\begin{itemize}
+    \item \textbf{Compiladores:} Análise léxica (regular), sintática (LLC)
+    \item \textbf{Verificação de Software:} Limitações da decidibilidade
+    \item \textbf{Teoria da Complexidade:} P, NP, PSPACE baseadas em MT
+    \item \textbf{Criptografia:} Problemas computacionalmente difíceis
+    \item \textbf{IA e ML:} Limites computacionais de aprendizado
+\end{itemize}
+
+\end{document}

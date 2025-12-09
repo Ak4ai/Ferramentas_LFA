@@ -1,0 +1,12 @@
+{
+  "definition": "Variaveis: S, A, B, C\nTerminais: 0, 1\nInicial: S\nProducoes:\nS -> 0S | 1A\nA -> 0A | 1B\nB -> 0B | 1C\nC -> 0C | 1C | ε",
+  "rules": [
+    {
+      "rules": [
+        { "type": "minCount", "value": { "char": "1", "count": 3 } }
+      ]
+    }
+  ],
+  "description": "GR Exe 5a: L = {w ∈ {0,1}* | w tem pelo menos 3 '1's}",
+  "comments": "Gramática Regular Linear à Direita - Estados representam quantidade de 1s vistos (0, 1, 2, 3+)"
+}

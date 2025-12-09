@@ -90,7 +90,7 @@ Esta MT verifica se a cadeia de entrada começa com os símbolos $ab$ em sequên
 \subsubsection*{Diagrama de Estados}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth,height=0.4\textheight,keepaspectratio]{diagramas/MT_exe1_a.pdf}
+    \includegraphics[width=0.8\textwidth,height=0.4\textheight,keepaspectratio]{../diagramasMT/MT_exe1_a.pdf}
     \caption{MT para $L = \{w \mid w \text{ começa com } ab\}$}
 \end{figure}
 
@@ -114,7 +114,7 @@ Esta MT aceita cadeias com igual quantidade de $a$'s, $b$'s e $c$'s em sequênci
 \subsubsection*{Diagrama de Estados}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth,height=0.4\textheight,keepaspectratio]{diagramas/MT_exe1_b.pdf}
+    \includegraphics[width=0.8\textwidth,height=0.4\textheight,keepaspectratio]{../diagramasMT/MT_exe1_b.pdf}
     \caption{MT para $L = \{a^n b^n c^n \mid n \geq 0\}$}
 \end{figure}
 
@@ -137,7 +137,7 @@ Esta MT aceita cadeias onde o número de $a$'s é o dobro do número de $b$'s.
 \subsubsection*{Diagrama de Estados}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth,height=0.4\textheight,keepaspectratio]{diagramas/MT_exe1_c.pdf}
+    \includegraphics[width=0.8\textwidth,height=0.4\textheight,keepaspectratio]{../diagramasMT/MT_exe1_c.pdf}
     \caption{MT para $L = \{a^n b^m \mid n = 2m\}$}
 \end{figure}
 
@@ -161,7 +161,7 @@ Esta MT aceita palíndromos pares, ou seja, cadeias que são iguais lidas da esq
 \subsubsection*{Diagrama de Estados}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth,height=0.4\textheight,keepaspectratio]{diagramas/MT_exe1_d.pdf}
+    \includegraphics[width=0.8\textwidth,height=0.4\textheight,keepaspectratio]{../diagramasMT/MT_exe1_d.pdf}
     \caption{MT para $L = \{ww^R\}$ (palíndromos pares)}
 \end{figure}
 
@@ -185,7 +185,7 @@ Esta MT aceita cadeias com igual quantidade de $a$'s e $b$'s, em qualquer ordem.
 \subsubsection*{Diagrama de Estados}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth,height=0.4\textheight,keepaspectratio]{diagramas/MT_exe1_e.pdf}
+    \includegraphics[width=0.8\textwidth,height=0.4\textheight,keepaspectratio]{../diagramasMT/MT_exe1_e.pdf}
     \caption{MT para $L = \{w \mid n_a(w) = n_b(w)\}$}
 \end{figure}
 
@@ -207,7 +207,7 @@ Esta MT aceita cadeias com $n$ uns seguidos de $n+3$ zeros.
 \subsubsection*{Diagrama de Estados}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth,height=0.4\textheight,keepaspectratio]{diagramas/MT_exe1_f.pdf}
+    \includegraphics[width=0.8\textwidth,height=0.4\textheight,keepaspectratio]{../diagramasMT/MT_exe1_f.pdf}
     \caption{MT para $L = \{1^n 0^{n+3}\}$}
 \end{figure}
 
@@ -232,7 +232,7 @@ Esta MT aceita cadeias onde:
 \subsubsection*{Diagrama de Estados}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth,height=0.4\textheight,keepaspectratio]{diagramas/MT_exe1_g.pdf}
+    \includegraphics[width=0.8\textwidth,height=0.4\textheight,keepaspectratio]{../diagramasMT/MT_exe1_g.pdf}
     \caption{MT para $L = \{a^n b^{2n} c^{n-1}\}$}
 \end{figure}
 
@@ -254,7 +254,7 @@ Esta MT aceita cadeias onde o número de $b$'s é igual ao máximo entre o núme
 \subsubsection*{Diagrama de Estados}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth,height=0.4\textheight,keepaspectratio]{diagramas/MT_exe1_h.pdf}
+    \includegraphics[width=0.8\textwidth,height=0.4\textheight,keepaspectratio]{../diagramasMT/MT_exe1_h.pdf}
     \caption{MT para $L = \{a^i b^j a^k \mid j = \max(i, k)\}$}
 \end{figure}
 
@@ -283,14 +283,14 @@ A MT verifica ambas as condições:
 \subsubsection*{Diagrama de Estados}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth,height=0.4\textheight,keepaspectratio]{diagramas/MT_exe1_i.pdf}
+    \includegraphics[width=0.8\textwidth,height=0.4\textheight,keepaspectratio]{../diagramasMT/MT_exe1_i.pdf}
     \caption{MT para $L = \{a^i b^j a^k \mid i = j \text{ ou } j = k\}$}
 \end{figure}
 
 \subsubsection*{Versão sem Estado de Rejeição Explícito}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth,height=0.4\textheight,keepaspectratio]{diagramas/MT_exe1_i_sem_qr.pdf}
+    \includegraphics[width=0.8\textwidth,height=0.4\textheight,keepaspectratio]{../diagramasMT/MT_exe1_i_sem_qr.pdf}
     \caption{MT para $L = \{a^i b^j a^k \mid i = j \text{ ou } j = k\}$ (sem transições para $q_r$)}
 \end{figure}
 
@@ -309,7 +309,7 @@ A MT verifica ambas as condições:
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth,height=0.4\textheight,keepaspectratio]{diagramas/MT_exe2.pdf}
+    \includegraphics[width=0.8\textwidth,height=0.4\textheight,keepaspectratio]{../diagramasMT/MT_exe2.pdf}
     \caption{Máquina de Turing para $L = \{w \mid n_a(w) = n_b(w)\}$}
 \end{figure}
 
@@ -609,6 +609,13 @@ Passo 4: Se fita 2 e fita 3 estão vazias → ACEITA
 (q_2, [\_, \_, \_]) &\rightarrow (q_f, [\_, \_, \_], [N, N, N])
 \end{align*}
 
+\subsubsection*{Diagrama de Estados}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.5\textheight,keepaspectratio]{../diagramasMT/MT_exe3_b.pdf}
+    \caption{MT Multifita (3 fitas) para $L = \{a^n b^n c^n\}$}
+\end{figure}
+
 %------------------------------------------------------------------------------
 \newpage
 \subsection{3.c) $L = \{a^n b^m \mid n = 2m\}$}
@@ -642,6 +649,13 @@ Fita 1: aaaa[b]b     Fita 2: IIII[_] → apaga 2: II[_]
 Fita 1: aaaab[b]     Fita 2: II[_] → apaga 2: [_]
 Fita 1: aaaaabb[_]   Fita 2: [_] → ACEITA ✓
 \end{verbatim}
+
+\subsubsection*{Diagrama de Estados}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.5\textheight,keepaspectratio]{../diagramasMT/MT_exe3_c.pdf}
+    \caption{MT Multifita (2 fitas) para $L = \{a^n b^m \mid n = 2m\}$}
+\end{figure}
 
 %------------------------------------------------------------------------------
 \newpage
@@ -683,6 +697,13 @@ Fita 1: abb[a]    Fita 2: [a]bba → a=a ✓
 ACEITA!
 \end{verbatim}
 
+\subsubsection*{Diagrama de Estados}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.5\textheight,keepaspectratio]{../diagramasMT/MT_exe3_d.pdf}
+    \caption{MT Multifita (2 fitas) para $L = \{ww^R\}$}
+\end{figure}
+
 %------------------------------------------------------------------------------
 \newpage
 \subsection{3.e) $L = \{w \mid n_a(w) = n_b(w)\}$}
@@ -717,6 +738,13 @@ Fita 1: abb[a]    Fita 2: [-] → cancela negativo → [_]
 Fita 1: abba[_]   Fita 2: [_] → contador = 0 → ACEITA ✓
 \end{verbatim}
 
+\subsubsection*{Diagrama de Estados}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.5\textheight,keepaspectratio]{../diagramasMT/MT_exe3_e.pdf}
+    \caption{MT Multifita (2 fitas) para $L = \{w \mid n_a(w) = n_b(w)\}$}
+\end{figure}
+
 %------------------------------------------------------------------------------
 \newpage
 \subsection{3.f) $L = \{1^n 0^{n+3} \mid n \geq 0\}$}
@@ -748,6 +776,13 @@ Fita 1: 11000[0]00   Fita 2: I[I] → apaga → I
 Fita 1: 110000[0]0   Fita 2: [I] → apaga → _
 Fita 1: 1100000[_]   Fita 2: [_] → ACEITA ✓
 \end{verbatim}
+
+\subsubsection*{Diagrama de Estados}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.5\textheight,keepaspectratio]{../diagramasMT/MT_exe3_f.pdf}
+    \caption{MT Multifita (2 fitas) para $L = \{1^n 0^{n+3}\}$}
+\end{figure}
 
 %------------------------------------------------------------------------------
 \newpage
@@ -782,6 +817,13 @@ Fita 1: aabbb[b]    (continua par)
 Fita 1: aabbbb[c]   Fita 2: [_], primeiro c (grátis)
 Fita 1: aabbbbc[_]  → ACEITA ✓
 \end{verbatim}
+
+\subsubsection*{Diagrama de Estados}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.5\textheight,keepaspectratio]{../diagramasMT/MT_exe3_g.pdf}
+    \caption{MT Multifita (2 fitas) para $L = \{a^n b^{2n} c^{n-1}\}$}
+\end{figure}
 
 %------------------------------------------------------------------------------
 \newpage
@@ -823,6 +865,13 @@ Fita 1: aabba[_]
 Comparação: Fita 2 = II (i=2), Fita 3 = I (k=1)
 max(2,1) = 2 = j → ACEITA ✓
 \end{verbatim}
+
+\subsubsection*{Diagrama de Estados}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.5\textheight,keepaspectratio]{../diagramasMT/MT_exe3_h.pdf}
+    \caption{MT Multifita (3 fitas) para $L = \{a^i b^j a^k \mid j = \max(i, k)\}$}
+\end{figure}
 
 %------------------------------------------------------------------------------
 \newpage
@@ -875,6 +924,13 @@ Fita 1: abba[a]     Fita 3: II
 Comparação: j=2, Fita 3=II (k=2) → j = k → ACEITA ✓
 \end{verbatim}
 
+\subsubsection*{Diagrama de Estados}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.5\textheight,keepaspectratio]{../diagramasMT/MT_exe3_i.pdf}
+    \caption{MT Multifita (3 fitas) para $L = \{a^i b^j a^k \mid i = j \text{ ou } j = k\}$}
+\end{figure}
+
 %------------------------------------------------------------------------------
 \newpage
 \subsection{Resumo: Comparação de Complexidades}
@@ -916,8 +972,352 @@ A MT multifita reduz a complexidade de $O(n^2)$ para $O(n)$ na maioria dos probl
 
 \textbf{Enunciado:} Refaça os exercícios usando MT Não-Determinísticas com uma complexidade de tempo inferior à MT padrão.
 
-\vspace{1cm}
-\textit{A ser implementado...}
+\subsection{Introdução às MT Não-Determinísticas}
+
+Uma \textbf{Máquina de Turing Não-Determinística (MTND)} pode ter múltiplas transições possíveis para um mesmo par (estado, símbolo). Em cada passo, a máquina pode "escolher" qual transição seguir, explorando múltiplos caminhos simultaneamente.
+
+\subsubsection*{Diferença Fundamental}
+\begin{tcolorbox}[colback=blue!5,colframe=blue!75!black,title=Não-Determinismo]
+\textbf{MT Determinística:} Para cada $(q, a)$, existe \textbf{no máximo uma} transição $\delta(q, a) = (q', b, D)$
+
+\textbf{MT Não-Determinística:} Para cada $(q, a)$, podem existir \textbf{múltiplas} transições:
+$$\delta(q, a) \subseteq Q \times \Gamma \times \{L, R, N\}$$
+
+A MTND \textbf{aceita} se \textbf{existe ao menos um caminho} que leva ao estado de aceitação.
+\end{tcolorbox}
+
+\subsubsection*{Vantagem de Complexidade}
+Embora as MTNDs não sejam mais poderosas que MTs determinísticas (Teorema de Church-Turing), elas podem resolver certos problemas mais rapidamente:
+
+\begin{itemize}
+    \item \textbf{"Adivinhar" soluções:} A MTND pode "adivinhar" não-deterministicamente onde está o meio de um palíndromo, quais elementos parear, etc.
+    \item \textbf{Exploração paralela:} Conceptualmente, explora todos os caminhos em paralelo
+    \item \textbf{Redução de complexidade:} Muitos problemas $O(n^2)$ podem ser resolvidos em $O(n)$ com não-determinismo
+\end{itemize}
+
+%------------------------------------------------------------------------------
+\newpage
+\subsection{4.a) $L = \{w \mid w \text{ começa com } ab\}$}
+%------------------------------------------------------------------------------
+
+\begin{tcolorbox}[colback=gray!10,colframe=gray!50,title=Análise de Complexidade]
+\textbf{MT Padrão:} $O(1)$ - Verifica 2 símbolos\\
+\textbf{MTND:} Não há ganho - Problema já é trivial
+\end{tcolorbox}
+
+Este exercício não se beneficia do não-determinismo pois a verificação já é feita em tempo constante.
+
+\subsubsection*{Diagrama de Estados}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth,height=0.4\textheight,keepaspectratio]{../diagramasMT/MT_exe1_a.pdf}
+    \caption{MTND para $L = \{w \mid w \text{ começa com } ab\}$ (idêntica à versão determinística)}
+\end{figure}
+
+%------------------------------------------------------------------------------
+\newpage
+\subsection{4.b) $L = \{a^n b^n c^n \mid n \geq 0\}$}
+%------------------------------------------------------------------------------
+
+\subsubsection*{Análise de Complexidade}
+\begin{tcolorbox}[colback=gray!10,colframe=gray!50,title=Comparação]
+\textbf{MT Padrão:} $O(n^2)$ - Múltiplas passagens marcando $(a,b,c)$\\
+\textbf{MTND:} $O(n)$ - Adivinha não-deterministicamente quantos símbolos marcar
+\end{tcolorbox}
+
+\subsubsection*{Estratégia Não-Determinística}
+A MTND \textbf{adivinha} quantos grupos $(a,b,c)$ deve marcar por passagem, reduzindo o número de varreduras necessárias.
+
+\subsubsection*{Algoritmo}
+\begin{enumerate}
+    \item Não-deterministicamente escolhe entre:
+    \begin{itemize}
+        \item Continuar marcando grupos $(a, b, c)$
+        \item Parar e verificar se todos foram marcados
+    \end{itemize}
+    \item Para cada grupo: marca um $a$ com $X$, um $b$ com $Y$, um $c$ com $Z$
+    \item Aceita se todos os símbolos estiverem marcados
+\end{enumerate}
+
+\subsubsection*{Transições Não-Determinísticas}
+As seguintes transições ilustram o não-determinismo:
+\begin{align*}
+\delta(q_{\text{marca\_a}}, a) &= \{(q_{\text{marca\_a}}, a, R), (q_{\text{busca\_b}}, X, R)\} \\
+\delta(q_{\text{marca\_b}}, b) &= \{(q_{\text{marca\_b}}, b, R), (q_{\text{busca\_c}}, Y, R)\}
+\end{align*}
+
+Em $q_{\text{marca\_a}}$ ao ler $a$, a máquina pode:
+\begin{itemize}
+    \item \textbf{Opção 1:} Continuar buscando ($a \to a$, move R)
+    \item \textbf{Opção 2:} Marcar este $a$ e buscar $b$ correspondente ($a \to X$, vai para $q_{\text{busca\_b}}$)
+\end{itemize}
+
+\subsubsection*{Diagrama de Estados}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.5\textheight,keepaspectratio]{../diagramasMT/MTND_exe4_b.pdf}
+    \caption{MTND para $L = \{a^n b^n c^n\}$ com 2 pares não-determinísticos}
+\end{figure}
+
+%------------------------------------------------------------------------------
+\newpage
+\subsection{4.c) $L = \{a^{2m} b^m \mid m \geq 0\}$}
+%------------------------------------------------------------------------------
+
+\subsubsection*{Análise de Complexidade}
+\begin{tcolorbox}[colback=gray!10,colframe=gray!50,title=Comparação]
+\textbf{MT Padrão:} $O(n^2)$ - Marca 2 $a$'s e 1 $b$ por iteração\\
+\textbf{MTND:} $O(n)$ - Adivinha não-deterministicamente qual $b$ parear
+\end{tcolorbox}
+
+\subsubsection*{Estratégia Não-Determinística}
+A MTND marca dois $a$'s e então \textbf{adivinha} qual $b$ deve ser pareado com este par.
+
+\subsubsection*{Diagrama de Estados}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.5\textheight,keepaspectratio]{../diagramasMT/MTND_exe4_c.pdf}
+    \caption{MTND para $L = \{a^{2m} b^m\}$ com 2 pares não-determinísticos}
+\end{figure}
+
+%------------------------------------------------------------------------------
+\newpage
+\subsection{4.d) $L = \{ww^R \mid w \in \{a,b\}^*\}$ - Palíndromos Pares}
+%------------------------------------------------------------------------------
+
+\subsubsection*{Análise de Complexidade}
+\begin{tcolorbox}[colback=gray!10,colframe=gray!50,title=Comparação]
+\textbf{MT Padrão:} $O(n^2)$ - Compara primeiro com último, segundo com penúltimo, etc.\\
+\textbf{MTND:} $O(n)$ - Adivinha não-deterministicamente onde está o meio
+\end{tcolorbox}
+
+\subsubsection*{Estratégia Não-Determinística}
+A MTND \textbf{adivinha} onde está o ponto de divisão entre $w$ e $w^R$. Se adivinhar corretamente, verifica a igualdade em tempo linear.
+
+\subsubsection*{Algoritmo}
+\begin{enumerate}
+    \item Marca o primeiro símbolo não marcado com $X$ (se $a$) ou $Y$ (se $b$)
+    \item Avança pela fita
+    \item \textbf{Não-deterministicamente} escolhe entre:
+    \begin{itemize}
+        \item Continuar avançando
+        \item \textbf{Parar aqui} (adivinhar que este é o meio/fim da metade direita)
+    \end{itemize}
+    \item Volta marcando o último símbolo não-marcado que deve corresponder ao primeiro
+    \item Verifica se corresponde (mesmo tipo: $a$ com $a$, $b$ com $b$)
+    \item Repete até todos estarem marcados
+\end{enumerate}
+
+\subsubsection*{Transições Não-Determinísticas}
+\begin{align*}
+\delta(q_{\text{scan}}, a) &= \{(q_{\text{scan}}, a, R), (q_{\text{mark\_end}}, a, L)\} \\
+\delta(q_{\text{scan}}, b) &= \{(q_{\text{scan}}, b, R), (q_{\text{mark\_end}}, b, L)\}
+\end{align*}
+
+Em $q_{\text{scan}}$, ao ler $a$ ou $b$, a máquina pode:
+\begin{itemize}
+    \item \textbf{Opção 1:} Continuar avançando (ainda não chegou ao meio)
+    \item \textbf{Opção 2:} Parar e voltar (adivinhou que este é o ponto certo)
+\end{itemize}
+
+\subsubsection*{Exemplos}
+\begin{itemize}
+    \item \textbf{Aceita:} $\epsilon$, $aa$, $bb$, $abba$, $aabbaa$, $baab$
+    \item \textbf{Rejeita:} $a$, $b$, $ab$, $aba$, $abc$, $aab$, $babba$
+\end{itemize}
+
+\subsubsection*{Diagrama de Estados}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.5\textheight,keepaspectratio]{../diagramasMT/MTND_exe4_d.pdf}
+    \caption{MTND para $L = \{ww^R\}$ com 2 pares não-determinísticos em $q_{\text{scan}}$}
+\end{figure}
+
+%------------------------------------------------------------------------------
+\newpage
+\subsection{4.e) $L = \{w \mid w \in \{a,b\}^* \text{ e } \#a = \#b\}$}
+%------------------------------------------------------------------------------
+
+\subsubsection*{Análise de Complexidade}
+\begin{tcolorbox}[colback=gray!10,colframe=gray!50,title=Comparação]
+\textbf{MT Padrão:} $O(n^2)$ - Busca linear por pares $a$-$b$\\
+\textbf{MTND:} $O(n)$ - Adivinha não-deterministicamente qual $b$ parear com cada $a$
+\end{tcolorbox}
+
+\subsubsection*{Estratégia Não-Determinística}
+A MTND, ao encontrar um $a$, \textbf{adivinha} qual $b$ não-marcado deve ser pareado com ele, reduzindo múltiplas buscas.
+
+\subsubsection*{Diagrama de Estados}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.5\textheight,keepaspectratio]{../diagramasMT/MTND_exe4_e.pdf}
+    \caption{MTND para $L = \{w \mid \#a = \#b\}$ com 2 pares não-determinísticos}
+\end{figure}
+
+%------------------------------------------------------------------------------
+\newpage
+\subsection{4.f) $L = \{1^n 0^{n+3} \mid n \geq 0\}$}
+%------------------------------------------------------------------------------
+
+\subsubsection*{Análise de Complexidade}
+\begin{tcolorbox}[colback=gray!10,colframe=gray!50,title=Comparação]
+\textbf{MT Padrão:} $O(n^2)$ - Pareia cada $1$ com um $0$ (exceto 3)\\
+\textbf{MTND:} $O(n)$ - Adivinha não-deterministicamente o valor de $n$
+\end{tcolorbox}
+
+\subsubsection*{Estratégia Não-Determinística}
+A MTND \textbf{adivinha} quantos $1$'s existem e verifica se há exatamente $n+3$ zeros.
+
+\subsubsection*{Diagrama de Estados}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.5\textheight,keepaspectratio]{../diagramasMT/MTND_exe4_f.pdf}
+    \caption{MTND para $L = \{1^n 0^{n+3}\}$ com 2 pares não-determinísticos}
+\end{figure}
+
+%------------------------------------------------------------------------------
+\newpage
+\subsection{4.g) $L = \{a^n b^{2n} c^{n-1} \mid n > 0\}$}
+%------------------------------------------------------------------------------
+
+\subsubsection*{Análise de Complexidade}
+\begin{tcolorbox}[colback=gray!10,colframe=gray!50,title=Comparação]
+\textbf{MT Padrão:} $O(n^2)$ - Marca $a$, dois $b$'s, um $c$ por iteração\\
+\textbf{MTND:} Determinística - Estrutura fixa não se beneficia do não-determinismo
+\end{tcolorbox}
+
+Este problema mantém complexidade similar pois a estrutura $a^n b^{2n} c^{n-1}$ exige contagem precisa em sequência.
+
+\subsubsection*{Diagrama de Estados}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.5\textheight,keepaspectratio]{../diagramasMT/MTND_exe4_g.pdf}
+    \caption{MTND para $L = \{a^n b^{2n} c^{n-1}\}$ (determinística)}
+\end{figure}
+
+%------------------------------------------------------------------------------
+\newpage
+\subsection{4.h) $L = \{a^i b^j a^k \mid j = \max(i, k)\}$}
+%------------------------------------------------------------------------------
+
+\subsubsection*{Análise de Complexidade}
+\begin{tcolorbox}[colback=gray!10,colframe=gray!50,title=Comparação]
+\textbf{MT Padrão:} $O(n^2)$ - Compara $i$ e $k$, depois verifica $j$\\
+\textbf{MTND:} $O(n)$ - Adivinha qual é o máximo ($i$ ou $k$) e verifica
+\end{tcolorbox}
+
+\subsubsection*{Estratégia Não-Determinística}
+A MTND \textbf{adivinha} se $i > k$, $i < k$, ou $i = k$, e verifica se $j$ corresponde ao máximo.
+
+\subsubsection*{Algoritmo}
+\begin{enumerate}
+    \item Não-deterministicamente escolhe uma das hipóteses:
+    \begin{itemize}
+        \item $i > k$: Verifica se $j = i$
+        \item $i < k$: Verifica se $j = k$
+        \item $i = k$: Verifica se $j = i = k$
+    \end{itemize}
+    \item Para a hipótese escolhida, faz pareamento linear
+\end{enumerate}
+
+\subsubsection*{Diagrama de Estados}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.5\textheight,keepaspectratio]{../diagramasMT/MTND_exe4_h.pdf}
+    \caption{MTND para $L = \{a^i b^j a^k \mid j = \max(i,k)\}$ com 9 pares não-determinísticos}
+\end{figure}
+
+%------------------------------------------------------------------------------
+\newpage
+\subsection{4.i) $L = \{a^i b^j a^k \mid i = j \text{ ou } j = k\}$}
+%------------------------------------------------------------------------------
+
+\subsubsection*{Análise de Complexidade}
+\begin{tcolorbox}[colback=gray!10,colframe=gray!50,title=Comparação]
+\textbf{MT Padrão:} $O(n^2)$ - Testa ambas condições sequencialmente\\
+\textbf{MTND:} $O(n)$ - Adivinha qual condição testar ($i=j$ ou $j=k$)
+\end{tcolorbox}
+
+\subsubsection*{Estratégia Não-Determinística}
+A MTND \textbf{adivinha} qual das duas condições é verdadeira:
+\begin{itemize}
+    \item \textbf{Ramo 1:} Testa se $i = j$ (ignora $k$)
+    \item \textbf{Ramo 2:} Testa se $j = k$ (ignora $i$)
+\end{itemize}
+
+Se algum dos ramos aceitar, a cadeia é aceita.
+
+\subsubsection*{Algoritmo}
+\begin{enumerate}
+    \item Não-deterministicamente escolhe testar:
+    \begin{itemize}
+        \item \textbf{Condição 1 ($i = j$):} Pareia cada $a$ à esquerda com um $b$, ignora $a$'s à direita
+        \item \textbf{Condição 2 ($j = k$):} Pareia cada $b$ com um $a$ à direita, ignora $a$'s à esquerda
+    \end{itemize}
+    \item Verifica se o pareamento escolhido é exato
+\end{enumerate}
+
+\subsubsection*{Exemplos}
+\begin{itemize}
+    \item \textbf{Aceita:}
+    \begin{itemize}
+        \item $ab$ (1=1, teste $i=j$)
+        \item $aab$ (2=1? não, mas 1=1 teste $j=k$ ✓)
+        \item $aba$ (1=1, teste $i=j$ ✓)
+        \item $aabba$ (2=2, teste $i=j$ ✓)
+        \item $abbaa$ (2=2, teste $j=k$ ✓)
+    \end{itemize}
+    \item \textbf{Rejeita:}
+    \begin{itemize}
+        \item $aabbb$ (2≠3 e 3≠0)
+        \item $aaaba$ (3≠2 e 2≠1)
+    \end{itemize}
+\end{itemize}
+
+\subsubsection*{Diagrama de Estados}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth,height=0.5\textheight,keepaspectratio]{../diagramasMT/MTND_exe4_i.pdf}
+    \caption{MTND para $L = \{a^i b^j a^k \mid i=j \text{ ou } j=k\}$ com 2 pares não-determinísticos}
+\end{figure}
+
+%------------------------------------------------------------------------------
+\newpage
+\subsection{Resumo: Comparação de Complexidades (Exercício 4)}
+%------------------------------------------------------------------------------
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|l|c|c|c|}
+\hline
+\textbf{Ex} & \textbf{Linguagem} & \textbf{MT Padrão} & \textbf{MTND} & \textbf{Pares ND} \\
+\hline
+4.a & Começa com $ab$ & $O(1)$ & $O(1)$ & 0 \\
+4.b & $a^n b^n c^n$ & $O(n^2)$ & $O(n)$ & 2 \\
+4.c & $a^{2m} b^m$ & $O(n^2)$ & $O(n)$ & 2 \\
+4.d & Palíndromos $ww^R$ & $O(n^2)$ & $O(n)$ & 2 \\
+4.e & $\#a = \#b$ & $O(n^2)$ & $O(n)$ & 2 \\
+4.f & $1^n 0^{n+3}$ & $O(n^2)$ & $O(n)$ & 2 \\
+4.g & $a^n b^{2n} c^{n-1}$ & $O(n^2)$ & $O(n^2)$ & 0 \\
+4.h & $j = \max(i,k)$ & $O(n^2)$ & $O(n)$ & 9 \\
+4.i & $i=j$ ou $j=k$ & $O(n^2)$ & $O(n)$ & 2 \\
+\hline
+\end{tabular}
+\caption{Comparação de complexidades entre MT padrão e MTND}
+\end{table}
+
+\begin{tcolorbox}[colback=green!5,colframe=green!50!black,title=Conclusão]
+As MTNDs reduzem a complexidade de $O(n^2)$ para $O(n)$ em problemas onde é possível \textbf{"adivinhar" uma solução} e verificá-la linearmente:
+
+\begin{itemize}
+    \item \textbf{Adivinhar posições:} Onde está o meio de um palíndromo (4.d)
+    \item \textbf{Adivinhar pareamentos:} Qual $b$ parear com qual $a$ (4.e)
+    \item \textbf{Adivinhar condições:} Qual teste fazer: $i=j$ ou $j=k$ (4.i)
+    \item \textbf{Adivinhar quantidades:} Quantos símbolos marcar por iteração (4.b, 4.c)
+\end{itemize}
+
+O não-determinismo permite explorar múltiplas possibilidades em "paralelo", aceitando se \textbf{ao menos um caminho} levar à aceitação.
+\end{tcolorbox}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage

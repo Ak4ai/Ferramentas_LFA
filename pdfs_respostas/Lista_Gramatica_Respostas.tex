@@ -1,0 +1,1041 @@
+% !TEX program = pdflatex
+\documentclass[a4paper,12pt]{article}
+
+% ================== PACOTES ==================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{geometry}
+\usepackage{tcolorbox}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{tikz}
+
+% ================== CONFIGURAÇÕES ==================
+\geometry{
+    left=2.5cm,
+    right=2.5cm,
+    top=2.5cm,
+    bottom=2.5cm
+}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+}
+
+% ================== CABEÇALHO/RODAPÉ ==================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{LFA - Linguagens Formais e Autômatos}
+\fancyhead[R]{CEFET-MG}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ================== BOXES ==================
+\newtcolorbox{enunciadobox}[1][]{
+    colback=blue!5,
+    colframe=blue!60!black,
+    title={\textbf{#1}},
+    fonttitle=\bfseries
+}
+
+\newtcolorbox{explicacaobox}[1][]{
+    colback=green!5,
+    colframe=green!50!black,
+    title={\textbf{#1}},
+    fonttitle=\bfseries
+}
+
+\newtcolorbox{gramaticabox}[1][]{
+    colback=orange!5,
+    colframe=orange!60!black,
+    title={\textbf{#1}},
+    fonttitle=\bfseries
+}
+
+% ================== TÍTULO ==================
+\title{\textbf{Lista de Exercícios}\\
+\Large Gramáticas Livres de Contexto (GLC) e Gramáticas Regulares (GR)\\
+\large Resoluções}
+\author{Linguagens Formais e Autômatos}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+% ============================================================
+% EXERCÍCIO 1
+% ============================================================
+\section{Exercício 1: GLCs sobre $\Sigma = \{a, b, c\}$}
+
+% ============================================================
+% EXERCÍCIO 1a
+% ============================================================
+\subsection{Exercício 1a: $L = \{a^i b^j \mid i > j\}$}
+
+\begin{enunciadobox}[Enunciado]
+Construa uma GLC para a linguagem $L = \{a^i b^j \mid i > j\}$
+\end{enunciadobox}
+
+\begin{explicacaobox}[Estratégia]
+Precisamos gerar mais $a$'s do que $b$'s. A ideia é:
+\begin{itemize}
+    \item Gerar pelo menos um $a$ extra no início
+    \item Depois gerar pares $a$-$b$ balanceados
+\end{itemize}
+\end{explicacaobox}
+
+\begin{gramaticabox}[Gramática]
+$G = (V, \Sigma, P, S)$ onde:
+\begin{itemize}
+    \item $V = \{S, A\}$
+    \item $\Sigma = \{a, b\}$
+    \item $S$ é o símbolo inicial
+    \item Produções $P$:
+\end{itemize}
+\begin{align*}
+S &\rightarrow aS \mid aA \\
+A &\rightarrow aAb \mid \varepsilon
+\end{align*}
+\end{gramaticabox}
+
+\begin{explicacaobox}[Explicação]
+\begin{itemize}
+    \item $S \rightarrow aS$ gera $a$'s extras (garantindo $i > j$)
+    \item $S \rightarrow aA$ força pelo menos um $a$ extra antes de balancear
+    \item $A \rightarrow aAb$ gera pares balanceados $a^n b^n$
+    \item $A \rightarrow \varepsilon$ termina a geração
+\end{itemize}
+\textbf{Exemplo}: $aaab$ ($i=3, j=1$): $S \Rightarrow aS \Rightarrow aaA \Rightarrow aaAb \Rightarrow aaab$
+\end{explicacaobox}
+
+\newpage
+
+% ============================================================
+% EXERCÍCIO 1b
+% ============================================================
+\subsection{Exercício 1b: $L = \{a^i b^j \mid i < j\}$}
+
+\begin{enunciadobox}[Enunciado]
+Construa uma GLC para a linguagem $L = \{a^i b^j \mid i < j\}$
+\end{enunciadobox}
+
+\begin{explicacaobox}[Estratégia]
+Precisamos gerar mais $b$'s do que $a$'s. Simétrico ao exercício anterior.
+\end{explicacaobox}
+
+\begin{gramaticabox}[Gramática]
+$G = (V, \Sigma, P, S)$ onde:
+\begin{itemize}
+    \item $V = \{S, A\}$
+    \item $\Sigma = \{a, b\}$
+    \item $S$ é o símbolo inicial
+    \item Produções $P$:
+\end{itemize}
+\begin{align*}
+S &\rightarrow Sb \mid Ab \\
+A &\rightarrow aAb \mid \varepsilon
+\end{align*}
+\end{gramaticabox}
+
+\begin{explicacaobox}[Explicação]
+\begin{itemize}
+    \item $S \rightarrow Sb$ gera $b$'s extras no final
+    \item $S \rightarrow Ab$ força pelo menos um $b$ extra
+    \item $A \rightarrow aAb$ gera pares balanceados
+    \item $A \rightarrow \varepsilon$ termina a geração
+\end{itemize}
+\textbf{Exemplo}: $abb$ ($i=1, j=2$): $S \Rightarrow Ab \Rightarrow aAbb \Rightarrow abb$
+\end{explicacaobox}
+
+\newpage
+
+% ============================================================
+% EXERCÍCIO 1c
+% ============================================================
+\subsection{Exercício 1c: $L = \{a^i b^j \mid i \neq j\}$}
+
+\begin{enunciadobox}[Enunciado]
+Construa uma GLC para a linguagem $L = \{a^i b^j \mid i \neq j\}$
+\end{enunciadobox}
+
+\begin{explicacaobox}[Estratégia]
+União das linguagens $i > j$ e $i < j$. Usamos um símbolo inicial que escolhe qual caso seguir.
+\end{explicacaobox}
+
+\begin{gramaticabox}[Gramática]
+$G = (V, \Sigma, P, S)$ onde:
+\begin{itemize}
+    \item $V = \{S, M, N, A\}$
+    \item $\Sigma = \{a, b\}$
+    \item $S$ é o símbolo inicial
+    \item Produções $P$:
+\end{itemize}
+\begin{align*}
+S &\rightarrow M \mid N \\
+M &\rightarrow aM \mid aA \quad &\text{(caso } i > j \text{)}\\
+N &\rightarrow Nb \mid Ab \quad &\text{(caso } i < j \text{)}\\
+A &\rightarrow aAb \mid \varepsilon
+\end{align*}
+\end{gramaticabox}
+
+\begin{explicacaobox}[Explicação]
+\begin{itemize}
+    \item $S$ escolhe entre $M$ (mais $a$'s) ou $N$ (mais $b$'s)
+    \item $M$ gera pelo menos um $a$ extra
+    \item $N$ gera pelo menos um $b$ extra
+    \item $A$ gera a parte balanceada
+\end{itemize}
+\end{explicacaobox}
+
+\newpage
+
+% ============================================================
+% EXERCÍCIO 1d
+% ============================================================
+\subsection{Exercício 1d: $L = \{w c w^R \mid w \in \{a,b\}^*\}$}
+
+\begin{enunciadobox}[Enunciado]
+Construa uma GLC para a linguagem $L = \{w c w^R \mid w \in \{a,b\}^*\}$
+\end{enunciadobox}
+
+\begin{explicacaobox}[Estratégia]
+Gerar palíndromos com marcador central $c$. Cada símbolo adicionado à esquerda deve ser espelhado à direita.
+\end{explicacaobox}
+
+\begin{gramaticabox}[Gramática]
+$G = (V, \Sigma, P, S)$ onde:
+\begin{itemize}
+    \item $V = \{S\}$
+    \item $\Sigma = \{a, b, c\}$
+    \item $S$ é o símbolo inicial
+    \item Produções $P$:
+\end{itemize}
+\begin{align*}
+S &\rightarrow aSa \mid bSb \mid c
+\end{align*}
+\end{gramaticabox}
+
+\begin{explicacaobox}[Explicação]
+\begin{itemize}
+    \item $S \rightarrow aSa$ adiciona $a$ em ambos os lados
+    \item $S \rightarrow bSb$ adiciona $b$ em ambos os lados
+    \item $S \rightarrow c$ gera o marcador central e termina
+\end{itemize}
+\textbf{Exemplo}: $abcba$: $S \Rightarrow aSa \Rightarrow abSba \Rightarrow abcba$
+\end{explicacaobox}
+
+\newpage
+
+% ============================================================
+% EXERCÍCIO 1e
+% ============================================================
+\subsection{Exercício 1e: $L = \{a^i b^j c^k \mid i, j, k > 0 \text{ e } i = k\}$}
+
+\begin{enunciadobox}[Enunciado]
+Construa uma GLC para a linguagem $L = \{a^i b^j c^k \mid i, j, k > 0 \text{ e } i = k\}$
+
+(Nota: O enunciado menciona $b^*$, interpretado como $b^j$ com $j > 0$)
+\end{enunciadobox}
+
+\begin{explicacaobox}[Estratégia]
+Balancear $a$'s e $c$'s enquanto permite qualquer quantidade positiva de $b$'s no meio.
+\end{explicacaobox}
+
+\begin{gramaticabox}[Gramática]
+$G = (V, \Sigma, P, S)$ onde:
+\begin{itemize}
+    \item $V = \{S, B\}$
+    \item $\Sigma = \{a, b, c\}$
+    \item $S$ é o símbolo inicial
+    \item Produções $P$:
+\end{itemize}
+\begin{align*}
+S &\rightarrow aSc \mid aBC \\
+B &\rightarrow bB \mid b
+\end{align*}
+\end{gramaticabox}
+
+\begin{explicacaobox}[Explicação]
+\begin{itemize}
+    \item $S \rightarrow aSc$ gera pares $a$-$c$ balanceados
+    \item $S \rightarrow aBc$ força pelo menos um par $a$-$c$ e introduz os $b$'s
+    \item $B \rightarrow bB \mid b$ gera um ou mais $b$'s
+\end{itemize}
+\textbf{Exemplo}: $aabbbcc$ ($i=k=2, j=3$): $S \Rightarrow aSc \Rightarrow aaBcc \Rightarrow aabBcc \Rightarrow aabbBcc \Rightarrow aabbbcc$
+\end{explicacaobox}
+
+\newpage
+
+% ============================================================
+% EXERCÍCIO 1f
+% ============================================================
+\subsection{Exercício 1f: $L = \{a^i b^j c^k \mid i, j, k > 0 \text{ e } (i = j \text{ ou } j = k)\}$}
+
+\begin{enunciadobox}[Enunciado]
+Construa uma GLC para a linguagem $L = \{a^i b^j c^k \mid i, j, k > 0 \text{ e } (i = j \text{ ou } j = k)\}$
+\end{enunciadobox}
+
+\begin{explicacaobox}[Estratégia]
+União de duas linguagens:
+\begin{itemize}
+    \item $L_1 = \{a^i b^j c^k \mid i = j\}$: balancear $a$'s e $b$'s, $c$'s livres
+    \item $L_2 = \{a^i b^j c^k \mid j = k\}$: $a$'s livres, balancear $b$'s e $c$'s
+\end{itemize}
+\end{explicacaobox}
+
+\begin{gramaticabox}[Gramática]
+$G = (V, \Sigma, P, S)$ onde:
+\begin{itemize}
+    \item $V = \{S, A, B, C, D\}$
+    \item $\Sigma = \{a, b, c\}$
+    \item $S$ é o símbolo inicial
+    \item Produções $P$:
+\end{itemize}
+\begin{align*}
+S &\rightarrow AC \mid DB \\
+A &\rightarrow aAb \mid ab \quad &\text{(gera } a^n b^n \text{)}\\
+C &\rightarrow cC \mid c \quad &\text{(gera } c^+ \text{)}\\
+D &\rightarrow aD \mid a \quad &\text{(gera } a^+ \text{)}\\
+B &\rightarrow bBc \mid bc \quad &\text{(gera } b^n c^n \text{)}
+\end{align*}
+\end{gramaticabox}
+
+\begin{explicacaobox}[Explicação]
+\begin{itemize}
+    \item $S \rightarrow AC$ escolhe o caso $i = j$
+    \item $S \rightarrow DB$ escolhe o caso $j = k$
+    \item Cada ramo garante a condição respectiva
+\end{itemize}
+\end{explicacaobox}
+
+\newpage
+
+% ============================================================
+% EXERCÍCIO 1g
+% ============================================================
+\subsection{Exercício 1g: $L = \{a^i b^j c^k \mid i, j, k > 0 \text{ e } k = 2(i+j)\}$}
+
+\begin{enunciadobox}[Enunciado]
+Construa uma GLC para a linguagem $L = \{a^i b^j c^k \mid i, j, k > 0 \text{ e } k = 2(i+j)\}$
+\end{enunciadobox}
+
+\begin{explicacaobox}[Estratégia]
+Cada $a$ e cada $b$ contribuem com 2 $c$'s. Precisamos garantir que para cada $a$ ou $b$ gerado, dois $c$'s são adicionados.
+\end{explicacaobox}
+
+\begin{gramaticabox}[Gramática]
+$G = (V, \Sigma, P, S)$ onde:
+\begin{itemize}
+    \item $V = \{S, A, B\}$
+    \item $\Sigma = \{a, b, c\}$
+    \item $S$ é o símbolo inicial
+    \item Produções $P$:
+\end{itemize}
+\begin{align*}
+S &\rightarrow aAcc \mid aBcc \\
+A &\rightarrow aAcc \mid aBcc \\
+B &\rightarrow bBcc \mid bcc
+\end{align*}
+\end{gramaticabox}
+
+\begin{explicacaobox}[Explicação]
+\begin{itemize}
+    \item Cada $a$ gerado adiciona $cc$ no final
+    \item Cada $b$ gerado adiciona $cc$ no final
+    \item $A$ permite mais $a$'s ou transição para $b$'s
+    \item $B$ gera os $b$'s restantes (pelo menos um)
+    \item Estrutura garante pelo menos um $a$ e um $b$
+\end{itemize}
+\textbf{Exemplo}: $abcccc$ ($i=1, j=1, k=4=2(1+1)$): $S \Rightarrow aAcc \Rightarrow abcccc$
+\end{explicacaobox}
+
+\newpage
+
+% ============================================================
+% EXERCÍCIO 2
+% ============================================================
+\section{Exercício 2: GLC para $a^n b^n c^m d^m$}
+
+\begin{enunciadobox}[Enunciado]
+Construa uma GLC que reconheça a seguinte linguagem: $L = \{a^n b^n c^m d^m \mid n, m \in \mathbb{N}\}$
+\end{enunciadobox}
+
+\begin{explicacaobox}[Estratégia]
+A linguagem é a concatenação de duas linguagens independentes:
+\begin{itemize}
+    \item $L_1 = \{a^n b^n\}$
+    \item $L_2 = \{c^m d^m\}$
+\end{itemize}
+\end{explicacaobox}
+
+\begin{gramaticabox}[Gramática]
+$G = (V, \Sigma, P, S)$ onde:
+\begin{itemize}
+    \item $V = \{S, A, C\}$
+    \item $\Sigma = \{a, b, c, d\}$
+    \item $S$ é o símbolo inicial
+    \item Produções $P$:
+\end{itemize}
+\begin{align*}
+S &\rightarrow AC \\
+A &\rightarrow aAb \mid \varepsilon \\
+C &\rightarrow cCd \mid \varepsilon
+\end{align*}
+\end{gramaticabox}
+
+\begin{explicacaobox}[Explicação]
+\begin{itemize}
+    \item $S \rightarrow AC$ concatena as duas partes
+    \item $A$ gera $a^n b^n$ (incluindo $\varepsilon$ quando $n=0$)
+    \item $C$ gera $c^m d^m$ (incluindo $\varepsilon$ quando $m=0$)
+\end{itemize}
+\textbf{Exemplo}: $aabbcd$ ($n=2, m=1$): $S \Rightarrow AC \Rightarrow aAbC \Rightarrow aaAbbC \Rightarrow aabbC \Rightarrow aabbcCd \Rightarrow aabbcd$
+\end{explicacaobox}
+
+\newpage
+
+% ============================================================
+% EXERCÍCIO 3
+% ============================================================
+\section{Exercício 3: GLCs Diversas}
+
+% ============================================================
+% EXERCÍCIO 3a
+% ============================================================
+\subsection{Exercício 3a: ER $(a^* b^*)^*$}
+
+\begin{enunciadobox}[Enunciado]
+Construa uma GLC para $L = \{w \in \{0,1\}^* \mid w$ pode ser descrito como a ER $(a^* b^*)^*\}$
+\end{enunciadobox}
+
+\begin{explicacaobox}[Estratégia]
+$(a^* b^*)^* = \Sigma^*$ (todas as cadeias sobre $\{a,b\}$). Esta é uma linguagem regular.
+\end{explicacaobox}
+
+\begin{gramaticabox}[Gramática]
+$G = (V, \Sigma, P, S)$ onde:
+\begin{itemize}
+    \item $V = \{S\}$
+    \item $\Sigma = \{a, b\}$
+    \item $S$ é o símbolo inicial
+    \item Produções $P$:
+\end{itemize}
+\begin{align*}
+S &\rightarrow aS \mid bS \mid \varepsilon
+\end{align*}
+\end{gramaticabox}
+
+\begin{explicacaobox}[Explicação]
+A gramática gera qualquer sequência de $a$'s e $b$'s, incluindo a palavra vazia.
+\end{explicacaobox}
+
+\newpage
+
+% ============================================================
+% EXERCÍCIO 3b
+% ============================================================
+\subsection{Exercício 3b: Parênteses Balanceados}
+
+\begin{enunciadobox}[Enunciado]
+Construa uma GLC para $L = \{w \mid w$ é formado por parênteses balanceados$\}$
+
+Exemplo: \texttt{()()}, \texttt{(())}, \texttt{((()))}
+\end{enunciadobox}
+
+\begin{explicacaobox}[Estratégia]
+Parênteses balanceados podem ser:
+\begin{itemize}
+    \item Vazios
+    \item Um par contendo parênteses balanceados
+    \item Concatenação de parênteses balanceados
+\end{itemize}
+\end{explicacaobox}
+
+\begin{gramaticabox}[Gramática]
+$G = (V, \Sigma, P, S)$ onde:
+\begin{itemize}
+    \item $V = \{S\}$
+    \item $\Sigma = \{(, )\}$
+    \item $S$ é o símbolo inicial
+    \item Produções $P$:
+\end{itemize}
+\begin{align*}
+S &\rightarrow (S) \mid SS \mid \varepsilon
+\end{align*}
+\end{gramaticabox}
+
+\begin{explicacaobox}[Explicação]
+\begin{itemize}
+    \item $S \rightarrow (S)$ envolve expressão balanceada em parênteses
+    \item $S \rightarrow SS$ concatena duas expressões balanceadas
+    \item $S \rightarrow \varepsilon$ caso base (vazio é balanceado)
+\end{itemize}
+\textbf{Exemplo}: \texttt{(()())}: $S \Rightarrow (S) \Rightarrow (SS) \Rightarrow ((S)S) \Rightarrow (()(S)) \Rightarrow (()())$
+\end{explicacaobox}
+
+\newpage
+
+% ============================================================
+% EXERCÍCIO 3c
+% ============================================================
+\subsection{Exercício 3c: Parênteses e Colchetes Balanceados}
+
+\begin{enunciadobox}[Enunciado]
+Construa uma GLC para $L = \{w \mid w$ é formado por parênteses e colchetes balanceados$\}$
+
+Exemplo: \texttt{[()()]}, \texttt{([])}, \texttt{[](()[()])}
+\end{enunciadobox}
+
+\begin{explicacaobox}[Estratégia]
+Extensão do exercício anterior para incluir colchetes. Cada tipo de delimitador deve casar corretamente.
+\end{explicacaobox}
+
+\begin{gramaticabox}[Gramática]
+$G = (V, \Sigma, P, S)$ onde:
+\begin{itemize}
+    \item $V = \{S\}$
+    \item $\Sigma = \{(, ), [, ]\}$
+    \item $S$ é o símbolo inicial
+    \item Produções $P$:
+\end{itemize}
+\begin{align*}
+S &\rightarrow (S) \mid [S] \mid SS \mid \varepsilon
+\end{align*}
+\end{gramaticabox}
+
+\begin{explicacaobox}[Explicação]
+\begin{itemize}
+    \item $S \rightarrow (S)$ envolve em parênteses
+    \item $S \rightarrow [S]$ envolve em colchetes
+    \item $S \rightarrow SS$ concatenação
+    \item $S \rightarrow \varepsilon$ caso base
+\end{itemize}
+\textbf{Exemplo}: \texttt{[([])]}: $S \Rightarrow [S] \Rightarrow [(S)] \Rightarrow [([S])] \Rightarrow [([])]$
+\end{explicacaobox}
+
+\newpage
+
+% ============================================================
+% EXERCÍCIO 3d
+% ============================================================
+\subsection{Exercício 3d: $a^n b^n \cup b^n a^n$}
+
+\begin{enunciadobox}[Enunciado]
+Construa uma GLC para $L = \{w \mid w$ é formado por $n$ $a$'s seguidos de $n$ $b$'s, ou $n$ $b$'s seguidos de $n$ $a$'s$\}$
+\end{enunciadobox}
+
+\begin{explicacaobox}[Estratégia]
+União de duas linguagens simétricas: $a^n b^n$ e $b^n a^n$.
+\end{explicacaobox}
+
+\begin{gramaticabox}[Gramática]
+$G = (V, \Sigma, P, S)$ onde:
+\begin{itemize}
+    \item $V = \{S, A, B\}$
+    \item $\Sigma = \{a, b\}$
+    \item $S$ é o símbolo inicial
+    \item Produções $P$:
+\end{itemize}
+\begin{align*}
+S &\rightarrow A \mid B \\
+A &\rightarrow aAb \mid \varepsilon \\
+B &\rightarrow bBa \mid \varepsilon
+\end{align*}
+\end{gramaticabox}
+
+\begin{explicacaobox}[Explicação]
+\begin{itemize}
+    \item $S$ escolhe entre os dois casos
+    \item $A$ gera $a^n b^n$
+    \item $B$ gera $b^n a^n$
+\end{itemize}
+\end{explicacaobox}
+
+\newpage
+
+% ============================================================
+% EXERCÍCIO 3e
+% ============================================================
+\subsection{Exercício 3e: Palíndromos de Tamanho Ímpar}
+
+\begin{enunciadobox}[Enunciado]
+Construa uma GLC para $L = \{w \in \{0,1\}^* \mid w = w^R \text{ e } |w|$ é ímpar$\}$
+\end{enunciadobox}
+
+\begin{explicacaobox}[Estratégia]
+Palíndromos ímpares têm um símbolo central. Geramos simetricamente ao redor dele.
+\end{explicacaobox}
+
+\begin{gramaticabox}[Gramática]
+$G = (V, \Sigma, P, S)$ onde:
+\begin{itemize}
+    \item $V = \{S\}$
+    \item $\Sigma = \{0, 1\}$
+    \item $S$ é o símbolo inicial
+    \item Produções $P$:
+\end{itemize}
+\begin{align*}
+S &\rightarrow 0S0 \mid 1S1 \mid 0 \mid 1
+\end{align*}
+\end{gramaticabox}
+
+\begin{explicacaobox}[Explicação]
+\begin{itemize}
+    \item $S \rightarrow 0S0$ e $S \rightarrow 1S1$ adicionam símbolos simétricos
+    \item $S \rightarrow 0$ e $S \rightarrow 1$ geram o símbolo central (tamanho ímpar)
+\end{itemize}
+\textbf{Exemplo}: $01010$: $S \Rightarrow 0S0 \Rightarrow 01S10 \Rightarrow 01010$
+\end{explicacaobox}
+
+\newpage
+
+% ============================================================
+% EXERCÍCIO 3f
+% ============================================================
+\subsection{Exercício 3f: Palíndromos}
+
+\begin{enunciadobox}[Enunciado]
+Construa uma GLC para $L = \{w \in \{0,1\}^* \mid w = w^R\}$ (todos os palíndromos)
+\end{enunciadobox}
+
+\begin{explicacaobox}[Estratégia]
+Incluir palíndromos de tamanho par e ímpar. Para pares, não há símbolo central.
+\end{explicacaobox}
+
+\begin{gramaticabox}[Gramática]
+$G = (V, \Sigma, P, S)$ onde:
+\begin{itemize}
+    \item $V = \{S\}$
+    \item $\Sigma = \{0, 1\}$
+    \item $S$ é o símbolo inicial
+    \item Produções $P$:
+\end{itemize}
+\begin{align*}
+S &\rightarrow 0S0 \mid 1S1 \mid 0 \mid 1 \mid \varepsilon
+\end{align*}
+\end{gramaticabox}
+
+\begin{explicacaobox}[Explicação]
+\begin{itemize}
+    \item $S \rightarrow 0S0$ e $S \rightarrow 1S1$ adicionam símbolos simétricos
+    \item $S \rightarrow 0$ e $S \rightarrow 1$ para palíndromos ímpares
+    \item $S \rightarrow \varepsilon$ para palíndromos pares e palavra vazia
+\end{itemize}
+\textbf{Exemplo par}: $0110$: $S \Rightarrow 0S0 \Rightarrow 01S10 \Rightarrow 0110$
+\end{explicacaobox}
+
+\newpage
+
+% ============================================================
+% EXERCÍCIO 4
+% ============================================================
+\section{Exercício 4: Expressões Matemáticas}
+
+\begin{enunciadobox}[Enunciado]
+Construa uma GLC que reconheça a linguagem $L = \{w \mid w$ é uma expressão matemática bem formada que utiliza parênteses e as operações de soma e subtração$\}$
+
+Use o terminal \texttt{d} para representar dígitos [1..9].
+
+Exemplo: \texttt{d+d}, \texttt{d-d}, \texttt{(d+d)-d}, \texttt{(d+d)-d+d}, \texttt{(d+d-d)}
+\end{enunciadobox}
+
+\begin{explicacaobox}[Estratégia]
+Uma expressão é:
+\begin{itemize}
+    \item Um dígito
+    \item Uma expressão entre parênteses
+    \item Duas expressões conectadas por $+$ ou $-$
+\end{itemize}
+\end{explicacaobox}
+
+\begin{gramaticabox}[Gramática]
+$G = (V, \Sigma, P, E)$ onde:
+\begin{itemize}
+    \item $V = \{E, T\}$
+    \item $\Sigma = \{d, +, -, (, )\}$
+    \item $E$ é o símbolo inicial
+    \item Produções $P$:
+\end{itemize}
+\begin{align*}
+E &\rightarrow E + T \mid E - T \mid T \\
+T &\rightarrow (E) \mid d
+\end{align*}
+\end{gramaticabox}
+
+\begin{explicacaobox}[Explicação]
+\begin{itemize}
+    \item $E$ representa uma expressão completa
+    \item $T$ representa um termo (dígito ou expressão entre parênteses)
+    \item Associatividade à esquerda para $+$ e $-$
+\end{itemize}
+\textbf{Exemplo}: \texttt{(d+d)-d}: $E \Rightarrow E-T \Rightarrow T-T \Rightarrow (E)-d \Rightarrow (E+T)-d \Rightarrow (T+T)-d \Rightarrow (d+d)-d$
+\end{explicacaobox}
+
+\newpage
+
+% ============================================================
+% EXERCÍCIO 5: GRAMÁTICAS REGULARES
+% ============================================================
+\section{Exercício 5: Gramáticas Regulares (GR)}
+
+% ============================================================
+% EXERCÍCIO 5a
+% ============================================================
+\subsection{Exercício 5a: Pelo menos três 1's}
+
+\begin{enunciadobox}[Enunciado]
+Construa uma GR para $L = \{w \in \{0,1\}^* \mid w$ possui pelo menos três 1's$\}$
+\end{enunciadobox}
+
+\begin{explicacaobox}[Estratégia]
+Usar estados para contar o número de 1's vistos (0, 1, 2, 3+). Gramática linear à direita.
+\end{explicacaobox}
+
+\begin{gramaticabox}[Gramática Regular (Linear à Direita)]
+$G = (V, \Sigma, P, S)$ onde:
+\begin{itemize}
+    \item $V = \{S, A, B, C\}$
+    \item $\Sigma = \{0, 1\}$
+    \item $S$ é o símbolo inicial
+    \item Produções $P$:
+\end{itemize}
+\begin{align*}
+S &\rightarrow 0S \mid 1A \\
+A &\rightarrow 0A \mid 1B \\
+B &\rightarrow 0B \mid 1C \\
+C &\rightarrow 0C \mid 1C \mid \varepsilon
+\end{align*}
+\end{gramaticabox}
+
+\begin{explicacaobox}[Explicação]
+\begin{itemize}
+    \item $S$: nenhum 1 visto ainda
+    \item $A$: um 1 visto
+    \item $B$: dois 1's vistos
+    \item $C$: três ou mais 1's vistos (estado final)
+\end{itemize}
+\end{explicacaobox}
+
+\subsection{Diagrama do AFN Equivalente}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.35\textheight,keepaspectratio]{../diagramasGR/GR_exe5a_3uns.pdf}
+    \caption{AFN equivalente à GR do Exercício 5a: Pelo menos três 1's}
+\end{figure}
+
+\newpage
+
+% ============================================================
+% EXERCÍCIO 5b
+% ============================================================
+\subsection{Exercício 5b: Começa com 0 e termina com 1}
+
+\begin{enunciadobox}[Enunciado]
+Construa uma GR para $L = \{w \in \{0,1\}^* \mid w$ começa com 0 e termina com 1$\}$
+\end{enunciadobox}
+
+\begin{gramaticabox}[Gramática Regular (Linear à Direita)]
+$G = (V, \Sigma, P, S)$ onde:
+\begin{itemize}
+    \item $V = \{S, A\}$
+    \item $\Sigma = \{0, 1\}$
+    \item $S$ é o símbolo inicial
+    \item Produções $P$:
+\end{itemize}
+\begin{align*}
+S &\rightarrow 0A \\
+A &\rightarrow 0A \mid 1A \mid 1
+\end{align*}
+\end{gramaticabox}
+
+\begin{explicacaobox}[Explicação]
+\begin{itemize}
+    \item $S \rightarrow 0A$ força início com 0
+    \item $A$ processa o resto da cadeia
+    \item $A \rightarrow 1$ termina com 1
+\end{itemize}
+\textbf{Nota}: A menor palavra aceita é ``01''.
+\end{explicacaobox}
+
+\subsection{Diagrama do AFN Equivalente}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.35\textheight,keepaspectratio]{../diagramasGR/GR_exe5b_0inicio_1fim.pdf}
+    \caption{AFN equivalente à GR do Exercício 5b: Começa com 0 e termina com 1}
+\end{figure}
+
+\newpage
+
+% ============================================================
+% EXERCÍCIO 5c
+% ============================================================
+\subsection{Exercício 5c: ER $(0^* 1^*)^*$}
+
+\begin{enunciadobox}[Enunciado]
+Construa uma GR para $L = \{w \in \{0,1\}^* \mid w$ pode ser descrito como a ER $(0^* 1^*)^*\}$
+\end{enunciadobox}
+
+\begin{explicacaobox}[Estratégia]
+$(0^* 1^*)^* = \Sigma^*$. Aceita qualquer cadeia.
+\end{explicacaobox}
+
+\begin{gramaticabox}[Gramática Regular (Linear à Direita)]
+$G = (V, \Sigma, P, S)$ onde:
+\begin{itemize}
+    \item $V = \{S\}$
+    \item $\Sigma = \{0, 1\}$
+    \item $S$ é o símbolo inicial
+    \item Produções $P$:
+\end{itemize}
+\begin{align*}
+S &\rightarrow 0S \mid 1S \mid \varepsilon
+\end{align*}
+\end{gramaticabox}
+
+\subsection{Diagrama do AFN Equivalente}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.35\textheight,keepaspectratio]{../diagramasGR/GR_exe5c_sigma_estrela.pdf}
+    \caption{AFN equivalente à GR do Exercício 5c: $(0^* 1^*)^* = \Sigma^*$}
+\end{figure}
+
+\newpage
+
+% ============================================================
+% EXERCÍCIO 5d
+% ============================================================
+\subsection{Exercício 5d: Número ímpar de ocorrências de ``01''}
+
+\begin{enunciadobox}[Enunciado]
+Construa uma GR para $L = \{w \in \{0,1\}^* \mid w$ possui um número ímpar de ocorrências consecutivas de ``01''$\}$
+\end{enunciadobox}
+
+\begin{explicacaobox}[Estratégia]
+Usar estados para rastrear:
+\begin{itemize}
+    \item Paridade das ocorrências de ``01'' (par/ímpar)
+    \item Se o último símbolo foi 0 (potencial início de ``01'')
+\end{itemize}
+\end{explicacaobox}
+
+\begin{gramaticabox}[Gramática Regular (Linear à Direita)]
+$G = (V, \Sigma, P, S)$ onde:
+\begin{itemize}
+    \item $V = \{S, A, B, C\}$ (S=par/não-0, A=par/após-0, B=ímpar/não-0, C=ímpar/após-0)
+    \item $\Sigma = \{0, 1\}$
+    \item $S$ é o símbolo inicial
+    \item Produções $P$:
+\end{itemize}
+\begin{align*}
+S &\rightarrow 0A \mid 1S \\
+A &\rightarrow 0A \mid 1B \\
+B &\rightarrow 0C \mid 1B \mid \varepsilon \\
+C &\rightarrow 0C \mid 1S \mid \varepsilon
+\end{align*}
+\end{gramaticabox}
+
+\begin{explicacaobox}[Explicação]
+\begin{itemize}
+    \item $S$: contagem par, último não foi 0
+    \item $A$: contagem par, último foi 0
+    \item $B$: contagem ímpar, último não foi 0 (FINAL)
+    \item $C$: contagem ímpar, último foi 0 (FINAL)
+\end{itemize}
+\end{explicacaobox}
+
+\subsection{Diagrama do AFN Equivalente}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.35\textheight,keepaspectratio]{../diagramasGR/GR_exe5d_impar_01s.pdf}
+    \caption{AFN equivalente à GR do Exercício 5d: Número ímpar de ocorrências de ``01''}
+\end{figure}
+
+\newpage
+
+% ============================================================
+% EXERCÍCIO 5e
+% ============================================================
+\subsection{Exercício 5e: Número Binário Válido}
+
+\begin{enunciadobox}[Enunciado]
+Construa uma GR para $L = \{w \in \{0,1\}^* \mid w$ é um número binário válido (sem zeros à esquerda)$\}$
+\end{enunciadobox}
+
+\begin{explicacaobox}[Estratégia]
+Números binários válidos:
+\begin{itemize}
+    \item ``0'' sozinho
+    \item Começa com 1, seguido de qualquer sequência de 0's e 1's
+\end{itemize}
+\end{explicacaobox}
+
+\begin{gramaticabox}[Gramática Regular (Linear à Direita)]
+$G = (V, \Sigma, P, S)$ onde:
+\begin{itemize}
+    \item $V = \{S, A\}$
+    \item $\Sigma = \{0, 1\}$
+    \item $S$ é o símbolo inicial
+    \item Produções $P$:
+\end{itemize}
+\begin{align*}
+S &\rightarrow 0 \mid 1A \\
+A &\rightarrow 0A \mid 1A \mid \varepsilon
+\end{align*}
+\end{gramaticabox}
+
+\begin{explicacaobox}[Explicação]
+\begin{itemize}
+    \item $S \rightarrow 0$ aceita apenas ``0''
+    \item $S \rightarrow 1A$ começa com 1
+    \item $A$ aceita qualquer continuação (incluindo vazia para ``1'' sozinho)
+\end{itemize}
+\end{explicacaobox}
+
+\subsection{Diagrama do AFN Equivalente}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.35\textheight,keepaspectratio]{../diagramasGR/GR_exe5e_binario_valido.pdf}
+    \caption{AFN equivalente à GR do Exercício 5e: Número binário válido}
+\end{figure}
+
+\newpage
+
+% ============================================================
+% EXERCÍCIO 6
+% ============================================================
+\section{Exercício 6: Números de Ponto Flutuante}
+
+\begin{enunciadobox}[Enunciado]
+Construa uma GR que reconheça a linguagem $L = \{w \mid w$ é um número flutuante$\}$
+
+Use o terminal \texttt{d} para representar dígitos [0..9] e \texttt{n} para [1..9].
+
+Exemplo: \texttt{123.547}, \texttt{.75}, \texttt{0.87}, \texttt{445}
+\end{enunciadobox}
+
+\begin{explicacaobox}[Estratégia]
+Números de ponto flutuante podem ter:
+\begin{itemize}
+    \item Parte inteira seguida de ponto e parte decimal: \texttt{123.45}
+    \item Apenas parte decimal: \texttt{.75}
+    \item Apenas parte inteira: \texttt{445}
+    \item Zero seguido de ponto: \texttt{0.87}
+\end{itemize}
+\end{explicacaobox}
+
+\begin{gramaticabox}[Gramática Regular (Linear à Direita)]
+$G = (V, \Sigma, P, S)$ onde:
+\begin{itemize}
+    \item $V = \{S, I, D, F\}$
+    \item $\Sigma = \{d, n, .\}$ onde $d \in \{0..9\}$, $n \in \{1..9\}$
+    \item $S$ é o símbolo inicial
+    \item Produções $P$:
+\end{itemize}
+\begin{align*}
+S &\rightarrow nI \mid 0 \mid 0.D \mid .D \\
+I &\rightarrow dI \mid .D \mid \varepsilon \\
+D &\rightarrow dF \\
+F &\rightarrow dF \mid \varepsilon
+\end{align*}
+\end{gramaticabox}
+
+\begin{explicacaobox}[Explicação]
+\begin{itemize}
+    \item $S$ inicia: número começando com $n$ (1-9), apenas 0, 0 seguido de decimal, ou decimal direto
+    \item $I$ continua parte inteira ou vai para decimal
+    \item $D$ requer pelo menos um dígito após o ponto
+    \item $F$ permite mais dígitos na parte decimal
+\end{itemize}
+\textbf{Exemplos aceitos}: 123, 0, 0.5, .75, 123.456
+\end{explicacaobox}
+
+\subsection{Diagrama do AFN Equivalente}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.30\textheight,keepaspectratio]{../diagramasGR/GR_exe6_flutuante.pdf}
+    \caption{AFN equivalente à GR do Exercício 6: Números de ponto flutuante}
+\end{figure}
+
+\newpage
+
+% ============================================================
+% RESUMO
+% ============================================================
+\section{Resumo dos Exercícios}
+
+\begin{center}
+\begin{tabular}{|c|l|c|c|}
+\hline
+\textbf{Ex.} & \textbf{Linguagem} & \textbf{Alfabeto} & \textbf{Tipo} \\
+\hline
+1a & $a^i b^j$, $i > j$ & $\{a,b\}$ & GLC \\
+1b & $a^i b^j$, $i < j$ & $\{a,b\}$ & GLC \\
+1c & $a^i b^j$, $i \neq j$ & $\{a,b\}$ & GLC \\
+1d & $wcw^R$ & $\{a,b,c\}$ & GLC \\
+1e & $a^i b^j c^k$, $i = k$ & $\{a,b,c\}$ & GLC \\
+1f & $a^i b^j c^k$, $i=j \lor j=k$ & $\{a,b,c\}$ & GLC \\
+1g & $a^i b^j c^k$, $k = 2(i+j)$ & $\{a,b,c\}$ & GLC \\
+\hline
+2 & $a^n b^n c^m d^m$ & $\{a,b,c,d\}$ & GLC \\
+\hline
+3a & $(a^* b^*)^* = \Sigma^*$ & $\{a,b\}$ & GLC (Regular) \\
+3b & Parênteses balanceados & $\{(,)\}$ & GLC \\
+3c & Parênteses e colchetes & $\{(,),[,]\}$ & GLC \\
+3d & $a^n b^n \cup b^n a^n$ & $\{a,b\}$ & GLC \\
+3e & Palíndromos ímpares & $\{0,1\}$ & GLC \\
+3f & Palíndromos & $\{0,1\}$ & GLC \\
+\hline
+4 & Expressões matemáticas & $\{d,+,-,(,)\}$ & GLC \\
+\hline
+5a & Pelo menos três 1's & $\{0,1\}$ & GR \\
+5b & Começa com 0, termina com 1 & $\{0,1\}$ & GR \\
+5c & $(0^* 1^*)^*$ & $\{0,1\}$ & GR \\
+5d & Número ímpar de ``01'' & $\{0,1\}$ & GR \\
+5e & Número binário válido & $\{0,1\}$ & GR \\
+\hline
+6 & Números de ponto flutuante & $\{d,n,.\}$ & GR \\
+\hline
+\end{tabular}
+\end{center}
+
+\vspace{1cm}
+
+\textbf{Legenda:}
+\begin{itemize}
+    \item \textbf{GLC}: Gramática Livre de Contexto
+    \item \textbf{GR}: Gramática Regular (Linear à Direita)
+\end{itemize}
+
+\section*{Observações}
+
+\begin{itemize}
+    \item Gramáticas Livres de Contexto têm produções da forma $A \rightarrow \alpha$, onde $A$ é um não-terminal e $\alpha$ é uma sequência de terminais e não-terminais
+    \item Gramáticas Regulares (lineares à direita) têm produções da forma $A \rightarrow aB$ ou $A \rightarrow a$ ou $A \rightarrow \varepsilon$
+    \item Toda GR é também uma GLC, mas nem toda GLC é uma GR
+    \item Os exercícios 5 e 6 são gramáticas regulares que podem ser convertidas diretamente em AFDs
+    \item $\varepsilon$ representa a palavra vazia
+\end{itemize}
+
+\end{document}
