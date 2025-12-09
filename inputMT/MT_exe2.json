@@ -1,3 +1,0 @@
-{
-  "definition": "Estados: q0, q1, q2, q3, q4, q5, qr\nAlfabeto_Entrada: a, b\nAlfabeto_Fita: a, b, #, X, _\nSimbolo_Branco: _\nEstado_Inicial: q0\nEstado_Aceitacao: q5\nEstado_Rejeicao: qr\nTransicoes:\nq0, #, q1, #, R\nq0, _, q5, _, N\nq1, a, q2, X, R\nq1, b, q4, X, R\nq1, X, q1, X, R\nq1, _, q5, _, N\nq2, a, q2, a, R\nq2, X, q2, X, R\nq2, b, q3, X, L\nq3, a, q3, a, L\nq3, b, q3, b, L\nq3, X, q3, X, L\nq3, #, q1, #, R\nq4, b, q4, b, R\nq4, X, q4, X, R\nq4, a, q3, X, L"
-}
