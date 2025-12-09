@@ -1,0 +1,12 @@
+{
+  "definition": "Variaveis: Q0, Q1, Q2, Q3\nTerminais: 0, 1\nInicial: Q0\nProducoes:\nQ0 -> 0Q1 | 1Q0\nQ1 -> 0Q1 | 1Q2\nQ2 -> 0Q3 | 1Q2 | ε | 1\nQ3 -> 0Q3 | 1Q0 | ε | 0",
+  "rules": [
+    {
+      "rules": [
+        { "type": "substringCountParity", "value": { "sub": "01", "parity": "odd" } }
+      ]
+    }
+  ],
+  "description": "GR Exe 5d: L = {w ∈ {0,1}* | w possui número ímpar de ocorrências de '01'}",
+  "comments": "Q0=par,não-0 | Q1=par,viu-0 | Q2=ímpar,não-0 (FINAL) | Q3=ímpar,viu-0 (FINAL). Ambos Q2 e Q3 são finais."
+}

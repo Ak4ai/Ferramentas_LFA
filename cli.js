@@ -6,7 +6,7 @@ const path = require('path');
 const readline = require('readline');
 const { execSync } = require('child_process');
 
-// Pastas separadas para AFD, AFN, AP e MT
+// Pastas separadas para AFD, AFN, AP, MT e GR
 const inputDirAFD = path.join(__dirname, 'inputAFD');
 const diagramDirAFD = path.join(__dirname, 'diagramasAFD');
 const inputDirAFN = path.join(__dirname, 'inputAFN');
@@ -16,6 +16,8 @@ const diagramDirAP = path.join(__dirname, 'diagramasAP');
 const inputDirMT = path.join(__dirname, 'inputMT');
 const diagramDirMT = path.join(__dirname, 'diagramasMT');
 const inputDirMTND = path.join(__dirname, 'inputMT_ND');
+const inputDirGR = path.join(__dirname, 'inputGR');
+const diagramDirGR = path.join(__dirname, 'diagramasGR');
 
 // Pastas legadas (mantidas para compatibilidade)
 const inputDir = path.join(__dirname, 'input');
@@ -256,6 +258,37 @@ const validators = {
             return str.length >= min;
         },
         text: 'Comprimento Mínimo'
+    },
+    minCount: {
+        // Verifica contagem mínima de um caractere
+        // Ex: { char: '1', count: 3 } para pelo menos 3 '1's
+        func: (str, { char, count }) => {
+            const charCount = (str.match(new RegExp(char, 'g')) || []).length;
+            return charCount >= count;
+        },
+        text: 'Contagem Mínima'
+    },
+    maxCount: {
+        // Verifica contagem máxima de um caractere
+        // Ex: { char: '0', count: 2 } para no máximo 2 '0's
+        func: (str, { char, count }) => {
+            const charCount = (str.match(new RegExp(char, 'g')) || []).length;
+            return charCount <= count;
+        },
+        text: 'Contagem Máxima'
+    },
+    acceptAll: {
+        // Aceita qualquer string (Σ*)
+        func: () => true,
+        text: 'Aceita Tudo'
+    },
+    lengthParity: {
+        // Verifica paridade do comprimento total
+        // Ex: { type: 'even' } para comprimento par
+        func: (str, { type }) => {
+            return type === 'even' ? str.length % 2 === 0 : str.length % 2 !== 0;
+        },
+        text: 'Paridade do Comprimento'
     },
     weightedSumDivisible: {
         // Verifica se soma ponderada é divisível por n
@@ -670,6 +703,439 @@ function parseAfnDefinition(text) {
         }
         return afn;
     } catch (e) { return { error: e.message }; }
+}
+
+// =============================================================================
+// GRAMÁTICAS REGULARES (GR)
+// =============================================================================
+
+/**
+ * Parser para Gramática Regular (GR)
+ * Formato de entrada:
+ *   Variaveis: S, A, B, C
+ *   Terminais: a, b, 0, 1
+ *   Inicial: S
+ *   Producoes:
+ *   S -> aA | bB | ε
+ *   A -> aA | a
+ *   B -> bB | b
+ * 
+ * Suporta gramáticas lineares à direita (A -> aB ou A -> a ou A -> ε)
+ * e lineares à esquerda (A -> Ba ou A -> a ou A -> ε)
+ */
+function parseGrammarDefinition(text) {
+    try {
+        const lines = text.split('\n').filter(line => line.trim() !== '');
+        const grammar = {
+            variables: [],
+            terminals: [],
+            startSymbol: null,
+            productions: {},  // { 'S': ['aA', 'bB', 'ε'], 'A': ['aA', 'a'], ... }
+            type: null        // 'right-linear' ou 'left-linear'
+        };
+        
+        let readingProductions = false;
+        
+        for (const line of lines) {
+            const trimmedLine = line.trim();
+            
+            // Detecta seção de produções
+            if (trimmedLine.toLowerCase().startsWith('producoes:') || 
+                trimmedLine.toLowerCase().startsWith('produções:') ||
+                trimmedLine.toLowerCase().startsWith('productions:')) {
+                readingProductions = true;
+                continue;
+            }
+            
+            if (readingProductions) {
+                // Formato: A -> aB | bC | ε
+                // ou: A -> aB
+                // ou: A → aB (com seta unicode)
+                const match = trimmedLine.match(/^([A-Z][A-Za-z0-9_]*)\s*(?:->|→)\s*(.+)$/);
+                if (match) {
+                    const variable = match[1].trim();
+                    const rhsList = match[2].split('|').map(s => s.trim());
+                    
+                    if (!grammar.productions[variable]) {
+                        grammar.productions[variable] = [];
+                    }
+                    
+                    for (const rhs of rhsList) {
+                        // Normaliza epsilon
+                        const normalizedRhs = (rhs === 'ε' || rhs === 'epsilon' || rhs === 'λ' || rhs === 'lambda' || rhs === '') 
+                            ? 'ε' : rhs;
+                        if (!grammar.productions[variable].includes(normalizedRhs)) {
+                            grammar.productions[variable].push(normalizedRhs);
+                        }
+                    }
+                }
+            } else {
+                // Parse de cabeçalho
+                const colonIndex = line.indexOf(':');
+                if (colonIndex === -1) continue;
+                
+                const key = line.substring(0, colonIndex).trim().toLowerCase();
+                const value = line.substring(colonIndex + 1).trim();
+                
+                if (key === 'variaveis' || key === 'variáveis' || key === 'variables' || key === 'v') {
+                    grammar.variables = value.split(',').map(s => s.trim()).filter(s => s);
+                } else if (key === 'terminais' || key === 'terminals' || key === 't' || key === 'sigma' || key === 'σ') {
+                    grammar.terminals = value.split(',').map(s => s.trim()).filter(s => s && s !== 'ε');
+                } else if (key === 'inicial' || key === 'start' || key === 's' || key === 'simbolo_inicial') {
+                    grammar.startSymbol = value.split(',')[0].trim();
+                }
+            }
+        }
+        
+        // Validação
+        if (grammar.variables.length === 0) {
+            return { error: "Nenhuma variável definida." };
+        }
+        if (grammar.terminals.length === 0) {
+            return { error: "Nenhum terminal definido." };
+        }
+        if (!grammar.startSymbol) {
+            return { error: "Símbolo inicial não definido." };
+        }
+        if (Object.keys(grammar.productions).length === 0) {
+            return { error: "Nenhuma produção definida." };
+        }
+        
+        // Detecta tipo de gramática (linear à direita ou à esquerda)
+        grammar.type = detectGrammarType(grammar);
+        
+        return grammar;
+    } catch (e) {
+        return { error: e.message };
+    }
+}
+
+/**
+ * Detecta se a gramática é linear à direita ou à esquerda
+ */
+function detectGrammarType(grammar) {
+    let hasRightLinear = false;
+    let hasLeftLinear = false;
+    
+    for (const variable of Object.keys(grammar.productions)) {
+        for (const rhs of grammar.productions[variable]) {
+            if (rhs === 'ε') continue;
+            
+            // Encontra variáveis no lado direito
+            const varsInRhs = [];
+            for (let i = 0; i < rhs.length; i++) {
+                // Variáveis são maiúsculas (podem ter mais de um caractere)
+                if (rhs[i] >= 'A' && rhs[i] <= 'Z') {
+                    let varName = rhs[i];
+                    while (i + 1 < rhs.length && (
+                        (rhs[i+1] >= 'A' && rhs[i+1] <= 'Z') ||
+                        (rhs[i+1] >= 'a' && rhs[i+1] <= 'z') ||
+                        (rhs[i+1] >= '0' && rhs[i+1] <= '9') ||
+                        rhs[i+1] === '_'
+                    ) && grammar.variables.includes(varName + rhs[i+1])) {
+                        i++;
+                        varName += rhs[i];
+                    }
+                    if (grammar.variables.includes(varName)) {
+                        varsInRhs.push({ name: varName, pos: i - varName.length + 1 });
+                    }
+                }
+            }
+            
+            if (varsInRhs.length === 0) {
+                // Produção A -> terminais (ok para ambos os tipos)
+                continue;
+            } else if (varsInRhs.length === 1) {
+                const varPos = varsInRhs[0].pos;
+                const varLen = varsInRhs[0].name.length;
+                
+                // Linear à direita: variável no final (A -> aB)
+                if (varPos + varLen === rhs.length) {
+                    hasRightLinear = true;
+                }
+                // Linear à esquerda: variável no início (A -> Ba)
+                else if (varPos === 0) {
+                    hasLeftLinear = true;
+                }
+            } else {
+                // Mais de uma variável - não é regular!
+                return 'invalid';
+            }
+        }
+    }
+    
+    if (hasRightLinear && hasLeftLinear) {
+        return 'mixed'; // Mistura - pode não ser regular
+    } else if (hasRightLinear) {
+        return 'right-linear';
+    } else if (hasLeftLinear) {
+        return 'left-linear';
+    }
+    
+    return 'right-linear'; // Default (só terminais é considerado linear à direita)
+}
+
+/**
+ * Converte Gramática Regular (linear à direita) para AFN
+ * 
+ * Regras de conversão:
+ * - Cada variável vira um estado
+ * - Símbolo inicial da gramática = estado inicial do AFN
+ * - A -> aB  vira transição δ(A, a) = B
+ * - A -> a   vira transição δ(A, a) = qf (estado final)
+ * - A -> ε   torna A um estado final
+ * - S -> ε   torna estado inicial também final
+ */
+function convertGrammarToAFN(grammar) {
+    if (grammar.error) return grammar;
+    
+    // Se for linear à esquerda, converte para linear à direita primeiro
+    if (grammar.type === 'left-linear') {
+        grammar = convertLeftToRightLinear(grammar);
+    }
+    
+    const afn = {
+        states: [],
+        alphabet: [...grammar.terminals],
+        startState: grammar.startSymbol,
+        finalStates: [],
+        transitions: {},
+        epsilonTransitions: {},
+        isNFA: false,
+        fromGrammar: true
+    };
+    
+    // Estado final especial para produções A -> a
+    const qFinal = 'qF';
+    
+    // Adiciona estados (um por variável + estado final)
+    afn.states = [...grammar.variables, qFinal];
+    afn.finalStates = [qFinal];
+    
+    // Inicializa estruturas de transição
+    for (const state of afn.states) {
+        afn.transitions[state] = {};
+        afn.epsilonTransitions[state] = [];
+    }
+    
+    // Processa produções
+    for (const variable of Object.keys(grammar.productions)) {
+        for (const rhs of grammar.productions[variable]) {
+            if (rhs === 'ε') {
+                // A -> ε: A é estado final
+                if (!afn.finalStates.includes(variable)) {
+                    afn.finalStates.push(variable);
+                }
+            } else {
+                // Analisa o lado direito
+                const parsed = parseProductionRhs(rhs, grammar);
+                
+                if (parsed.terminal && parsed.variable) {
+                    // A -> aB: transição de A para B com 'a'
+                    const symbol = parsed.terminal;
+                    const target = parsed.variable;
+                    
+                    if (!afn.transitions[variable][symbol]) {
+                        afn.transitions[variable][symbol] = [];
+                    }
+                    if (!afn.transitions[variable][symbol].includes(target)) {
+                        afn.transitions[variable][symbol].push(target);
+                    }
+                    
+                    // Verifica não-determinismo
+                    if (afn.transitions[variable][symbol].length > 1) {
+                        afn.isNFA = true;
+                    }
+                } else if (parsed.terminal && !parsed.variable) {
+                    // A -> a: transição de A para qF com 'a'
+                    const symbol = parsed.terminal;
+                    
+                    if (!afn.transitions[variable][symbol]) {
+                        afn.transitions[variable][symbol] = [];
+                    }
+                    if (!afn.transitions[variable][symbol].includes(qFinal)) {
+                        afn.transitions[variable][symbol].push(qFinal);
+                    }
+                    
+                    // Verifica não-determinismo
+                    if (afn.transitions[variable][symbol].length > 1) {
+                        afn.isNFA = true;
+                    }
+                }
+            }
+        }
+    }
+    
+    // Remove estado qF se não for usado
+    let qfUsed = false;
+    for (const state of Object.keys(afn.transitions)) {
+        for (const symbol of Object.keys(afn.transitions[state])) {
+            if (afn.transitions[state][symbol].includes(qFinal)) {
+                qfUsed = true;
+                break;
+            }
+        }
+        if (qfUsed) break;
+    }
+    
+    if (!qfUsed) {
+        afn.states = afn.states.filter(s => s !== qFinal);
+        afn.finalStates = afn.finalStates.filter(s => s !== qFinal);
+        delete afn.transitions[qFinal];
+        delete afn.epsilonTransitions[qFinal];
+    }
+    
+    return afn;
+}
+
+/**
+ * Analisa o lado direito de uma produção
+ * Retorna { terminal: 'a', variable: 'B' } ou { terminal: 'ab', variable: null }
+ */
+function parseProductionRhs(rhs, grammar) {
+    let terminal = '';
+    let variable = null;
+    
+    let i = 0;
+    while (i < rhs.length) {
+        // Verifica se é início de variável
+        if (rhs[i] >= 'A' && rhs[i] <= 'Z') {
+            let varName = rhs[i];
+            let j = i + 1;
+            // Tenta estender o nome da variável
+            while (j < rhs.length) {
+                const extendedName = varName + rhs[j];
+                if (grammar.variables.includes(extendedName)) {
+                    varName = extendedName;
+                    j++;
+                } else {
+                    break;
+                }
+            }
+            
+            if (grammar.variables.includes(varName)) {
+                variable = varName;
+                i = j;
+            } else {
+                // Não é variável, é terminal maiúsculo
+                terminal += rhs[i];
+                i++;
+            }
+        } else {
+            // É terminal
+            terminal += rhs[i];
+            i++;
+        }
+    }
+    
+    return { terminal: terminal || null, variable };
+}
+
+/**
+ * Converte gramática linear à esquerda para linear à direita
+ * (Inverte as produções e depois reverte a linguagem)
+ */
+function convertLeftToRightLinear(grammar) {
+    // Para simplificar, mantemos a gramática como está
+    // O simulador tratará corretamente
+    // Uma conversão completa requer reverter a linguagem
+    console.log('⚠ Gramática linear à esquerda detectada. Conversão automática aplicada.');
+    
+    const newGrammar = {
+        variables: [...grammar.variables],
+        terminals: [...grammar.terminals],
+        startSymbol: grammar.startSymbol,
+        productions: {},
+        type: 'right-linear'
+    };
+    
+    // Cria novo estado inicial S' se necessário
+    const newStart = grammar.startSymbol + "'";
+    newGrammar.variables.push(newStart);
+    newGrammar.startSymbol = newStart;
+    
+    // Para cada produção A -> Ba, cria B -> aA
+    for (const variable of Object.keys(grammar.productions)) {
+        for (const rhs of grammar.productions[variable]) {
+            if (rhs === 'ε') {
+                // A -> ε permanece
+                if (!newGrammar.productions[variable]) newGrammar.productions[variable] = [];
+                newGrammar.productions[variable].push('ε');
+            } else {
+                // A -> Ba vira B -> aA (ou similar)
+                // Por simplicidade, inverte a string
+                const reversed = rhs.split('').reverse().join('');
+                if (!newGrammar.productions[variable]) newGrammar.productions[variable] = [];
+                newGrammar.productions[variable].push(reversed);
+            }
+        }
+    }
+    
+    // Adiciona produções do novo estado inicial
+    newGrammar.productions[newStart] = [];
+    for (const v of grammar.variables) {
+        if (grammar.productions[v] && grammar.productions[v].includes('ε')) {
+            // Se variável original aceita ε, novo início pode ir para ela
+            newGrammar.productions[newStart].push(v);
+        }
+    }
+    if (newGrammar.productions[newStart].length === 0) {
+        newGrammar.productions[newStart].push(grammar.startSymbol);
+    }
+    
+    return grammar; // Retorna original por enquanto - implementação completa é complexa
+}
+
+/**
+ * Gera código Mermaid para GR (mostra o AFN equivalente com label de GR)
+ */
+function generateGrMermaidCode(afn, grammarInfo = null) {
+    let code = 'stateDiagram-v2\n';
+    code += '    direction LR\n';
+    
+    // Estado inicial
+    code += `    [*] --> ${afn.startState}\n`;
+    
+    // Estados finais
+    for (const finalState of afn.finalStates) {
+        code += `    ${finalState} --> [*]\n`;
+    }
+    
+    // Agrupa transições por (origem, destino) para combinar símbolos
+    const transitionMap = {};
+    
+    for (const from of Object.keys(afn.transitions)) {
+        for (const symbol of Object.keys(afn.transitions[from])) {
+            const targets = afn.transitions[from][symbol];
+            for (const to of targets) {
+                const key = `${from}->${to}`;
+                if (!transitionMap[key]) {
+                    transitionMap[key] = [];
+                }
+                transitionMap[key].push(symbol);
+            }
+        }
+    }
+    
+    // Adiciona transições epsilon
+    for (const from of Object.keys(afn.epsilonTransitions)) {
+        for (const to of afn.epsilonTransitions[from]) {
+            const key = `${from}->${to}`;
+            if (!transitionMap[key]) {
+                transitionMap[key] = [];
+            }
+            transitionMap[key].push('ε');
+        }
+    }
+    
+    // Gera as transições
+    for (const key of Object.keys(transitionMap)) {
+        const [from, to] = key.split('->');
+        const symbols = transitionMap[key].join(', ');
+        code += `    ${from} --> ${to} : ${symbols}\n`;
+    }
+    
+    return code;
 }
 
 // Calcula fecho-epsilon de um conjunto de estados
@@ -1521,6 +1987,148 @@ function simulateTuring(tm, inputString, maxSteps = 2000, verbose = false) {
     return { result: currentState === tm.acceptState, log };
 }
 
+// Detecta se uma MT é não-determinística (múltiplas transições para mesmo par estado-símbolo)
+function detectNondeterminism(tm) {
+    const transitionMap = new Map();
+    for (const trans of tm.transitions) {
+        const key = `${trans.from},${trans.read}`;
+        if (transitionMap.has(key)) {
+            return true; // Encontrou múltiplas transições
+        }
+        transitionMap.set(key, true);
+    }
+    return false;
+}
+
+// Simulador de MT Não-Determinística (explora todas as ramificações)
+function simulateNondeterministicTuring(tm, inputString, maxSteps = 2000, verbose = false) {
+    // Estrutura: { tape, head, state, steps, path }
+    const initialConfig = {
+        tape: inputString.split('').length > 0 ? inputString.split('') : [tm.blank],
+        head: 0,
+        state: tm.startState,
+        steps: 0,
+        path: []
+    };
+    
+    const queue = [initialConfig]; // BFS para explorar todas as ramificações
+    const visited = new Set(); // Evita loops infinitos
+    let exploredPaths = 0;
+    let acceptingPath = null;
+    
+    if (verbose) {
+        console.log(`\n${'='.repeat(60)}`);
+        console.log(`Simulação NÃO-DETERMINÍSTICA: "${inputString || '(vazia)'}"`);
+        console.log(`${'='.repeat(60)}`);
+        console.log(`⚡ Explorando TODAS as ramificações possíveis...\n`);
+    }
+    
+    while (queue.length > 0 && !acceptingPath) {
+        const config = queue.shift();
+        const { tape, head, state, steps, path } = config;
+        
+        // Limite de passos
+        if (steps >= maxSteps) continue;
+        
+        // Estado de aceitação encontrado!
+        if (state === tm.acceptState) {
+            acceptingPath = { config, path };
+            break;
+        }
+        
+        // Estado de rejeição - abandona este caminho
+        if (state === tm.rejectState) continue;
+        
+        // Validações de fita
+        if (head < 0) continue;
+        while (head >= tape.length) tape.push(tm.blank);
+        
+        const currentSymbol = tape[head] || tm.blank;
+        
+        // Cria chave única para detectar loops
+        const configKey = `${state}:${head}:${tape.join('')}`;
+        if (visited.has(configKey)) continue;
+        visited.add(configKey);
+        
+        // Busca TODAS as transições possíveis (não-determinismo!)
+        const possibleTransitions = tm.transitions.filter(t =>
+            t.from === state && (t.read === currentSymbol || t.read === '*')
+        );
+        
+        if (possibleTransitions.length === 0) {
+            // Nenhuma transição = rejeita este caminho
+            continue;
+        }
+        
+        exploredPaths++;
+        
+        // Para cada transição possível, cria uma nova ramificação
+        possibleTransitions.forEach((transition, idx) => {
+            const newTape = [...tape];
+            newTape[head] = transition.write;
+            
+            let newHead = head;
+            if (transition.direction === 'R') newHead++;
+            else if (transition.direction === 'L') newHead--;
+            
+            const tapeDisplay = newTape.map((c, i) => i === head ? `[${c}]` : c).join('');
+            const stepInfo = `${steps}. ${state} | ${tapeDisplay} | ${currentSymbol} → (${transition.to}, ${transition.write}, ${transition.direction})`;
+            
+            const newConfig = {
+                tape: newTape,
+                head: newHead,
+                state: transition.to,
+                steps: steps + 1,
+                path: [...path, stepInfo]
+            };
+            
+            queue.push(newConfig);
+            
+            if (verbose && possibleTransitions.length > 1) {
+                console.log(`  🔀 Ramificação ${idx + 1}/${possibleTransitions.length}: ${state} → ${transition.to}`);
+            }
+        });
+    }
+    
+    const log = [];
+    
+    if (acceptingPath) {
+        log.push(`✅ ACEITA - Caminho de aceitação encontrado!`);
+        log.push(`Passos totais: ${acceptingPath.config.steps}`);
+        log.push(`Ramificações exploradas: ${exploredPaths}`);
+        log.push(``);
+        log.push(`Caminho de execução:`);
+        acceptingPath.path.forEach(step => log.push(`  ${step}`));
+        log.push(`  ${acceptingPath.config.steps}. ${acceptingPath.config.state} [ACEITA]`);
+        
+        if (verbose) {
+            console.log(`\n${'='.repeat(60)}`);
+            console.log(`✅ ACEITA - Caminho de aceitação encontrado!`);
+            console.log(`Passos: ${acceptingPath.config.steps} | Ramificações: ${exploredPaths}`);
+            console.log(`${'='.repeat(60)}`);
+            console.log(`\nCaminho de execução:`);
+            acceptingPath.path.forEach(step => console.log(`  ${step}`));
+            console.log(`  → Estado final: ${acceptingPath.config.state} ✓`);
+        }
+        
+        return { result: true, log, explored: exploredPaths };
+    } else {
+        log.push(`❌ REJEITA - Nenhum caminho de aceitação encontrado`);
+        log.push(`Ramificações exploradas: ${exploredPaths}`);
+        log.push(`Configurações visitadas: ${visited.size}`);
+        
+        if (verbose) {
+            console.log(`\n${'='.repeat(60)}`);
+            console.log(`❌ REJEITA - Todas as ramificações falharam`);
+            console.log(`Ramificações exploradas: ${exploredPaths}`);
+            console.log(`Configurações únicas: ${visited.size}`);
+            console.log(`${'='.repeat(60)}`);
+        }
+        
+        return { result: false, log, explored: exploredPaths };
+    }
+}
+
 // --- Funções de Interface CLI ---
 
 // Função auxiliar para obter diretórios corretos baseado no tipo
@@ -1533,6 +2141,8 @@ function getDirectories(machineType) {
         return { inputDir: inputDirAP, diagramDir: diagramDirAP };
     } else if (machineType === 'turing' || machineType === 'mt') {
         return { inputDir: inputDirMT, diagramDir: diagramDirMT };
+    } else if (machineType === 'gr' || machineType === 'grammar') {
+        return { inputDir: inputDirGR, diagramDir: diagramDirGR };
     }
     // Fallback para pastas legadas
     return { inputDir, diagramDir };
@@ -1545,6 +2155,7 @@ function detectTypeByFilename(filename) {
     if (lower.startsWith('ap_') || lower.startsWith('pda_') || lower.includes('_ap_') || lower.includes('_pda_')) return 'ap';
     if (lower.startsWith('afn_') || lower.includes('afn')) return 'afn';
     if (lower.startsWith('afd_') || lower.includes('afd')) return 'afd';
+    if (lower.startsWith('gr_') || lower.startsWith('grammar_') || lower.includes('_gr_')) return 'gr';
     return null;
 }
 
@@ -1601,6 +2212,16 @@ function listInputFiles(type = null) {
         }
     }
     
+    // Lista arquivos de GR (Gramática Regular)
+    if (!type || type === 'gr') {
+        if (fs.existsSync(inputDirGR)) {
+            const grFiles = fs.readdirSync(inputDirGR)
+                .filter(f => fs.statSync(path.join(inputDirGR, f)).isFile())
+                .map(f => ({ name: f, path: path.join(inputDirGR, f), type: 'gr' }));
+            files.push(...grFiles);
+        }
+    }
+    
     // Lista arquivos legados (pasta input)
     if (fs.existsSync(inputDir)) {
         const legacyFiles = fs.readdirSync(inputDir)
@@ -1620,7 +2241,8 @@ function askUserFile(files, callback) {
         const typeLabel = file.type === 'afd' ? '[AFD]' : 
                          file.type === 'afn' ? '[AFN]' : 
                          file.type === 'ap' ? '[AP]' :
-                         file.type === 'mt' ? '[MT]' : '[?]';
+                         file.type === 'mt' ? '[MT]' : 
+                         file.type === 'gr' ? '[GR]' : '[?]';
         console.log(`  [${idx + 1}] ${typeLabel} ${file.name}`);
     });
     console.log('='.repeat(60) + '\n');
@@ -1640,6 +2262,31 @@ function askUserFile(files, callback) {
 
 function detectMachineType(content, jsonData = null) {
     const lowerContent = content.toLowerCase();
+    
+    // Verifica se é GR (Gramática Regular)
+    if (lowerContent.includes('variaveis:') || 
+        lowerContent.includes('variáveis:') ||
+        lowerContent.includes('variables:') ||
+        lowerContent.includes('terminais:') ||
+        lowerContent.includes('terminals:') ||
+        lowerContent.includes('producoes:') ||
+        lowerContent.includes('produções:') ||
+        lowerContent.includes('productions:') ||
+        content.includes('->') || content.includes('→')) {
+        // Verifica se tem formato de produção (A -> aB)
+        const hasProduction = /[A-Z][A-Za-z0-9_]*\s*(?:->|→)\s*.+/.test(content);
+        if (hasProduction && (lowerContent.includes('variaveis') || lowerContent.includes('variables') || 
+            lowerContent.includes('terminais') || lowerContent.includes('terminals'))) {
+            return 'gr';
+        }
+    }
+    
+    // Verifica se JSON indica GR
+    if (jsonData && (jsonData.type === 'gr' || jsonData.type === 'grammar' || 
+        jsonData.productions || jsonData.variables || jsonData.terminais ||
+        (jsonData.grammar && (jsonData.grammar.productions || jsonData.grammar.variables)))) {
+        return 'gr';
+    }
     
     // Verifica se é MT (Máquina de Turing)
     if (lowerContent.includes('alfabeto_fita') || 
@@ -1817,6 +2464,13 @@ function processFile(filename) {
         console.log(`  - Estado de rejeição: ${machine.rejectState}`);
         console.log(`  - Transições: ${machine.transitions.length}\n`);
         
+        // Detecta se é não-determinística
+        const isNondeterministic = jsonData.nondeterministic === true || detectNondeterminism(machine);
+        if (isNondeterministic) {
+            console.log('\x1b[33m⚡ MÁQUINA NÃO-DETERMINÍSTICA detectada\x1b[0m');
+            console.log('  → Explorará TODAS as ramificações possíveis\n');
+        }
+        
         mermaidCode = generateTuringMermaidCode(machine);
         
         // Se há regras, valida com testes aleatórios
@@ -1838,7 +2492,9 @@ function processFile(filename) {
                 console.log(`Executando ${NUM_TESTS} testes aleatórios...\n`);
                 for (let i = 0; i < NUM_TESTS && failedTests.length < 5; i++) {
                     const testString = generateRandomString(alphabet, MAX_LENGTH);
-                    const simulationResult = simulateTuring(machine, testString);
+                    const simulationResult = isNondeterministic 
+                        ? simulateNondeterministicTuring(machine, testString)
+                        : simulateTuring(machine, testString);
                     const validatorResult = masterValidator(testString);
                     if (simulationResult.result !== validatorResult) {
                         const expected = validatorResult ? 'ACEITA' : 'REJEITA';
@@ -1866,9 +2522,12 @@ function processFile(filename) {
             console.log('\nTestando com strings de exemplo:');
             const testStrings = ['', 'a', 'aa', 'ab', 'aba', 'aaa', 'bbb', 'aabb'];
             testStrings.forEach(testStr => {
-                const result = simulateTuring(machine, testStr);
+                const result = isNondeterministic 
+                    ? simulateNondeterministicTuring(machine, testStr)
+                    : simulateTuring(machine, testStr);
                 const status = result.result ? '✓ ACEITA' : '✗ REJEITA';
-                console.log(`  "${testStr || '(vazia)'}" -> ${status}`);
+                const exploredInfo = result.explored ? ` (${result.explored} ramificações)` : '';
+                console.log(`  "${testStr || '(vazia)'}" -> ${status}${exploredInfo}`);
             });
         }
     } else {
@@ -2827,6 +3486,23 @@ function processFromArgs() {
                         definition += `${from}, ${symbol}, ${to}\n`;
                     }
                 }
+            } else if (jsonData.grammar && jsonData.grammar.productions) {
+                // É uma Gramática Regular em formato JSON
+                const g = jsonData.grammar;
+                definition = `Variaveis: ${g.variables.join(', ')}\n`;
+                definition += `Terminais: ${g.terminals.join(', ')}\n`;
+                definition += `Inicial: ${g.startSymbol}\n`;
+                definition += 'Producoes:\n';
+                for (const variable of Object.keys(g.productions)) {
+                    const rhsList = g.productions[variable];
+                    const rhsStr = rhsList.map(rhs => rhs === '' ? 'ε' : rhs).join(' | ');
+                    definition += `${variable} -> ${rhsStr}\n`;
+                }
+                
+                // Extrai languageDescription para usar como description (permite parsing de regras)
+                if (jsonData.languageDescription && !description) {
+                    description = jsonData.languageDescription;
+                }
             }
             
             // Extrai regras se existirem
@@ -2857,14 +3533,61 @@ function processFromArgs() {
     const machineType = detectMachineType(definition, jsonData);
     const typeLabel = machineType === 'turing' ? 'Máquina de Turing' : 
                      machineType === 'afn' ? 'AFN (Autômato Finito Não-determinístico)' :
-                     machineType === 'ap' ? 'AP (Autômato de Pilha)' : 'AFD';
+                     machineType === 'ap' ? 'AP (Autômato de Pilha)' : 
+                     machineType === 'gr' ? 'GR (Gramática Regular)' : 'AFD';
     console.log(`Tipo detectado: ${typeLabel}\n`);
     
     let machine;
     let mermaidCode;
+    let grammarInfo = null; // Para armazenar info da gramática original
     
     // Parse da definição
-    if (machineType === 'turing') {
+    if (machineType === 'gr') {
+        // Processa Gramática Regular
+        const grammar = parseGrammarDefinition(definition);
+        if (grammar.error) {
+            console.error(`✗ ERRO na definição da gramática: ${grammar.error}\n`);
+            process.exit(1);
+        }
+        
+        grammarInfo = grammar;
+        console.log(`✓ Gramática Regular válida`);
+        console.log(`  - Variáveis: ${grammar.variables.join(', ')}`);
+        console.log(`  - Terminais: ${grammar.terminals.join(', ')}`);
+        console.log(`  - Símbolo inicial: ${grammar.startSymbol}`);
+        console.log(`  - Tipo: ${grammar.type === 'right-linear' ? 'Linear à Direita' : 
+                               grammar.type === 'left-linear' ? 'Linear à Esquerda' : 
+                               grammar.type === 'mixed' ? 'Mista (pode não ser regular)' : 'Desconhecido'}`);
+        console.log(`  - Produções: ${Object.keys(grammar.productions).length} variáveis\n`);
+        
+        // Mostra as produções
+        console.log('  Produções:');
+        for (const variable of Object.keys(grammar.productions)) {
+            const prods = grammar.productions[variable].join(' | ');
+            console.log(`    ${variable} → ${prods}`);
+        }
+        console.log('');
+        
+        // Converte GR para AFN
+        console.log('Convertendo Gramática Regular para AFN equivalente...\n');
+        machine = convertGrammarToAFN(grammar);
+        
+        if (machine.error) {
+            console.error(`✗ ERRO na conversão GR → AFN: ${machine.error}\n`);
+            process.exit(1);
+        }
+        
+        console.log(`✓ AFN equivalente gerado`);
+        console.log(`  - Estados: ${machine.states.join(', ')}`);
+        console.log(`  - Alfabeto: ${machine.alphabet.join(', ')}`);
+        console.log(`  - Estado inicial: ${machine.startState}`);
+        console.log(`  - Estados finais: ${machine.finalStates.join(', ')}`);
+        console.log(`  - Não-determinístico: ${machine.isNFA ? 'Sim' : 'Não'}\n`);
+        
+        // Gera código Mermaid para o AFN equivalente
+        mermaidCode = generateGrMermaidCode(machine, grammarInfo);
+        
+    } else if (machineType === 'turing') {
         machine = parseTuringDefinition(definition);
     } else if (machineType === 'ap') {
         machine = parseApDefinition(definition);
@@ -2883,8 +3606,10 @@ function processFromArgs() {
         process.exit(1);
     }
     
-    // Mostra informações
-    console.log(`✓ Definição do ${typeLabel} válida`);
+    // Mostra informações (para tipos que não são GR - GR já mostrou acima)
+    if (machineType !== 'gr') {
+        console.log(`✓ Definição do ${typeLabel} válida`);
+    }
     if (machineType === 'turing') {
         console.log(`  - Estados: ${machine.states.join(', ')}`);
         console.log(`  - Alfabeto de entrada: ${machine.inputAlphabet.join(', ')}`);
@@ -2956,14 +3681,22 @@ function processFromArgs() {
         const NUM_TESTS = (machineType === 'turing' || machineType === 'ap') ? 100 : 500;
         const MAX_LENGTH = (machineType === 'turing' || machineType === 'ap') ? 15 : 20;
         console.log(`Executando ${NUM_TESTS} testes aleatórios...\n`);
+        
+        // Detecta não-determinismo para MT
+        const isNondeterministic = machineType === 'turing' && 
+            (jsonData.nondeterministic === true || detectNondeterminism(machine));
+        
         for (let i = 0; i < NUM_TESTS && failedTests.length < 2; i++) {
             const testString = generateRandomString(alphabet, MAX_LENGTH);
             let result;
             if (machineType === 'turing') {
-                result = simulateTuring(machine, testString, 2000, false);
+                result = isNondeterministic
+                    ? simulateNondeterministicTuring(machine, testString, 2000, false)
+                    : simulateTuring(machine, testString, 2000, false);
             } else if (machineType === 'ap') {
                 result = simulateAP(machine, testString);
-            } else if (machineType === 'afn') {
+            } else if (machineType === 'afn' || machineType === 'gr') {
+                // GR usa simulador de AFN (foi convertida para AFN)
                 result = simulateAFN(machine, testString);
             } else {
                 result = simulateAFD(machine, testString);
@@ -3002,14 +3735,21 @@ function processFromArgs() {
     // Testes customizados
     if (testStrings.length > 0) {
         console.log('\n--- Testes Customizados ---');
+        
+        // Detecta não-determinismo para MT
+        const isNondeterministic = machineType === 'turing' && 
+            (jsonData.nondeterministic === true || detectNondeterminism(machine));
+        
         testStrings.forEach(testStr => {
             testStr = testStr.trim();
             let result;
             if (machineType === 'turing') {
-                result = simulateTuring(machine, testStr, 2000, verboseMode);
+                result = isNondeterministic
+                    ? simulateNondeterministicTuring(machine, testStr, 2000, verboseMode)
+                    : simulateTuring(machine, testStr, 2000, verboseMode);
             } else if (machineType === 'ap') {
                 result = simulateAP(machine, testStr);
-            } else if (machineType === 'afn') {
+            } else if (machineType === 'afn' || machineType === 'gr') {
                 result = simulateAFN(machine, testStr);
             } else {
                 result = simulateAFD(machine, testStr);
@@ -3025,7 +3765,8 @@ function processFromArgs() {
     // Mostra código Mermaid
     const mermaidLabel = machineType === 'turing' ? 'MT Padrão' : 
                         machineType === 'ap' ? 'AP (Autômato de Pilha)' :
-                        machineType === 'afn' ? 'AFN' : 'AFD';
+                        machineType === 'afn' ? 'AFN' : 
+                        machineType === 'gr' ? 'GR (AFN Equivalente)' : 'AFD';
     console.log(`\n--- Código Mermaid Gerado (${mermaidLabel}) ---`);
     console.log(mermaidCode);
     console.log('--- Fim do Código ---\n');

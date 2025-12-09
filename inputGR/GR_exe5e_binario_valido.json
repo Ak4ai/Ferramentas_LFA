@@ -1,0 +1,12 @@
+{
+  "definition": "Variaveis: S, A\nTerminais: 0, 1\nInicial: S\nProducoes:\nS -> 1A | 1 | 0\nA -> 0A | 1A | 0 | 1",
+  "rules": [
+    {
+      "rules": [
+        { "type": "regex", "value": "^(0|1[01]*)$" }
+      ]
+    }
+  ],
+  "description": "GR Exe 5e: L = {w ∈ {0,1}* | w é número binário válido (sem zeros à esquerda)}",
+  "comments": "Números binários válidos: '0' sozinho, ou começa com 1 seguido de qualquer combinação. S gera 0, 1 ou 1A. A gera resto."
+}
